@@ -11,8 +11,8 @@
 <img src="https://img.shields.io/badge/CSS3-1572B6?style=flat-square&logo=CSS3&logoColor=white"/>
 <img src="https://img.shields.io/badge/React-61DAFB?style=flat-square&logo=React&logoColor=white"/>
 <br>
-<a href="https://www.notion.so/f4e77704459e414aaaf16bfc1459f517?v=d00f02f462444c999c637e18a57c4b4c"><img src="https://img.shields.io/badge/Notion-000000?style=flat-square&logo=Notion&logoColor=white"/></a>
-<a hre="https://github.com/pknu-wap/2023_1_Wap_Web_Team6"><img src="https://img.shields.io/badge/Github-181717?style=flat-square&logo=Github&logoColor=white"/></a>
+<a href="https://www.notion.so/4a11467f970840d3a645aabe3fcd1fb6" target="_blank"><img src="https://img.shields.io/badge/Notion-000000?style=flat-square&logo=Notion&logoColor=white"/></a>
+<a hre="https://github.com/pknu-wap/2023_1_Wap_Web_Team6" target="_blank"><img src="https://img.shields.io/badge/Github-181717?style=flat-square&logo=Github&logoColor=white"/></a>
 
 </div>
 
@@ -22,25 +22,25 @@
 <table>
   <tr>
     <td align="center">
-      <a href="https://github.com/alstjr7437">
+      <a href="https://github.com/alstjr7437" target="_blank">
         <img src="https://avatars.githubusercontent.com/u/94051599?v=4" width="120px;"/>
         <br />
         <a href="https://github.com/pknu-wap/wap-ui/commits/main?author=alstjr7437" title="Code">alstjr7437 👨‍💻</a>
     </td>
     <td align="center">
-      <a href="https://github.com/okdoittttt">
+      <a href="https://github.com/okdoittttt" target="_blank">
         <img src="https://avatars.githubusercontent.com/u/94339333?v=4" width="120px;"/>
         <br />
         <a href="https://github.com/pknu-wap/wap-ui/commits/main?author=okdoittttt" title="Code">okdoittttt 👨‍💻</a>
     </td>
     <td align="center">
-      <a href="https://github.com/qkrtnwjd4212">
+      <a href="https://github.com/qkrtnwjd4212" target="_blank">
         <img src="https://avatars.githubusercontent.com/u/80205505?v=4" width="120px;"/>
         <br />
         <a href="https://github.com/pknu-wap/wap-ui/commits/main?author=qkrtnwjd4212" title="Code">qkrtnwjd4212 👩‍💻</a>
     </td>
     <td align="center">
-      <a href="https://github.com/kwakyuji">
+      <a href="https://github.com/kwakyuji" target="_blank">
         <img src="https://avatars.githubusercontent.com/u/83887485?v=4" width="120px;"/>
         <br />
         <a href="https://github.com/pknu-wap/wap-ui/commits/main?author=kwakyuji" title="Code">kwakyuji 👩‍💻</a>
