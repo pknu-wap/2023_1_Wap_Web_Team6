@@ -1,6 +1,6 @@
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
-import { getAuth } from 'firebase/auth';
+
 
 const firebaseConfig = {
   apiKey: "AIzaSyCq8NgRmJ11v00IsTDDs2AfUZIIyRylKDs",
@@ -14,5 +14,3 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
-// 유저정보 가져오기
-// export const auth = getAuth(app)
