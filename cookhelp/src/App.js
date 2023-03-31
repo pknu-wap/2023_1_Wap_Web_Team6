@@ -4,6 +4,7 @@ function App() {
   return (
 
     <div class="App">
+      <Auth/>
     </div>
 
   );
