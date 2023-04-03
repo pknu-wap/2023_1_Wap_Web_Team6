@@ -1,6 +1,6 @@
 <div align = "center">
   
-# 2023년도 1학기 Web 6팀 요리조리
+# 2023년도 1 학기 Web 6팀 요리조리
 
 <h3>💻 Tech Stack 💻</h3>
 
