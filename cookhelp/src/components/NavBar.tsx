@@ -37,8 +37,8 @@ const MenuItem = styled.div<TabProps>`
   color: ${(props) => (props.isActive ? "black" : "#DCFBE5")};
 
   &:hover {
-    background-color: #ff;
-    color: #black;
+    background-color: #fff;
+    color: black;
   }
 `;
 
