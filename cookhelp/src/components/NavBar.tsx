@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import styled from "styled-components";
+import { useNavigate } from 'react-router-dom';
 
-interface TabProps {
-    isActive: boolean;
-}
+type TabProps = {
+  isActive: boolean;
+};
 
 const NavbarWrapper = styled.div`
   display: flex;
@@ -12,11 +13,6 @@ const NavbarWrapper = styled.div`
   padding: 10px;
   background-color: #678570;
   color: #fff;
-`;
-
-const Logo = styled.div`
-  font-size: 24px;
-  font-weight: bold;
 `;
 
 const MenuWrapper = styled.div`
@@ -37,8 +33,8 @@ const MenuItem = styled.div<TabProps>`
   color: ${(props) => (props.isActive ? "black" : "#DCFBE5")};
 
   &:hover {
-    background-color: #ff;
-    color: #black;
+    background-color: #fff;
+    color: black;
   }
 `;
 
@@ -56,30 +52,32 @@ const AuthButton = styled.button`
   border-radius: 5px;
 `;
 
-const Navbar: React.FC = () => {
-    const [activeMenuItem, setActiveMenuItem] = useState(1); // 현재 활성화된 메뉴 아이템의 인덱스를 상태로 관리
+const Navbar = () => {
+  const [activeMenuItem, setActiveMenuItem] = useState(1); // 현재 활성화된 메뉴 아이템의 인덱스를 상태로 관리
 
-    const handleMenuItemClick = (menuItemIndex: number) => {
-        setActiveMenuItem(menuItemIndex);
-    };
+  const handleMenuItemClick = (menuItemIndex: number) => {
+    setActiveMenuItem(menuItemIndex);
+  };
 
-    return (
-        <NavbarWrapper>
-            <Logo>YORIJORI</Logo>
-            <MenuWrapper>
-                <MenuItem isActive={activeMenuItem === 1} onClick={() => handleMenuItemClick(1)}>
-                    Recipe
-                </MenuItem>
-                <MenuItem isActive={activeMenuItem === 2} onClick={() => handleMenuItemClick(2)}>
-                    Community
-                </MenuItem>
-            </MenuWrapper>
-            <AuthButtonsWrapper>
-                <AuthButton>로그인</AuthButton>
-                <AuthButton>회원가입</AuthButton>
-            </AuthButtonsWrapper>
-        </NavbarWrapper>
-    );
+  const navigate = useNavigate();
+  return (
+    <NavbarWrapper>
+      <img src="/logo.png" alt="logo" width="150px" onClick={() => navigate("/")}/>
+      <MenuWrapper>
+        <MenuItem isActive={activeMenuItem === 1} onClick={() => handleMenuItemClick(1)}>
+          Recipe
+        </MenuItem>
+        <MenuItem isActive={activeMenuItem === 2} onClick={() => handleMenuItemClick(2)}>
+          Community
+        </MenuItem>
+      </MenuWrapper>
+
+      <AuthButtonsWrapper>
+        <AuthButton onClick={() => navigate("/login")}>로그인</AuthButton>
+        <AuthButton>회원가입</AuthButton>
+      </AuthButtonsWrapper>
+    </NavbarWrapper>
+  );
 }
 
 export default Navbar;
