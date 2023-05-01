@@ -5,7 +5,7 @@ const StyledContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-color: #e2e2e2;
+  background-color: var(--light-gray-color);
   border-radius: 10px;
 
   max-width: 30rem;

@@ -49,6 +49,5 @@
   },
   "devDependencies": {
     "@types/react-bootstrap": "^0.32.32",
-    "@types/styled-components": "^5.1.26"
   }
 }

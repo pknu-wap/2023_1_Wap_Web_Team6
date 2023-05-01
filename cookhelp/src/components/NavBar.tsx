@@ -11,7 +11,7 @@ const NavbarWrapper = styled.div`
   justify-content: space-between;
   align-items: center;
   padding: 10px;
-  background-color: #678570;
+  background-color: var(--green-color);
   color: #fff;
 `;
 
@@ -30,7 +30,7 @@ const MenuItem = styled.div<TabProps>`
   padding: 10px;
   border-radius: 5px;
   background-color: ${(props) => (props.isActive ? "white" : "transparent")};
-  color: ${(props) => (props.isActive ? "black" : "#DCFBE5")};
+  color: ${(props) => (props.isActive ? "black" : "var(--mint-color)")};
 
   &:hover {
     background-color: #fff;
