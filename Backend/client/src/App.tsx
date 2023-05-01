@@ -7,38 +7,24 @@ import TableBody from '@material-ui/core/TableBody'
 import TableRow from '@material-ui/core/TableRow'
 import TableCell from '@material-ui/core/TableCell'
 
-
-const customers = [
-  {
-  'id' : 1,
-  'password' : '000324',
-  'image' : 'https://placeimg.com/64/64/any',
-  'name' : '김민석',
-  'birthday' : '000324',
-  'gender' : '남자',
-  'job' : '대학생'
-  },
-  {
-    'id' : 2,
-    'password' : '2321',
-    'image' : 'https://placeimg.com/64/64/any',
-    'name' : '홍길동',
-    'birthday' : '7437',
-    'gender' : '남자',
-    'job' : '대학생'
-  },
-  {
-    'id' : 3,
-    'password' : '023',
-    'image' : 'https://placeimg.com/64/64/any',
-    'name' : '홍길순',
-    'birthday' : '7437',
-    'gender' : '여자',
-    'job' : '대학생'
-  }
-]
-
 class App extends Component{
+
+  state = {
+   customers : []
+  }
+  componentDidMount() {
+    this.callApi()
+      .then(res => this.setState({customer:res}))
+      .catch(err=> console.log(err));
+  }
+  callApi= async()=>{
+    const response = await fetch('/api/customers');
+    console.log(response)
+    const body = await response.json();
+    console.log(body)
+    return body;
+  }
+
   render() {
     return(
       <div>
@@ -55,7 +41,7 @@ class App extends Component{
           </TableHead>
           <TableBody>
           {
-            customers.map(c =>{
+            this.state.customers ? this.state.customers.map((c : any) =>{
               return (
                 <Customer 
                   key = {c.id}
@@ -69,6 +55,7 @@ class App extends Component{
                 />
               );
             })
+            : ""
           } 
           </TableBody>
         </Table>
