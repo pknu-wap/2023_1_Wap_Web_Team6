@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import Navbar from "../components/NavBar";
 import Container from "../UI/Container";
@@ -9,6 +9,7 @@ const Title = styled.h2`
 `;
 
 const Form = styled.form`
+  width: 60%;
   display: flex;
   flex-direction: column;
 `;
@@ -20,7 +21,7 @@ const FormGroup = styled.div`
 `;
 
 const Label = styled.label`
-  font-size: 16px;
+  font-size: 1rem;
   margin-bottom: 5px;
 `;
 
@@ -44,6 +45,11 @@ const Button = styled.button`
   &:hover {
     background-color: #32503b;
   }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
 `;
 
 const ButtonGroup = styled.div`
@@ -51,7 +57,41 @@ const ButtonGroup = styled.div`
   justify-content: space-between;
 `;
 
+const ErrorMsg = styled.p`
+  margin: 0;
+  font-size: 0.8rem;
+`;
+
 const Login = () => {
+  const [validId, setvalidId] = useState(false);
+  const [validPassword, setvalidPassword] = useState(false);
+
+  //영문자로 시작하는 영문자 또는 숫자 6~20자
+  const isId = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const regExp = /^[a-z]+[a-z0-9]{5,19}$/g;
+    if (!regExp.test(e.target.value)) {
+      // console.log(e.target.value);
+      setvalidId(false);
+    } else setvalidId(true);
+  };
+
+  //8 ~ 16자 영문, 숫자 조합
+  const isPassword = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const regExp = /^(?=.*\d)(?=.*[a-zA-Z])[0-9a-zA-Z]{8,16}$/;
+    if (!regExp.test(e.target.value)) {
+      // console.log(e.target.value);
+      setvalidPassword(false);
+    } else setvalidPassword(true);
+  };
+
+  const btnHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
+    const btn: HTMLButtonElement = e.currentTarget;
+    if (!validId || !validPassword) btn.disabled = true;
+    else btn.disabled = false;
+
+    console.log(btn.disabled);
+  };
+
   return (
     <>
       <Navbar></Navbar>
@@ -60,14 +100,28 @@ const Login = () => {
         <Form>
           <FormGroup>
             <Label>아이디 </Label>
-            <Input type="text" placeholder="아이디 입력"></Input>
+            <Input
+              onChange={isId}
+              type="text"
+              placeholder="아이디 입력"
+            ></Input>
+            {!validId && (
+              <ErrorMsg>영문 혹은 숫자 6자 이상 20자 이하 입력바람</ErrorMsg>
+            )}
           </FormGroup>
           <FormGroup>
             <Label>비밀번호 </Label>
-            <Input type="text" placeholder="비밀번호 입력"></Input>
+            <Input
+              onChange={isPassword}
+              type="text"
+              placeholder="비밀번호 입력"
+            ></Input>
+            {!validPassword && (
+              <ErrorMsg>8자 이상 16자 이하의 영문, 숫자 조합 입력</ErrorMsg>
+            )}
           </FormGroup>
           <ButtonGroup>
-            <Button>로그인</Button>
+            <Button onClick={btnHandler}>로그인</Button>
             <Button>회원가입</Button>
           </ButtonGroup>
         </Form>
