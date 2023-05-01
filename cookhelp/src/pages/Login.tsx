@@ -28,14 +28,14 @@ const Label = styled.label`
 const Input = styled.input`
   padding: 5px;
   font-size: 16px;
-  border: 1px solid #ccc;
+  border: 1px solid var(--gray-color);
   border-radius: 3px;
 `;
 
 const Button = styled.button`
   padding: 10px;
   font-size: 16px;
-  background-color: #678570;
+  background-color: var(--green-color);
   color: #fff;
   border: none;
   border-radius: 3px;
@@ -43,7 +43,7 @@ const Button = styled.button`
   margin-top: 10px;
 
   &:hover {
-    background-color: #32503b;
+    background-color: var(--dark-green-color);
   }
 
   &:disabled {
