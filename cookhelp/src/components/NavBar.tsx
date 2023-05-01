@@ -13,6 +13,7 @@ const NavbarWrapper = styled.div`
   padding: 10px;
   background-color: var(--green-color);
   color: #fff;
+  cursor: pointer;
 `;
 
 const MenuWrapper = styled.div`
@@ -50,6 +51,7 @@ const AuthButton = styled.button`
   padding: 5px 10px;
   border: none;
   border-radius: 5px;
+  font-size: 18px;
 `;
 
 const Navbar = () => {
