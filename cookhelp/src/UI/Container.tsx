@@ -8,7 +8,7 @@ const StyledContainer = styled.div`
   background-color: #e2e2e2;
   border-radius: 10px;
 
-  /* max-width: 960px; */
+  max-width: 30rem;
   width: 50%;
   margin: 5rem auto;
   padding-bottom: 2rem;
