@@ -84,14 +84,6 @@ const Login = () => {
     } else setvalidPassword(true);
   };
 
-  const btnHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
-    const btn: HTMLButtonElement = e.currentTarget;
-    if (!validId || !validPassword) btn.disabled = true;
-    else btn.disabled = false;
-
-    console.log(btn.disabled);
-  };
-
   return (
     <>
       <Navbar></Navbar>
@@ -121,7 +113,7 @@ const Login = () => {
             )}
           </FormGroup>
           <ButtonGroup>
-            <Button onClick={btnHandler}>로그인</Button>
+            <Button disabled={!validId || !validPassword}>로그인</Button>
             <Button>회원가입</Button>
           </ButtonGroup>
         </Form>
