@@ -55,7 +55,7 @@ const AuthButton = styled.button`
 `;
 
 const Navbar = () => {
-  const [activeMenuItem, setActiveMenuItem] = useState(1); // 현재 활성화된 메뉴 아이템의 인덱스를 상태로 관리
+  const [activeMenuItem, setActiveMenuItem] = useState(0); // 현재 활성화된 메뉴 아이템의 인덱스를 상태로 관리
 
   const handleMenuItemClick = (menuItemIndex: number) => {
     setActiveMenuItem(menuItemIndex);
@@ -68,8 +68,9 @@ const Navbar = () => {
         src="/logo.png"
         alt="logo"
         width="150px"
-        onClick={() => navigate("/")}
-      />
+        onClick={() => {navigate("/");
+        handleMenuItemClick(0);
+      }}/>
       <MenuWrapper>
         <MenuItem
           isActive={activeMenuItem === 1}
