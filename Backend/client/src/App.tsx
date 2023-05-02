@@ -1,33 +1,45 @@
 import React, { Component } from 'react';
 import Customer from './components/Customer'
 import './App.css';
+import Paper from '@material-ui/core/Paper'
 import Table from '@material-ui/core/Table'
 import TableHead from '@material-ui/core/TableHead'
 import TableBody from '@material-ui/core/TableBody'
 import TableRow from '@material-ui/core/TableRow'
 import TableCell from '@material-ui/core/TableCell'
+import { withStyles } from '@material-ui/core/styles';
+import CircularProgress from '@material-ui/core/CircularProgress'
+
+// const styles = (theme : any) =>({
+//   root :{
+//     width: '100%',
+//     marginTop:theme.spacing.unit * 3,
+//     overflowX:"auto"
+//   },
+//   table:{
+//     midWidth:1080
+//   }
+// })
 
 class App extends Component{
-
   state = {
    customers : []
   }
   componentDidMount() {
     this.callApi()
-      .then(res => this.setState({customer:res}))
+      .then(res => this.setState({customers:res}))
       .catch(err=> console.log(err));
   }
   callApi= async()=>{
     const response = await fetch('/api/customers');
-    console.log(response)
     const body = await response.json();
-    console.log(body)
     return body;
   }
 
   render() {
+    // const { classes } = this.props;
     return(
-      <div>
+      <Paper>
         <Table>
           <TableHead>
             <TableRow>
@@ -55,15 +67,16 @@ class App extends Component{
                 />
               );
             })
-            : ""
+            : "Hello"
           } 
           </TableBody>
         </Table>
         
           
-      </div>
+      </Paper>
     );
   }
 }
 
+//export default withStyles(styles)(App);
 export default App;

@@ -1,8 +1,11 @@
 const express = require('express')
 const bodyParser = require('body-parser')
+//express 서버
 const app = express();
+// port 설정 부분
 const port = process.env.PORT || 5000;
 
+// 사용자들 테스트 하는 부분
 //json형식으로 주고 받음
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended:true}))
@@ -39,4 +42,5 @@ app.get('/api/customers', (req, res) =>{
     ]);
 });
 
+// 서버 작동하는지 찍는 부분
 app.listen(port, () => console.log('Listening on port',port))
