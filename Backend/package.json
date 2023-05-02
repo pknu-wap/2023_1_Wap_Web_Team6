@@ -2,7 +2,6 @@
     "name": "client",
     "version": "1.0.0",
     "scripts": {
-        // yarn dev로 돌아가는 부분
         "client": "cd client && yarn start",
         "server": "nodemon server.tsx",
         "dev": "concurrently --kill-others-on-fail \"yarn server\" \"yarn client\""
@@ -13,6 +12,7 @@
         "typescript": "^5.0.4"
     },
     "devDependencies": {
+        "@types/node": "^18.16.3",
         "@typescript-eslint/eslint-plugin": "^5.59.1",
         "@typescript-eslint/parser": "^5.59.1",
         "concurrently": "^8.0.1",
@@ -20,5 +20,4 @@
         "nodemon": "^2.0.22",
         "ts-node": "^10.9.1"
     }
-    
 }
