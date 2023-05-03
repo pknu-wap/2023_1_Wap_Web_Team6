@@ -68,13 +68,18 @@ const Navbar = () => {
         src="/logo.png"
         alt="logo"
         width="150px"
-        onClick={() => {navigate("/");
-        handleMenuItemClick(0);
-      }}/>
+        onClick={() => {
+          navigate("/");
+          handleMenuItemClick(0);
+        }}
+      />
       <MenuWrapper>
         <MenuItem
           isActive={activeMenuItem === 1}
-          onClick={() => handleMenuItemClick(1)}
+          onClick={() => {
+            handleMenuItemClick(1);
+            navigate("/recipe_list");
+          }}
         >
           Recipe
         </MenuItem>
