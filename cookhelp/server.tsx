@@ -4,7 +4,7 @@ const fs = require('fs');
 //express 서버
 const app = express();
 // port 설정 부분
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 8080;
 
 const data = fs.readFileSync('./database.json');
 const conf = JSON.parse(data);
@@ -30,7 +30,7 @@ app.get('/api/customers', (req, res) => {
       if (err) {
           throw err;
       }
-      connection.query("SELECT * FROM customer;", (err, rows, fields) => {
+      connection.query("SELECT * FROM members;", (err, rows, fields) => {
           connection.release(); // 커넥션 반환
           if (err) {
               throw err;
