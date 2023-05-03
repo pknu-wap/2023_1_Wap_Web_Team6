@@ -3,11 +3,35 @@ import styled from "styled-components";
 import useSliderCard from "../hooks/userSliderCard";
 import { RecipeCard, ArrowButtonProps, CardProps } from "./type";
 
-const SliderContainer = styled.div``;
-const ImgBox = styled.div``;
-const StyledCard = styled.div``;
-const StyledArrowBack = styled.svg``;
-const StyledArrowForward = styled.svg``;
+const SliderContainer = styled.div`
+  margin: auto;
+`;
+const ImgBox = styled.div`
+  display: flex;
+`;
+const StyledCard = styled.div`
+  margin: auto;
+`;
+const StyledArrowBack = styled.svg`
+  width: 15%;
+  max-width: 60px;
+`;
+const StyledArrowForward = styled.svg`
+  width: 15%;
+  max-width: 60px;
+`;
+const SlideImg = styled.img`
+  width: 90%;
+  margin: auto;
+  max-width: 600px;
+`;
+const CardIdx = styled.p`
+  font-size: 15px;
+  margin-bottom: 1rem;
+  color: var(--dark-green-color);
+
+`;
+
 
 const ArrowBack = ({ onClick }: ArrowButtonProps) => {
   return (
@@ -30,6 +54,7 @@ const ArrowForward = ({ onClick }: ArrowButtonProps) => {
       style={{ cursor: "pointer" }}
       role="button"
       xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 320 512"
     >
       <path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z" />
     </StyledArrowForward>
@@ -41,7 +66,7 @@ const Card = ({ currentCard }: CardProps) => {
 
   return (
     <StyledCard>
-      <img src={pic} width="500"></img>
+      <SlideImg src={pic} />
       <p>{detail}</p>
     </StyledCard>
   );
@@ -60,9 +85,9 @@ const Slider = ({ recipeList }: { recipeList: RecipeCard }) => {
             <Card currentCard={card[cardIdx]} />
             <ArrowForward onClick={goForward} />
           </ImgBox>
-          <p>
+          <CardIdx>
             {cardIdx + 1}/{card.length}
-          </p>
+          </CardIdx>
         </>
       )}
     </SliderContainer>

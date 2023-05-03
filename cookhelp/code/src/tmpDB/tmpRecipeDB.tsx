@@ -9,7 +9,7 @@ const cardData: RecipeCard[] = [
         id: 1,
         ListNum: 1,
         pic: "https://cdn.pixabay.com/photo/2015/08/25/03/50/background-906135_960_720.jpg",
-        detail: "1. 재료를 준비한다.(밥, 소세지, 김치, 간장, 참기름",
+        detail: "1. 재료를 준비한다. ( 밥, 소세지, 김치, 간장, 참기름 )",
       },
       {
         id: 2,
