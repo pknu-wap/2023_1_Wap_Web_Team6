@@ -1,45 +1,43 @@
-const express = require('express')
-const bodyParser = require('body-parser')
+const express = require('express');
+const bodyParser = require('body-parser');
+const fs = require('fs');
 //express 서버
 const app = express();
 // port 설정 부분
 const port = process.env.PORT || 5000;
+
+const data = fs.readFileSync('./database.json');
+const conf = JSON.parse(data);
+const mysql = require('mysql');
+
+const pool = mysql.createPool({
+  host: conf.host,
+  user: conf.user,
+  password: conf.password,
+  port: conf.port,
+  database: conf.database,
+  connectionLimit: 10 // 연결 풀의 최대 연결 개수 설정
+});
+
 
 // 사용자들 테스트 하는 부분
 //json형식으로 주고 받음
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended:true}))
 
-app.get('/api/customers', (req, res) =>{
-    res.send([
-            {
-            'id' : 1,
-            'password' : '000324',
-            'image' : 'https://placeimg.com/64/64/any',
-            'name' : '김민석',
-            'birthday' : '000324',
-            'gender' : '남자',
-            'job' : '대학생'
-            },
-            {
-              'id' : 2,
-              'password' : '2321',
-              'image' : 'https://placeimg.com/64/64/any',
-              'name' : '홍길동',
-              'birthday' : '7437',
-              'gender' : '남자',
-              'job' : '대학생'
-            },
-            {
-              'id' : 3,
-              'password' : '023',
-              'image' : 'https://placeimg.com/64/64/any',
-              'name' : '홍길순',
-              'birthday' : '7437',
-              'gender' : '여자',
-              'job' : '대학생'
-            }
-    ]);
+app.get('/api/customers', (req, res) => {
+  pool.getConnection((err, connection) => {
+      if (err) {
+          throw err;
+      }
+      connection.query("SELECT * FROM customer;", (err, rows, fields) => {
+          connection.release(); // 커넥션 반환
+          if (err) {
+              throw err;
+          }
+          res.send(rows);
+      });
+  });
 });
 
 // 서버 작동하는지 찍는 부분
