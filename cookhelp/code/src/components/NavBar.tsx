@@ -67,7 +67,7 @@ const Navbar = () => {
       <img
         src="/logo.png"
         alt="logo"
-        width="150px"
+        width="180px"
         onClick={() => {
           navigate("/");
           handleMenuItemClick(0);
