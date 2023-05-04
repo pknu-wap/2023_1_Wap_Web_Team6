@@ -46,7 +46,6 @@ const RegisterBtn = styled.button`
 
   margin: auto;
   display: block;
-  /* float: right; */
   
   &:hover {
     background-color: var(--dark-green-color);
@@ -54,6 +53,7 @@ const RegisterBtn = styled.button`
 
 `;
 const ListWrapper = styled.div`
+
 `;
 
 const RecipeList = () => {
