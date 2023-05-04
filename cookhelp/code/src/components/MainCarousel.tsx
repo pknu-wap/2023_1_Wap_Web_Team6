@@ -34,12 +34,12 @@ const MainCarousel = () => {
           <Paper>
             <CarouselItemImg src="https://thumbs.dreamstime.com/b/healthy-food-selection-healthy-food-selection-fruits-vegetables-seeds-superfood-cereals-gray-background-121936825.jpg" />
             <ItemTitle>완전 건강해 보이는 요리</ItemTitle>
-            <ItemText>완전 건강해 보이는 요리의 레시피입니다. 닭가슴살과 아보카도, 방울토마토, 연어, 어쩌구</ItemText>
+            <ItemText>완전 건강해 보이는 요리의 레시피입니다. </ItemText>
           </Paper>
           <Paper>
             <CarouselItemImg src="https://www.chickensaladchick.com/assets/mainstage/mainstage-img.jpg" />
             <ItemTitle>치킨 샐러드 샌드위치</ItemTitle>
-            <ItemText>치킨 샐러드 샌드위치의 레시피입니다. 통밀 베이글에 양상추와 토마토, 어쩌구를 넣어서 </ItemText>
+            <ItemText>치킨 샐러드 샌드위치의 레시피입니다. </ItemText>
           </Paper>
           <Paper>
             <CarouselItemImg src="https://images.pexels.com/photos/958545/pexels-photo-958545.jpeg?cs=srgb&dl=pexels-chan-walrus-958545.jpg&fm=jpg" />
