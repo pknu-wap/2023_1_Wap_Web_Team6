@@ -114,7 +114,7 @@ const Login = () => {
       .then((res) => res.json())
       .then((json) => {
         if(json.isSuccess==="True"){
-          alert('회원가입이 완료되었습니다!')
+          alert('로그인 완료되었습니다!')
         }
         else{
           alert(json.isSuccess)
