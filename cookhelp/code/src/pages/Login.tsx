@@ -113,14 +113,15 @@ const Login = () => {
     })
       .then((res) => res.json())
       .then((json) => {
-        console.log("hello");
-        if (json.isLogin === "True") {
-          alert("로그인 성공");
-          console.log("로그인 성공");
-        } else {
-          alert(json.isLogin);
+        if(json.isSuccess==="True"){
+          alert('회원가입이 완료되었습니다!')
         }
-      });
+        else{
+          alert(json.isSuccess)
+        }
+      }).catch(function(err) {
+        console.error(` Err: ${err}`);
+    });;
   };
 
   return (
