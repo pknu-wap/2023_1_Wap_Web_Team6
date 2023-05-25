@@ -19,6 +19,16 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended:true}))
 app.use(cors())
 
+var MySQLStore = require('express-mysql-session')(session);
+var sessionStore = new MySQLStore(sessionOption);
+app.use(session({  
+	key: 'session_cookie_name',
+    secret: '~',
+	store: sessionStore,
+	resave: false,
+	saveUninitialized: false
+}))
+
 app.get('/authcheck', (req, res) => {   
   const sendData = { isLogin: "" };
   if (req.session.is_logined) {
@@ -30,7 +40,6 @@ app.get('/authcheck', (req, res) => {
 })
 
 app.get('/api/logout', function (req, res) {
-  console.log("hello");
   req.session.destroy(function (err) {
       res.redirect('/');
   });
@@ -47,12 +56,13 @@ app.post("/api/login", (req, res) => { // 데이터 받아서 결과 전송
             if (results.length > 0) {       // db에서의 반환값이 있다 = 일치하는 아이디가 있다.
                 //bcrypt.compare(password , results[0].password, (err, result) => {    // 입력된 비밀번호가 해시된 저장값과 같은 값인지 비교   
                     if (results[0].password == password) {                  // 비밀번호가 일치하면
-                        //   req.session.is_logined = true;      // 세션 정보 갱신                      여기서 에러...
-                        //   req.session.nickname = userId;
-                        //   req.session.save(function () {
-                        //       sendData.isLogin = "True"
-                        //       res.send(sendData);
-                        //   });
+                        req.session.is_logined = true;      // 세션 정보 갱신                      여기서 에러...
+                        req.session.nickname = userId;
+                        req.session.save(function () {
+                            sendData.isLogin = "True"
+                            console.log(sendData)
+                            res.send(sendData);
+                        });
                         console.log("로그인 성공!!")
                         //db.query(`INSERT INTO logTable (created, username, action, command, actiondetail) VALUES (NOW(), ?, 'login' , ?, ?)`
                         //    , [req.session.nickname, '-', `React 로그인 테스트`], function (error, result) { });

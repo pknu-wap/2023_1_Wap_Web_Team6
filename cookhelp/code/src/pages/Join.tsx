@@ -187,7 +187,9 @@ const Join = () => {
         } else {
           alert(json.isSuccess);
         }
-      });
+      }).catch(function(err) {
+        console.error(` Err: ${err}`);
+    })
   };
 
   return (
