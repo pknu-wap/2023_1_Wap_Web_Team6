@@ -3,12 +3,16 @@ export interface RecipeListType {
   ListNum: number;
   pic: string;
   detail: string;
+  stepTitle: string;
+  timer?: number;
 }
 
 export interface RecipeCard {
   id: number;
   RecipeName: string;
+  FoodType: string;
   cards: RecipeListType[];
+  Ingredient: string[];
 }
 
 export interface CardProps {
@@ -34,6 +38,7 @@ export interface RecipeItemProps {
   RecipeImg: string;
   RecipeWriter: string;
   RecipeDate: string;
+  to: string;
 }
 
 export interface ListProps {
