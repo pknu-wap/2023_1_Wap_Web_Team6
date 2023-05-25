@@ -1,0 +1,258 @@
+[33mcommit d3baf11ace911e4e432e2b382776f4cff02d012b[m[33m ([m[1;36mHEAD -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m
+Author: 김민석|Minseok Kim <alstjr7437@naver.com>
+Date:   Thu May 25 12:54:02 2023 +0900
+
+    파일 정리
+
+[33mcommit cec746bb9f365c8d198eb72c57f92ca983691037[m
+Merge: 043105da9 af702d801
+Author: 김민석|Minseok Kim <alstjr7437@naver.com>
+Date:   Thu May 25 12:35:26 2023 +0900
+
+    Merge branch 'main' of https://github.com/alstjr7437/2023_1_Wap_Web_Team6
+
+[33mcommit 043105da9eb59ccd23b7e51502a574f3e71ed0b2[m
+Author: 김민석|Minseok Kim <alstjr7437@naver.com>
+Date:   Thu May 25 12:35:13 2023 +0900
+
+    수정
+
+[33mcommit af702d801de306870d2ed51d3114e1a6c168d44c[m
+Merge: 5e5534159 1fe08df6e
+Author: 김민석|Minseok Kim <alstjr7437@naver.com>
+Date:   Thu May 25 12:29:47 2023 +0900
+
+    Merge pull request #11 from pknu-wap/develop
+    
+    0525
+
+[33mcommit 1fe08df6e7cf4c839170a5b0474872c78faa02cd[m[33m ([m[1;31mupstream/feature/RecipeHelper[m[33m, [m[1;31mupstream/develop[m[33m, [m[1;31mupstream/HEAD[m[33m, [m[1;32mdevelop[m[33m)[m
+Author: yunjikwak <mia007478@gmail.com>
+Date:   Wed May 24 23:23:41 2023 +0900
+
+    feat : timer 동작
+
+[33mcommit 9ab9db2ff83a1c1d70dde4f3c65db5143dbbbaa8[m
+Author: yunjikwak <mia007478@gmail.com>
+Date:   Wed May 24 23:21:18 2023 +0900
+
+    fix : 파일 이름 변경
+
+[33mcommit 3cb02c8b16bac256f4d40fbbf7bc9d5498c6097e[m
+Merge: 14774cec0 89f5643fc
+Author: yunjikwak <mia007478@gmail.com>
+Date:   Wed May 24 17:53:45 2023 +0900
+
+    Merge branch 'feature/RecipeHelper' into develop
+
+[33mcommit 89f5643fc0fcee53a8bdd1ba4cf433e55f8506a5[m
+Author: yunjikwak <mia007478@gmail.com>
+Date:   Wed May 24 17:52:15 2023 +0900
+
+    feat: map으로 수정
+
+[33mcommit 918fa0cf995d8f4452751d9389c11b8d06395ac9[m
+Author: yunjikwak <mia007478@gmail.com>
+Date:   Wed May 24 17:51:17 2023 +0900
+
+    feat: 타이머 틀 추가
+
+[33mcommit 14774cec00c2907c8737f54d98fe6345c3179aa4[m
+Merge: b36b85ad4 5e5534159
+Author: 김민석|Minseok Kim <alstjr7437@naver.com>
+Date:   Mon May 22 01:44:22 2023 +0900
+
+    Merge pull request #44 from alstjr7437/main
+    
+    간단한 파일 정리 및 오류 해결
+
+[33mcommit 5e55341591a171cf6a3ece432c1ba0a5aa824ae2[m
+Merge: 468c1af1f 6ef5a3692
+Author: 김민석|Minseok Kim <alstjr7437@naver.com>
+Date:   Mon May 22 01:42:00 2023 +0900
+
+    Merge branch 'main' of https://github.com/alstjr7437/2023_1_Wap_Web_Team6
+
+[33mcommit 468c1af1fb2d024522d7e3923356d3ebadac201c[m
+Author: 김민석|Minseok Kim <alstjr7437@naver.com>
+Date:   Mon May 22 01:41:52 2023 +0900
+
+    간단한 파일 정리 및 오류 해결
+
+[33mcommit 299d62640340018bc5f2675e7cb5a6373e607552[m
+Author: yunjikwak <mia007478@gmail.com>
+Date:   Sun May 21 22:54:48 2023 +0900
+
+    feat: recipe페이지 라우터 연결
+
+[33mcommit f6648d8df092294e51a529b914a85ee082978302[m
+Author: yunjikwak <mia007478@gmail.com>
+Date:   Sun May 21 18:09:13 2023 +0900
+
+    feat: router 변경
+
+[33mcommit b221b6ca6e19e2643ff2d554b46ce9c09bf98a39[m
+Author: yunjikwak <mia007478@gmail.com>
+Date:   Sun May 21 18:07:58 2023 +0900
+
+    feat: type 변경
+
+[33mcommit 6ef5a36923628e9fd13da38c4b63747066707a08[m
+Merge: 40ca7fac7 b36b85ad4
+Author: 김민석|Minseok Kim <alstjr7437@naver.com>
+Date:   Mon May 15 14:16:32 2023 +0900
+
+    Merge pull request #10 from pknu-wap/develop
+    
+    readme 수정
+
+[33mcommit b36b85ad4aca537662f22255fe4af7620b97604f[m
+Merge: 2ff8c2444 40ca7fac7
+Author: 김민석|Minseok Kim <alstjr7437@naver.com>
+Date:   Mon May 15 14:15:22 2023 +0900
+
+    Merge pull request #43 from alstjr7437/main
+    
+    백엔드 테스트 파일 삭제
+
+[33mcommit 40ca7fac739a2d855cf6e08bc8ce68c4a46c63ea[m
+Author: 김민석|Minseok Kim <alstjr7437@naver.com>
+Date:   Mon May 15 14:14:47 2023 +0900
+
+    테스트 파일 삭제
+
+[33mcommit 2ff8c244442195cec3ac2316418a989fe2b8c81b[m
+Author: 김민석|Minseok Kim <alstjr7437@naver.com>
+Date:   Mon May 15 14:12:54 2023 +0900
+
+    Update README.md
+
+[33mcommit 89efa97529b4cba6db9ec075ccbc974285e2c9f6[m
+Author: 김민석|Minseok Kim <alstjr7437@naver.com>
+Date:   Mon May 15 14:11:21 2023 +0900
+
+    Update README.md
+
+[33mcommit 917c1e526c09df640414e732da3db28dd0c6bf9c[m
+Merge: aaa0d5dac 5a11d3220
+Author: 김민석|Minseok Kim <alstjr7437@naver.com>
+Date:   Mon May 15 13:47:11 2023 +0900
+
+    Merge pull request #42 from pknu-wap/backendTest
+    
+    Merge pull request #41 from pknu-wap/develop
+
+[33mcommit 5a11d322062e019ef5cf166e7ebedb5dedff92c9[m[33m ([m[1;31mupstream/backendTest[m[33m)[m
+Merge: 59f07be32 aaa0d5dac
+Author: 김민석|Minseok Kim <alstjr7437@naver.com>
+Date:   Mon May 15 13:46:22 2023 +0900
+
+    Merge pull request #41 from pknu-wap/develop
+    
+    현재까지 부분 가져오기
+
+[33mcommit 1bc2f1d3dfee41ddbd9ee1d8430c1b80b6427bb7[m
+Merge: e51477c8a aaa0d5dac
+Author: 김민석|Minseok Kim <alstjr7437@naver.com>
+Date:   Mon May 15 13:45:14 2023 +0900
+
+    Merge pull request #9 from pknu-wap/develop
+    
+    로그인 회원가입 수정부분 가져오기
+
+[33mcommit aaa0d5dac5685ddfe13b008275c022edcde392ac[m[33m ([m[1;31mupstream/feature/Join[m[33m)[m
+Author: yunjikwak <mia007478@gmail.com>
+Date:   Mon May 15 11:21:01 2023 +0900
+
+    fix: fetch 수정
+
+[33mcommit dd67cc9c39f317a6ef743b0573932396591d2b9e[m[33m ([m[1;31mupstream/feature/login[m[33m)[m
+Author: yunjikwak <mia007478@gmail.com>
+Date:   Mon May 15 11:18:28 2023 +0900
+
+    fix: fetch 수정
+
+[33mcommit 3728254f06aa44669c6e0c17fc5347eea186fbcb[m[33m ([m[1;31mupstream/feature/RecipeList[m[33m)[m
+Author: yunjikwak <mia007478@gmail.com>
+Date:   Mon May 15 11:06:50 2023 +0900
+
+    feat: slide 추가
+
+[33mcommit a26aaf0439d0b190c5d8867abe7e0267e1057506[m
+Author: yunjikwak <mia007478@gmail.com>
+Date:   Mon May 15 10:49:33 2023 +0900
+
+    feat: 컴포넌트 분리
+
+[33mcommit a21c3ad398437636d7867b87234203895b7c1de2[m
+Merge: e3287b4e9 e51477c8a
+Author: 김민석|Minseok Kim <alstjr7437@naver.com>
+Date:   Thu May 11 19:55:38 2023 +0900
+
+    Merge pull request #40 from alstjr7437/main
+    
+    포트번호 수정(회원가입/로그인 요청값 수정 요청)
+
+[33mcommit e51477c8a42cb863d81724d02ab9b2460e4e32dc[m
+Author: 김민석|Minseok Kim <alstjr7437@naver.com>
+Date:   Thu May 11 19:54:45 2023 +0900
+
+    포트번호 수정
+
+[33mcommit e3287b4e9648d62ae32f7afb50196f3632b9f841[m
+Author: sujeong <qkrtnwjd4212@naver.com>
+Date:   Thu May 11 14:26:48 2023 +0900
+
+    chore: gitignore에 yarn.lock 파일 추가
+
+[33mcommit ae01275f3f728c8a6abee92e00c9ad4c55c077bd[m
+Author: sujeong <qkrtnwjd4212@naver.com>
+Date:   Thu May 11 14:21:18 2023 +0900
+
+    chore: 사용하지 않는 ui 라이브러리 삭제
+
+[33mcommit cf8930374398e8185b5132f60b57850802c7f494[m
+Merge: 08fcb3960 5ca6b1fe2
+Author: 김민석|Minseok Kim <alstjr7437@naver.com>
+Date:   Sun May 7 20:44:11 2023 +0900
+
+    Merge pull request #8 from pknu-wap/develop
+    
+    2023_05_07 pull
+
+[33mcommit 08fcb39602f7bce53a920e8c5dd9c7e8bba4254d[m
+Merge: 09bf4d203 c508b2ba5
+Author: 김민석|Minseok Kim <alstjr7437@naver.com>
+Date:   Thu May 4 19:23:32 2023 +0900
+
+    Merge branch 'main' of https://github.com/alstjr7437/2023_1_Wap_Web_Team6
+
+[33mcommit 5ca6b1fe27427415b753c0b912c89292e24a98f7[m
+Merge: d4453354e c1b530a40
+Author: qkrtnwjd4212 <80205505+qkrtnwjd4212@users.noreply.github.com>
+Date:   Thu May 4 17:36:12 2023 +0900
+
+    Merge pull request #39 from pknu-wap/feature/RecipeList
+    
+    레시피게시판, tmpDB 추가
+
+[33mcommit c1b530a400b950f537fc062bd58059a4305d31a4[m
+Merge: 31b7150de ecdea26fd
+Author: sujeong <qkrtnwjd4212@naver.com>
+Date:   Thu May 4 17:32:36 2023 +0900
+
+    fix: 머지 충돌 해결
+
+[33mcommit 31b7150de6c75410e2aa09c9d65f4db5cf74e1ab[m
+Author: sujeong <qkrtnwjd4212@naver.com>
+Date:   Thu May 4 17:19:35 2023 +0900
+
+    feat: 레시피 게시판css수정, 더미데이터 추가
+
+[33mcommit ecdea26fd5af4ede2508fb8ee694140fc53fbdec[m
+Author: sujeong <qkrtnwjd4212@naver.com>
+Date:   Thu May 4 15:52:47 2023 +0900
+
+    feat: 샘플데이터, 타입파일 분리
+
+[33mcommit 4f2aff287745d28478ca543a1eb7
