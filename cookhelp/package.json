@@ -3,7 +3,7 @@
     "version": "1.0.0",
     "scripts": {
         "client": "cd front && yarn start",
-        "server": "cd server && nodemon server.tsx",
+        "server": "cd server && yarn server",
         "dev": "concurrently --kill-others-on-fail \"yarn server\" \"yarn client\""
     }
 }
