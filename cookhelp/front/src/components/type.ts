@@ -24,11 +24,11 @@ export interface ArrowButtonProps {
 }
 
 export interface searchData {
-  id: number;
+  recipe_number: number;
   img?: string;
-  title: string;
-  writer: string;
-  date: string;
+  recipe_title: string;
+  members: string;
+  created_date: string;
   views?: number;
 }
 

@@ -1,6 +1,6 @@
 import { searchData } from "../components/type";
 
-const searchTmpData: searchData[] = [
+const searchTmpData = [
   {
     id: 0,
     img: "https://cdn.pixabay.com/photo/2022/12/29/01/01/image-7683986_960_720.jpg",
@@ -69,6 +69,30 @@ const searchTmpData: searchData[] = [
     id: 8,
     img: "https://cdn.pixabay.com/photo/2018/06/04/13/36/cold-noodles-3453218_960_720.jpg",
     title: "집에서 그릭요거트 만들기",
+    writer: "작성자",
+    date: "2023/05/06",
+    views: 579,
+  },
+  {
+    id: 9,
+    img: "https://cdn.pixabay.com/photo/2018/06/04/13/36/cold-noodles-3453218_960_720.jpg",
+    title: "햄버거 만들기",
+    writer: "작성자",
+    date: "2023/05/06",
+    views: 579,
+  },
+  {
+    id: 10,
+    img: "https://cdn.pixabay.com/photo/2018/06/04/13/36/cold-noodles-3453218_960_720.jpg",
+    title: "샌드위치 만들기",
+    writer: "작성자",
+    date: "2023/05/06",
+    views: 579,
+  },
+  {
+    id: 11,
+    img: "https://cdn.pixabay.com/photo/2018/06/04/13/36/cold-noodles-3453218_960_720.jpg",
+    title: "짱구는 못말려",
     writer: "작성자",
     date: "2023/05/06",
     views: 579,

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import Navbar from "../components/NavBar";
 import Container from "../UI/Container";
@@ -7,7 +7,7 @@ import RecipeItem from "../components/RecipeItem";
 import { RecipeItemProps, searchData } from "../components/type";
 import searchTmpData from "../tmpDB/tmpRecipeListDB";
 import { useNavigate } from "react-router-dom";
-import Btn from "../UI/Btn"
+import Btn from "../UI/Btn";
 
 const RecipeListContainer = styled(Container)`
   max-width: 60rem;
@@ -43,57 +43,68 @@ const RegisterBtn = styled(Btn)`
 `;
 
 const RecipeList = () => {
+  const [listData, setListData] = useState([]);
 
-  // const [listData, setListData] = useState([]);
+  // const newArray = data.map((item: fetchRecipeItemProps) => ({
+  //   id: item.RecipeId,
+  //   title: item.RecipeTitle,
+  //   writer: item.RecipeWriter,
+  //   date: item.RecipeDate,
+  // }));
 
-  // fetch("/api/list")
-  //   .then((response) => response.json())
-  //   .then((data) => {
-  //     const newArray = data.map((item: RecipeItemProps) => ({
-  //       id: item.RecipeId,
-  //       title: item.RecipeTitle,
-  //       writer: item.RecipeWriter,
-  //       date: item.RecipeDate,
-  //     }));
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await fetch("http://localhost:8081/api/list");
+        const data = await res.json();
 
-  //     setListData(newArray);
-  //     console.log(newArray);
-  //   })
-  //   .catch((error) => {
-  //     console.log("Error!", error);
-  //   });
-  
+        if (!res.ok) {
+          console.log("error : ", data.description);
+          return;
+        }
+        console.log("data : ", data);
+        setListData(data);
+      } catch (error) {
+        console.log("Error!", error);
+      }
+    };
+
+    fetchData();
+    console.log(listData);
+  }, []);
+
   const navigate = useNavigate();
+
   return (
     <>
       <Navbar />
-        <RecipeListContainer>
-          <LogoBox>
-            <SearchInput placeholder="레시피 검색"></SearchInput>
-            <StyleSearchLogo>
-              <LogoImg src={searchLogo}></LogoImg>
-            </StyleSearchLogo>
-          </LogoBox>
+      <RecipeListContainer>
+        <LogoBox>
+          <SearchInput placeholder="레시피 검색"></SearchInput>
+          <StyleSearchLogo>
+            <LogoImg src={searchLogo}></LogoImg>
+          </StyleSearchLogo>
+        </LogoBox>
 
-          <ListBox>
-            {searchTmpData.map((ele: searchData, index: number) => {
-              return (
-                <RecipeItem
-                  to={`/recipe/${index}`}
-                  RecipeId={ele.id}
-                  RecipeTitle={ele.title}
-                  RecipeWriter={ele.writer}
-                  RecipeDate={ele.date}
-                />
-              );
-            })}
-          </ListBox>
-          <RegisterBtn onClick={() => navigate("/recipe_register")}>레시피 등록</RegisterBtn>  
-        </RecipeListContainer>
-
+        <ListBox>
+          {listData.map((ele: searchData, index: number) => {
+            return (
+              <RecipeItem
+                to={`/recipe/${index}`}
+                RecipeId={ele.recipe_number}
+                RecipeTitle={ele.recipe_title}
+                RecipeWriter={ele.members}
+                RecipeDate={ele.created_date}
+              />
+            );
+          })}
+        </ListBox>
+        <RegisterBtn onClick={() => navigate("/recipe_register")}>
+          레시피 등록
+        </RegisterBtn>
+      </RecipeListContainer>
     </>
   );
 };
 
 export default RecipeList;
-
