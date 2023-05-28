@@ -28,13 +28,12 @@ const ListWriter = styled.div`
   width: 15%;
 `;
 const ListDate = styled.div`
-  width: 10%;
+  margin-left: auto;
 `;
 
 const RecipeItem = ({
   RecipeId,
   RecipeTitle,
-  RecipeImg,
   RecipeWriter,
   RecipeDate,
   to,

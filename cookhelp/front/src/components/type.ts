@@ -25,7 +25,7 @@ export interface ArrowButtonProps {
 
 export interface searchData {
   id: number;
-  img: string;
+  img?: string;
   title: string;
   writer: string;
   date: string;
@@ -35,7 +35,6 @@ export interface searchData {
 export interface RecipeItemProps {
   RecipeId: number;
   RecipeTitle: string;
-  RecipeImg: string;
   RecipeWriter: string;
   RecipeDate: string;
   to: string;

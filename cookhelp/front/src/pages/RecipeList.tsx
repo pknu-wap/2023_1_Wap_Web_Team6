@@ -1,21 +1,24 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import Navbar from "../components/NavBar";
 import Container from "../UI/Container";
 import searchLogo from "../assets/searchLogo.png";
 import RecipeItem from "../components/RecipeItem";
-import { searchData } from "../components/type";
+import { RecipeItemProps, searchData } from "../components/type";
 import searchTmpData from "../tmpDB/tmpRecipeListDB";
+import { useNavigate } from "react-router-dom";
+import Btn from "../UI/Btn"
 
 const RecipeListContainer = styled(Container)`
   max-width: 60rem;
   width: 70%;
-  height: 30rem;
+  height: 35rem;
   margin-bottom: 1rem;
+  display: flex;
 `;
 const StyleSearchLogo = styled.div`
   width: 34px;
-  padding-right: 1rem;
+  padding-left: 0.5rem;
   padding-top: 1rem;
 `;
 const LogoImg = styled.img`
@@ -30,39 +33,46 @@ const SearchInput = styled.input`
   margin-top: 0.5rem;
 `;
 const ListBox = styled.div`
-  // 레시피 검색 목록
   background-color: var(--light-gray-color);
   width: 90%;
   height: 500px;
 `;
-const RegisterBtn = styled.button`
-  padding: 10px;
-  font-size: 16px;
-  background-color: var(--green-color);
-  color: #fff;
-  border: none;
-  border-radius: 3px;
-
-  margin: auto;
-  display: block;
-
-  &:hover {
-    background-color: var(--dark-green-color);
-  }
+const RegisterBtn = styled(Btn)`
+  margin-left: auto;
+  margin-right: 5rem;
 `;
-const ListWrapper = styled.div``;
 
 const RecipeList = () => {
+
+  // const [listData, setListData] = useState([]);
+
+  // fetch("/api/list")
+  //   .then((response) => response.json())
+  //   .then((data) => {
+  //     const newArray = data.map((item: RecipeItemProps) => ({
+  //       id: item.RecipeId,
+  //       title: item.RecipeTitle,
+  //       writer: item.RecipeWriter,
+  //       date: item.RecipeDate,
+  //     }));
+
+  //     setListData(newArray);
+  //     console.log(newArray);
+  //   })
+  //   .catch((error) => {
+  //     console.log("Error!", error);
+  //   });
+  
+  const navigate = useNavigate();
   return (
     <>
       <Navbar />
-      <ListWrapper>
         <RecipeListContainer>
           <LogoBox>
+            <SearchInput placeholder="레시피 검색"></SearchInput>
             <StyleSearchLogo>
               <LogoImg src={searchLogo}></LogoImg>
             </StyleSearchLogo>
-            <SearchInput placeholder="레시피 검색"></SearchInput>
           </LogoBox>
 
           <ListBox>
@@ -72,19 +82,18 @@ const RecipeList = () => {
                   to={`/recipe/${index}`}
                   RecipeId={ele.id}
                   RecipeTitle={ele.title}
-                  RecipeImg={ele.img}
                   RecipeWriter={ele.writer}
                   RecipeDate={ele.date}
                 />
               );
             })}
           </ListBox>
+          <RegisterBtn onClick={() => navigate("/recipe_register")}>레시피 등록</RegisterBtn>  
         </RecipeListContainer>
 
-        <RegisterBtn>레시피 등록</RegisterBtn>
-      </ListWrapper>
     </>
   );
 };
 
 export default RecipeList;
+
