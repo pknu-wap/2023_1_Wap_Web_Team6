@@ -3,6 +3,7 @@ import styled from "styled-components";
 import Navbar from "../components/NavBar";
 import Container from "../UI/Container";
 import { Link } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const Title = styled.h2`
   font-size: 24px;
@@ -64,6 +65,8 @@ const ErrorMsg = styled.p`
 `;
 
 const Login = () => {
+  const navigate = useNavigate();
+  const { state } = useLocation();
   const [login, setLogin] = useState({
     loginId: "",
     loginPassword: "",
@@ -111,17 +114,32 @@ const Login = () => {
       },
       body: JSON.stringify(login), //login 객체를 보냄
     })
-      .then((res) => res.json())
-      .then((json) => {
-        if(json.isSuccess==="True"){
-          alert('로그인 완료되었습니다!')
+      .then(res => res.json())
+      .then(data => {
+        if(data.isLogin==="True"){
+          console.log(data)
+          navigate("/");
         }
         else{
-          alert(json.isSuccess)
+          console.log(data)
+          alert(data.isLogin)
         }
-      }).catch(function(err) {
-        console.error(` Err: ${err}`);
-    });;
+      })
+      .catch(error => console.log("error =>", error))
+
+    //   .then(res => res.json())
+    //   .then(data => {
+    //     if(data.isLogin==="True"){
+    //       alert('로그인 완료되었습니다!')
+    //       navigate("/");
+    //       console.log('hello')
+    //     }
+    //     else{
+    //       alert(data.isLogin)
+    //     }
+    //   }).catch(function(err) {
+    //     console.error(` Err: ${err}`);
+    // });
   };
 
   return (
