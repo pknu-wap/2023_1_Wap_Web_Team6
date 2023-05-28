@@ -45,45 +45,49 @@ app.get('/api/logout', function (req, res) {
   });
 });
 
-app.post("/api/login", (req, res) => { // 데이터 받아서 결과 전송
+app.post("/api/login", (req, res) => {
     const userId = req.body.loginId;
     const password = req.body.loginPassword;
-    const sendData = { isLogin: "" };
+    const sendData = { isLogin: "True" };
+    res.send(sendData)
 
-    if (userId && password) {             // id와 pw가 입력되었는지 확인
-        db.query('SELECT * FROM members WHERE id = ?', [userId], function (error, results, fields) {
-            if (error) throw error;
-            if (results.length > 0) {       // db에서의 반환값이 있다 = 일치하는 아이디가 있다.
-                //bcrypt.compare(password , results[0].password, (err, result) => {    // 입력된 비밀번호가 해시된 저장값과 같은 값인지 비교   
-                    if (results[0].password == password) {                  // 비밀번호가 일치하면
-                        req.session.is_logined = true;      // 세션 정보 갱신                      여기서 에러...
-                        req.session.nickname = userId;
-                        req.session.save(function () {
-                            sendData.isLogin = "True"
-                            console.log(sendData)
-                            res.send(sendData);
-                        });
-                        console.log("로그인 성공!!")
-                        //db.query(`INSERT INTO logTable (created, username, action, command, actiondetail) VALUES (NOW(), ?, 'login' , ?, ?)`
-                        //    , [req.session.nickname, '-', `React 로그인 테스트`], function (error, result) { });
-                    }
-                    else{                                   // 비밀번호가 다른 경우
-                        sendData.isLogin = "로그인 정보가 일치하지 않습니다."
-                        console.log('비밀번호가 틀렸습니다.')
-                        res.send(sendData);
-                    }
-                    
-                //})                      
-            } else {    // db에 해당 아이디가 없는 경우
-                sendData.isLogin = "아이디 정보가 일치하지 않습니다."
-                console.log('아이디가 없습니다.')
-                res.send(sendData);
-            }
-        });
-    } else {            // 아이디, 비밀번호 중 입력되지 않은 값이 있는 경우
-        sendData.isLogin = "아이디와 비밀번호를 입력하세요!"
-        res.send(sendData);
-    }
+    // if (userId && password) {
+    //   db.query('SELECT * FROM members WHERE id = ?', [userId], function (error, results, fields) {
+    //     if (error) throw error;
+    //     if (results.length > 0) {
+    //       if (results[0].password == password) {
+    //         sendData.isLogin = "True";
+    //         console.log(sendData)
+    //         res.send(sendData)
+    //         // req.session.is_logined = true;
+    //         // req.session.nickname = userId;
+
+    //         // req.session.save(function (err) {
+    //         //   if (err) {
+    //         //     console.error('세션 저장 오류:', err);
+    //         //     sendData.isLogin = "세션 저장 오류가 발생했습니다.";
+    //         //     res.send(sendData);
+    //         //   } else {
+    //         //     sendData.isLogin = "True";
+    //         //     console.log(sendData);
+    //         //     res.json(sendData);
+    //         //   }
+    //         // });
+    //       } else {
+    //         sendData.isLogin = "로그인 정보가 일치하지 않습니다.";
+    //         console.log('비밀번호가 틀렸습니다.');
+    //         res.send(sendData);
+    //       }
+    //     } else {
+    //       sendData.isLogin = "아이디 정보가 일치하지 않습니다.";
+    //       console.log('아이디가 없습니다.');
+    //       res.send(sendData);
+    //     }
+    //   });
+    // } else {
+    //   sendData.isLogin = "아이디와 비밀번호를 입력하세요!";
+    //   res.send(sendData);
+    // }
 });
 
 app.post("/api/Join", (req, res) => {  // 데이터 받아서 결과 전송
