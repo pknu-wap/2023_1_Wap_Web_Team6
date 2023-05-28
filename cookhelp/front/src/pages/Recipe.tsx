@@ -70,7 +70,7 @@ const Footer = styled.footer`
 
   width: 1500px;
   max-width: 90%;
-  height: 180px;
+  height: 190px;
 `;
 
 const List = ({ stepDetail, listNum, setSelectIdx }: ListProps) => {
