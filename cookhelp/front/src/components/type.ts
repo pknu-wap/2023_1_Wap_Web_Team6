@@ -24,7 +24,7 @@ export interface ArrowButtonProps {
 }
 
 export interface searchData {
-  recipe_number: number;
+  recipe_idx: number;
   img?: string;
   recipe_title: string;
   members: string;
@@ -44,7 +44,7 @@ export interface fetchRecipeList {
   created_date: string;
   foodstyle: string;
   members: string;
-  recipe_number: number;
+  recipe_idx: number;
   recipe_title: string;
 }
 

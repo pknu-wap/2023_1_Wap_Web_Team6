@@ -124,86 +124,74 @@ app.post("/api/Join", (req, res) => {  // 데이터 받아서 결과 전송
 
 // 레시피 리스트 불러오기
 app.get("/api/list", (req, res) => {
-    const sqlQuery = "SELECT recipe_number, recipe_title, members, created_date, foodstyle from cookhelper;";
+    const sqlQuery = "SELECT recipe_idx, recipe_title, members, created_date, foodstyle from cookhelper;";
     db.query(sqlQuery, (err, result) => {
         res.send(result)
         console.log('게시판 목록 생성 완료.')
     });
 });
 
-// multer
-const multer = require('multer');
+// // multer
+// const multer = require('multer');
 
-// Multer 디렉토리 설정
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-      // 파일 저장 경로 설정
-      cb(null, 'img_server/');
-    },
-    filename: function (req, file, cb) {
-      // 저장될 파일명 설정
-      cb(null, Date.now() + '-' + file.originalname);
-    }
-});
+// // Multer 디렉토리 설정
+// const storage = multer.diskStorage({
+//     destination: function (req, file, cb) {
+//       // 파일 저장 경로 설정
+//       cb(null, 'img_server/');
+//     },
+//     filename: function (req, file, cb) {
+//       // 저장될 파일명 설정
+//       cb(null, Date.now() + '-' + file.originalname);
+//     }
+// });
 
-const upload = multer({ storage: storage });
+// const upload = multer({ storage: storage });
 
-// 파일 업로드 처리
-app.post('/upload', upload.single('file'), function (req, res, next) {
-    // 업로드 완료 시 동작할 코드 작성
-    res.send('파일 업로드 완료.');
+// // 파일 업로드 처리
+// app.post('/upload', upload.single('recipe_img'), function (req, res, next) {
 
-    const recipe_title = req.body.recipe_title;
-    const members = req.body.members;
-    const recipe_stuff = req.body.recipe_stuff;
-    const recipe_video = req.body.recipe_title;
+//     const recipe_title = req.body.recipe_title;
+//     const members = req.body.members;
+//     const recipe_stuff = req.body.recipe_stuff;
+//     const recipe_img = req.body.recipe_img;
+//     const timer = req.body.timer;
+//     const foodstyle = req.body.foodstyle;
     
-    const recipe_step_1 = req.body.recipe_step_1;
-    const recipe_step_2 = req.body.recipe_step_2;
-    const recipe_step_3 = req.body.recipe_step_3;
-    const recipe_step_4 = req.body.recipe_step_4;
-    const recipe_step_5 = req.body.recipe_step_5;
-    const recipe_step_6 = req.body.recipe_step_6;
-    const recipe_step_7 = req.body.recipe_step_7;
-    const recipe_step_8 = req.body.recipe_step_8;
-    const recipe_step_9 = req.body.recipe_step_9;
-    const recipe_step_10 = req.body.recipe_step_10;
+//     // 반복되는 데이터를 배열로 정리
+//     const recipe_steps: string[] = [];
+//     const recipe_descriptions: string[] = [];
+//     const rd_img: string[] = [];
+//     const rd_video: string[] = [];
 
-    const recipe_description_1 = req.body.recipe_description_1;
-    const recipe_description_2 = req.body.recipe_description_2;
-    const recipe_description_3 = req.body.recipe_description_3;
-    const recipe_description_4 = req.body.recipe_description_4;
-    const recipe_description_5 = req.body.recipe_description_5;
-    const recipe_description_6 = req.body.recipe_description_6;
-    const recipe_description_7 = req.body.recipe_description_7;
-    const recipe_description_8 = req.body.recipe_description_8;
-    const recipe_description_9 = req.body.recipe_description_9;
-    const recipe_description_10 = req.body.recipe_description_10;
+//   for (let i = 1; i <= 10; i++) {
+//     recipe_steps.push(req.body[`recipe_step_${i}`]);
+//     recipe_descriptions.push(req.body[`recipe_description_${i}`]);
+//     rd_img.push(req.body[`recipe_description_${i}`]);
+//     rd_video.push(req.body[`recipe_description_${i}`]);
+//   }
 
-    const timer = req.body.timer;
-    const foodstyle = req.body.foodstyle;
+//   const sendData = { isSuccess: "" };
 
-    const sendData = { isSuccess: "" };
-
-    const query = `INSERT INTO cookhelper (recipe_title, members, recipe_stuff, recipe_video, recipe_step_1, recipe_step_2, recipe_step_3, recipe_step_4, recipe_step_5, recipe_step_6, recipe_step_7, recipe_step_8, recipe_step_9, recipe_step_10, recipe_description_1, recipe_description_2, recipe_description_3, recipe_description_4, recipe_description_5, recipe_description_6, recipe_description_7, recipe_description_8, recipe_description_9, recipe_description_10, timer, foodstyle) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
-    const values = [
-        recipe_title, members, recipe_stuff, recipe_video, recipe_step_1, recipe_step_2, recipe_step_3, recipe_step_4,
-        recipe_step_5, recipe_step_6, recipe_step_7, recipe_step_8, recipe_step_9, recipe_step_10, recipe_description_1,
-        recipe_description_2, recipe_description_3, recipe_description_4, recipe_description_5, recipe_description_6,
-        recipe_description_7, recipe_description_8, recipe_description_9, recipe_description_10, timer, foodstyle
-    ];
+//   const query = `INSERT INTO cookhelper (recipe_title, members, recipe_stuff, recipe_img, recipe_step_1, recipe_step_2, recipe_step_3, recipe_step_4, recipe_step_5, recipe_step_6, recipe_step_7, recipe_step_8, recipe_step_9, recipe_step_10, rd_1, rd_1_img, rd_1_video, rd_2, rd_2_img, rd_2_video, rd_3, rd_3_img, rd_3_video, rd_4, rd_4_img, rd_4_video, rd_5, rd_5_img, rd_5_video, rd_6, rd_6_img, rd_6_video, rd_7, rd_7_img, rd_7_video, rd_8, rd_8_img, rd_8_video, rd_9, rd_9_img, rd_9_video, rd_10, rd_10_img, rd_10_video, timer, created_date, foodstyle) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);`;
+  
+//   const values = [
+//     recipe_title, members, recipe_stuff, recipe_img, ...recipe_steps, ...recipe_descriptions, ...rd_img, ...rd_video, timer, foodstyle
+//   ];
     
-    db.query(query, values, function (error, result, fields) {
-        if (error) {
-            console.error("데이터 삽입 오류", error)
-            sendData.isSuccess = "데이터 삽입 오류 발생"
-        } else {
-            sendData.isSuccess = "True";
-        }
-    })
+//     db.query(query, values, function (error, result, fields) {
+//         if (error) {
+//             console.error("데이터 삽입 오류", error)
+//             sendData.isSuccess = "데이터 삽입 오류 발생"
+//         } else {
+//             sendData.isSuccess = "True";
+//         }
+//     })
 
-    console.log(recipe_title);
-});
+//     console.log(recipe_title);
+//     // 업로드 완료 시 동작할 코드 작성
+//     res.send('파일 업로드 완료.');
+// });
 
 // 서버 작동하는지 찍는 부분
 app.listen(port, () => console.log('Listening on port',port))

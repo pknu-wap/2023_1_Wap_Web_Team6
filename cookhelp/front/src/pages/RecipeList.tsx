@@ -141,9 +141,9 @@ const RecipeList = () => {
             const date = ele.created_date.slice(0, 10);
             return (
               <RecipeItem
-                key={ele.recipe_number}
+                key={ele.recipe_idx}
                 to={`/recipe/${index}`}
-                RecipeId={ele.recipe_number}
+                RecipeId={ele.recipe_idx}
                 RecipeTitle={ele.recipe_title}
                 RecipeWriter={ele.members}
                 RecipeDate={date}
