@@ -29,7 +29,7 @@ app.use(session({
 	saveUninitialized: false
 }))
 
-app.get('/authcheck', (req, res) => {   
+app.get('/api/authcheck', (req, res) => {   
   const sendData = { isLogin: "" };
   if (req.session.is_logined) {
       sendData.isLogin = "True"
@@ -61,7 +61,8 @@ app.post("/api/login", (req, res) => { // 데이터 받아서 결과 전송
                         req.session.save(function () {
                             sendData.isLogin = "True"
                             console.log(sendData)
-                            res.send(sendData);
+                            console.log(req.session.nickname)
+                            res.json(sendData);
                         });
                         console.log("로그인 성공!!")
                         //db.query(`INSERT INTO logTable (created, username, action, command, actiondetail) VALUES (NOW(), ?, 'login' , ?, ?)`
@@ -79,6 +80,7 @@ app.post("/api/login", (req, res) => { // 데이터 받아서 결과 전송
                 console.log('아이디가 없습니다.')
                 res.send(sendData);
             }
+            console.log(sendData)
         });
     } else {            // 아이디, 비밀번호 중 입력되지 않은 값이 있는 경우
         sendData.isLogin = "아이디와 비밀번호를 입력하세요!"

@@ -8,7 +8,6 @@ const Title = styled.h2`
   font-size: 24px;
   margin-bottom: 20px;
 `;
-
 const Form = styled.form`
   width: 60%;
   display: flex;
@@ -113,11 +112,11 @@ const Login = () => {
     })
       .then((res) => res.json())
       .then((json) => {
-        if(json.isSuccess==="True"){
+        if(json.isLogin==="True"){
           alert('로그인 완료되었습니다!')
         }
         else{
-          alert(json.isSuccess)
+          alert(json.isLogin)
         }
       }).catch(function(err) {
         console.error(` Err: ${err}`);
