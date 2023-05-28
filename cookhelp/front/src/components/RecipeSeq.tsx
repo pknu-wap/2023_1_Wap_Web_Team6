@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { ChangeEvent, useState } from "react"
 import styled from "styled-components"
 import { RecipeSeqProps } from "../components/type"
 
@@ -32,7 +32,36 @@ const TimerContainer = styled.div`
 `;
 
 const RecipeSeq = (props: RecipeSeqProps) => {
-    const [checkTimer, setCheckTimer] = useState(0);
+    // const [isChecked, setIsChecked] = useState(false);
+
+    // const handleCheckboxChange = (event: ChangeEvent<HTMLInputElement>) => {
+    //     setIsChecked(event.target.checked);
+    // };
+
+    const [checkedItems, setCheckedItems] = useState<boolean[]>([]);
+
+    // const checkedItemHandler = (id: number, isChecked: boolean) => {
+    //     if (isChecked) {
+    //         checkedItems.add(id);
+    //         setCheckedItems(checkedItems);
+    //     } else if (!isChecked && checkedItems.has(id)) {
+    //         checkedItems.delete(id);
+    //         setCheckedItems(checkedItems);
+    //     }
+    // };
+
+    const checkedItemHandler = (index: number, isChecked: boolean) => {
+        const updatedCheckedItems = [...checkedItems];
+        updatedCheckedItems[index] = isChecked;
+        setCheckedItems(updatedCheckedItems);
+      };
+
+    // const [bChecked, setChecked] = useState(false);
+
+    // const checkHandler = ({ target }: { target: HTMLInputElement }, id: number) => {
+    //     setChecked(!bChecked);
+    //     checkedItemHandler(id, target.checked);
+    // };
 
     return (
         <DetailDiv>
@@ -54,9 +83,18 @@ const RecipeSeq = (props: RecipeSeqProps) => {
 
                     <TimerContainer>
                         <div>
-                            <input type="checkbox" id="scales" name="scales" />
+                            {/* <input type="checkbox"
+                            checked={bChecked}
+                            onChange={(e) => checkHandler(e)} /> */}
+                            <input
+                            type="checkbox"
+                            
+                            checked={checkedItems[i] || false}
+                            onChange={(e) => checkedItemHandler(i, e.target.checked)}
+                            />
                             <label>타이머</label>
                         </div>
+                        {checkedItems[i] && (<Input type="text" placeholder="몇분" style={{ marginLeft: "1rem", width: "5rem" }} />)}
 
                     </TimerContainer>
                 </SeqData>

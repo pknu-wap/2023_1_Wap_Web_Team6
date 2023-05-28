@@ -49,4 +49,3 @@ export interface ListProps {
 export interface RecipeSeqProps {
   countList: number[];
 }
-
