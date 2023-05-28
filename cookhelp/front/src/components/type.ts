@@ -40,6 +40,14 @@ export interface RecipeItemProps {
   to: string;
 }
 
+export interface fetchRecipeList {
+  created_date: string;
+  foodstyle: string;
+  members: string;
+  recipe_number: number;
+  recipe_title: string;
+}
+
 export interface ListProps {
   stepDetail: string;
   listNum: number;
