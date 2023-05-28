@@ -45,3 +45,8 @@ export interface ListProps {
   listNum: number;
   setSelectIdx: React.Dispatch<React.SetStateAction<number>>;
 }
+
+export interface RecipeSeqProps {
+  countList: number[];
+}
+
