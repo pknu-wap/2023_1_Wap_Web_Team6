@@ -1,6 +1,7 @@
 import { useState } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
+import { useEffect } from 'react';
 
 type TabProps = {
   isActive: boolean;
@@ -54,14 +55,45 @@ const AuthButton = styled.button`
   font-size: 18px;
 `;
 
+
+
 const Navbar = () => {
   const [activeMenuItem, setActiveMenuItem] = useState(0); // 현재 활성화된 메뉴 아이템의 인덱스를 상태로 관리
+  const [mode, setMode] = useState("");
+
+  const navigate = useNavigate();
+  useEffect(() => {
+    fetch("http://localhost:8081/members/api/authcheck")
+      .then((res) => res.json())
+      .then((json) => {        
+        if (json.isLogin === "True") {
+          console.log('hello')
+          setMode("WELCOME");
+        }
+        else {
+          setMode("LOGIN");
+        }
+      });
+  }, []); 
+
+  let content:any = null;  
+
+  if(mode==="LOGIN"){
+    content = <>
+    <AuthButton onClick={() => navigate("/login")}>로그인
+    </AuthButton> <AuthButton onClick={() => navigate("/Join")}>회원가입</AuthButton>
+    </>
+  }
+  else if (mode === 'WELCOME') {
+    content = <>
+    <h3>hello</h3>  
+    </>
+  }
 
   const handleMenuItemClick = (menuItemIndex: number) => {
     setActiveMenuItem(menuItemIndex);
   };
 
-  const navigate = useNavigate();
   return (
     <NavbarWrapper>
       <img
@@ -92,8 +124,7 @@ const Navbar = () => {
       </MenuWrapper>
 
       <AuthButtonsWrapper>
-        <AuthButton onClick={() => navigate("/login")}>로그인</AuthButton>
-        <AuthButton onClick={() => navigate("/Join")}>회원가입</AuthButton>
+        {content}
       </AuthButtonsWrapper>
     </NavbarWrapper>
   );
