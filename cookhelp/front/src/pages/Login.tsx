@@ -103,30 +103,31 @@ const Login = () => {
     }
   };
 
-  const handleBtnClick = (e: React.MouseEvent<HTMLButtonElement>): void => {
-    fetch("http://localhost:8081/members/api/login", {
-      //auth 주소에서 받을 예정
-      method: "post", // method :통신방법
-      headers: {
-        // headers: API 응답에 대한 정보를 담음
-        "content-type": "application/json",
-      },
-      body: JSON.stringify(login), //login 객체를 보냄
-    })
-      .then(res => res.json())
-      .then(data => {
-        if(data.isLogin==="True"){
-          alert('로그인 완료되었습니다!')
-          console.log(data)
-          navigate("/");
-        }
-        else{
-          console.log(data)
-          alert(data.isLogin)
-        }
+    const handleBtnClick = (e: React.MouseEvent<HTMLButtonElement>): void => {
+      e.preventDefault(); // 버튼 클릭의 기본 동작 중지
+      fetch("http://localhost:8081/members/api/login", {
+        //auth 주소에서 받을 예정
+        method: "post", // method :통신방법
+        headers: {
+          // headers: API 응답에 대한 정보를 담음
+          "content-type": "application/json",
+        },
+        body: JSON.stringify(login), //login 객체를 보냄
       })
-      .catch(error => console.log("error =>", error))
-  };
+        .then(res => res.json())
+        .then(data => {
+          if(data.isLogin==="True"){
+            alert('로그인 완료되었습니다!')
+            console.log(data)
+            navigate("/");
+          }
+          else{
+            console.log(data)
+            alert(data.isLogin)
+          }
+        })
+        .catch(error => console.log("error =>", error))
+    };
 
   return (
     <>
