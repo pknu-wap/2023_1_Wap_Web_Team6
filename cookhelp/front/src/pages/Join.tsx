@@ -3,6 +3,7 @@ import styled from "styled-components";
 import Navbar from "../components/NavBar";
 import Container from "../UI/Container";
 import { Link } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const Title = styled.h2`
   font-size: 1.5rem;
@@ -114,6 +115,8 @@ const Join = () => {
   const [checkPassword, setCheckPassword] = useState(false);
   const [name, setName] = useState(false);
   const [selectFood, setSelectFood] = useState(false);
+  const navigate = useNavigate();
+  const { state } = useLocation();
 
   //영문자로 시작하는 영문자 또는 숫자 6~20자
   const isId = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -149,7 +152,6 @@ const Join = () => {
 
   const handleNickName = (e: React.ChangeEvent<HTMLInputElement>) => {
     const regExp = /^[a-zA-Z0-9ㄱ-ㅎㅏ-ㅣ가-힣]+$/g;
-    console.log(e.target.value);
     if (!regExp.test(e.target.value)) {
       setName(false);
     } else {
@@ -169,7 +171,8 @@ const Join = () => {
   };
 
   const handleBtnClick = (e: React.MouseEvent<HTMLButtonElement>): void => {
-    fetch("http://localhost:8081/api/Join", {
+    e.preventDefault(); // 버튼 클릭의 기본 동작 중지
+    fetch("http://localhost:8081/members/api/Join", {
       //signin 주소에서 받을 예정
       method: "post", // method :통신방법
       headers: {
@@ -183,7 +186,7 @@ const Join = () => {
         if (json.isSuccess === "True") {
           alert("회원가입이 완료되었습니다!");
           console.log("회원가입완료!");
-          //props.setMode("LOGIN");
+          navigate("/");
         } else {
           alert(json.isSuccess);
         }

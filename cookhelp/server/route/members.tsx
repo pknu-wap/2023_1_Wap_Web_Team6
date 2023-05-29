@@ -17,15 +17,18 @@ router.use(bodyParser.json())
 router.use(bodyParser.urlencoded({extended:true}))
 router.use(cors())
 
-var MySQLStore = require('express-mysql-session')(session);
-var sessionStore = new MySQLStore(sessionOption);
-router.use(session({  
-	key: 'session_cookie_name',
-    secret: '~',
-	store: sessionStore,
-	resave: false,
-	saveUninitialized: false
-}))
+const MySQLStore = require('express-mysql-session')(session);
+const sessionStore = new MySQLStore(sessionOption);
+
+const sessionMiddleware = session({
+  key: 'session_cookie_name',
+  secret: 'hello',
+  store: sessionStore,
+  resave: false,
+  saveUninitialized: false
+});
+
+router.use(sessionMiddleware);
 
 router.get('/', (req, res) => {
     res.send('Hello, members');
@@ -33,6 +36,8 @@ router.get('/', (req, res) => {
 
 router.get('/api/authcheck', (req, res) => {   
   const sendData = { isLogin: "" };
+  console.log(req.session.is_logined)
+  console.log(req.session.nickname)
   if (req.session.is_logined) {
       sendData.isLogin = "True"
   } else {
@@ -48,35 +53,30 @@ router.get('/api/logout', function (req, res) {
 });
 
 router.post("/api/login", (req, res) => {
-    console.log('hello')
     const userId = req.body.loginId;
     const password = req.body.loginPassword;
-    const sendData = { isLogin: "True" };
-    // console.log(sendData)
-    // res.send(sendData)
+    const sendData = { isLogin: "" };
 
     if (userId && password) {
       db.query('SELECT * FROM members WHERE id = ?', [userId], function (error, results, fields) {
         if (error) throw error;
         if (results.length > 0) {
           if (results[0].password == password) {
-            sendData.isLogin = "True";
-            console.log(sendData)
-            res.send(sendData)
-            // req.session.is_logined = true;
-            // req.session.nickname = userId;
+            req.session.is_logined = true;
+            req.session.nickname = userId;
 
-            // req.session.save(function (err) {
-            //   if (err) {
-            //     console.error('세션 저장 오류:', err);
-            //     sendData.isLogin = "세션 저장 오류가 발생했습니다.";
-            //     res.send(sendData);
-            //   } else {
-            //     sendData.isLogin = "True";
-            //     console.log(sendData);
-            //     res.json(sendData);
-            //   }
-            // });
+            req.session.save(function (err) {
+              if (err) {
+                console.error('세션 저장 오류:', err);
+                sendData.isLogin = "세션 저장 오류가 발생했습니다.";
+                res.send(sendData);
+              } else {
+                sendData.isLogin = "True";
+                console.log(req.session.is_logined, req.session.nickname)
+                console.log(userId, '로그인');
+                res.send(sendData);
+              }
+            });
           } else {
             sendData.isLogin = "로그인 정보가 일치하지 않습니다.";
             console.log('비밀번호가 틀렸습니다.');
@@ -109,10 +109,10 @@ router.post("/api/Join", (req, res) => {  // 데이터 받아서 결과 전송
                 db.query('INSERT INTO members (id, password, nickname, foodstyle) VALUES(?,?,?,?)', [userId, userPassword, userName, userSelectFood], function (error, data) {
                     if (error) throw error;                    
                     console.log('회원가입 성공!')
-                    // req.session.save(function () {    
-                    //     sendData.isSuccess = "True"
-                    //     res.send(sendData);
-                    // });
+                    req.session.save(function () {    
+                        sendData.isSuccess = "True"
+                        res.send(sendData);
+                    });
                 });
             }
             else {                                                  // DB에 같은 이름의 회원아이디가 있는 경우            
