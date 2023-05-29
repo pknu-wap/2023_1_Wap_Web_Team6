@@ -9,7 +9,6 @@ const Title = styled.h2`
   font-size: 24px;
   margin-bottom: 20px;
 `;
-
 const Form = styled.form`
   width: 60%;
   display: flex;
@@ -105,7 +104,7 @@ const Login = () => {
   };
 
   const handleBtnClick = (e: React.MouseEvent<HTMLButtonElement>): void => {
-    fetch("http://localhost:8081/api/login", {
+    fetch("http://localhost:8081/members/api/login", {
       //auth 주소에서 받을 예정
       method: "post", // method :통신방법
       headers: {
@@ -117,6 +116,7 @@ const Login = () => {
       .then(res => res.json())
       .then(data => {
         if(data.isLogin==="True"){
+          alert('로그인 완료되었습니다!')
           console.log(data)
           navigate("/");
         }
@@ -126,20 +126,6 @@ const Login = () => {
         }
       })
       .catch(error => console.log("error =>", error))
-
-    //   .then(res => res.json())
-    //   .then(data => {
-    //     if(data.isLogin==="True"){
-    //       alert('로그인 완료되었습니다!')
-    //       navigate("/");
-    //       console.log('hello')
-    //     }
-    //     else{
-    //       alert(data.isLogin)
-    //     }
-    //   }).catch(function(err) {
-    //     console.error(` Err: ${err}`);
-    // });
   };
 
   return (
