@@ -1,10 +1,9 @@
 {
     "name": "client",
     "version": "1.0.0",
+    "main": "main.tsx",
     "scripts": {
-        "client": "cd code && yarn start",
-        "server": "nodemon server.tsx",
-        "dev": "concurrently --kill-others-on-fail \"yarn server\" \"yarn client\""
+        "server": "nodemon server"
     },
     "dependencies": {
         "@types/dotenv": "^8.2.0",
