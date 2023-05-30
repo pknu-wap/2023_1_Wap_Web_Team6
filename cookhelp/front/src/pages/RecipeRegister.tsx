@@ -84,6 +84,8 @@ const RecipeRegister = () => {
         recipe_title: "null", // 레시피 제목
         recipe_stuff: "null", // 요리 재료
         foodstyle: "null", // 음식 종류(한,중,일,양)
+        recipe_img: Array(11).fill("null"), // 이미지 배열
+        members: "작성자",
 
         recipe_step_1: "null", // 요리순서 소제목 1~10
         recipe_step_2: "null",
@@ -107,18 +109,16 @@ const RecipeRegister = () => {
         rd_9: "null",
         rd_10: "null",
 
-        recipe_img: Array(11).fill("null"),
-
-        timer_1: "null", // 타이머 1~10
-        timer_2: "null",
-        timer_3: "null",
-        timer_4: "null",
-        timer_5: "null",
-        timer_6: "null",
-        timer_7: "null",
-        timer_8: "null",
-        timer_9: "null",
-        timer_10: "null"
+        timer_rd_1: "null", // 타이머 1~10
+        timer_rd_2: "null",
+        timer_rd_3: "null",
+        timer_rd_4: "null",
+        timer_rd_5: "null",
+        timer_rd_6: "null",
+        timer_rd_7: "null",
+        timer_rd_8: "null",
+        timer_rd_9: "null",
+        timer_rd_10: "null"
     })
 
     const handleImgUpload = (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
@@ -213,7 +213,7 @@ const RecipeRegister = () => {
                     <Input
                         type="file"
                         name="recipe_img"
-
+                        onChange={(e) => handleImgUpload(e, 0)}
                         required
                     />
                 </FormItem>

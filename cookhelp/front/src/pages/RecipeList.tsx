@@ -140,7 +140,7 @@ const RecipeList = () => {
           {listData
             .slice(offset, offset + limit)
             .map((ele: searchData, index: number) => {
-              const date = ele.created_date.slice(0, 10);
+              //const date = ele.created_date.slice(0, 10);
               return (
                 <RecipeItem
                   key={ele.recipe_idx}
@@ -148,7 +148,7 @@ const RecipeList = () => {
                   RecipeId={ele.recipe_idx}
                   RecipeTitle={ele.recipe_title}
                   RecipeWriter={ele.members}
-                  RecipeDate={date}
+                  RecipeDate={ele.created_date}
                 />
               );
             })}

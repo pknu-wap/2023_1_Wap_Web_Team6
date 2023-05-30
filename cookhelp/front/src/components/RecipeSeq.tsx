@@ -60,6 +60,7 @@ const RecipeSeq = (props: RecipeSeqProps) => {
                     />
                     <input type="file"
                     name={`rd_${i + 1}_img`}
+                    onChange={(e) => props.handleImgUpload(e, i+1)}
                     />
 
                     <TimerContainer>
@@ -77,7 +78,7 @@ const RecipeSeq = (props: RecipeSeqProps) => {
                         {checkedItems[i] && (<Input 
                         type="text"
                         placeholder="몇분" 
-                        name={`timer_${i + 1}`}
+                        name={`timer_rd_${i + 1}`}
                         onChange={props.handleValueChange}
                         style={{ marginLeft: "1rem", width: "5rem" }} />)}
 
