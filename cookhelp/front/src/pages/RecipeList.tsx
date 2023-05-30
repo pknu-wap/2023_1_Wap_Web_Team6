@@ -4,15 +4,11 @@ import Navbar from "../components/NavBar";
 import Container from "../UI/Container";
 import searchLogo from "../assets/searchLogo.png";
 import RecipeItem from "../components/RecipeItem";
-import {
-  fetchRecipeList,
-  RecipeItemProps,
-  searchData,
-} from "../components/type";
-import searchTmpData from "../tmpDB/tmpRecipeListDB";
-import { useNavigate } from "react-router-dom";
+import { fetchRecipeList, searchData } from "../components/type";
+// import searchTmpData from "../tmpDB/tmpRecipeListDB";
+import { useNavigate, useLocation } from "react-router-dom";
 import Btn from "../UI/Btn";
-import { type } from "os";
+import Pagination from "../components/Pagination";
 
 const RecipeListContainer = styled(Container)`
   max-width: 60rem;
@@ -69,14 +65,23 @@ const ItemBtn = styled.button<{ isActive: boolean }>`
 `;
 
 const RecipeList = () => {
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  let genreName = searchParams.get("genreName");
   const [listData, setListData] = useState([]);
   const foodStyle = ["전체", "한식", "중식", "일식", "양식"];
-  const [clickedCategory, setClickCategory] = useState("전체");
+  const [clickedCategory, setClickCategory] = useState(
+    genreName ? genreName : "전체"
+  );
+  const navigate = useNavigate();
+  const [page, setPage] = useState(1);
+  const limit = 10;
+  const offset = (page - 1) * limit;
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await fetch("http://localhost:8081/api/list");
+        const res = await fetch("http://localhost:8081/board/api/list");
         const data = await res.json();
 
         if (!res.ok) {
@@ -92,8 +97,6 @@ const RecipeList = () => {
                 (item: fetchRecipeList) => item.foodstyle === clickedCategory
               )
             );
-
-        // setListData(data);
       } catch (error) {
         console.log("Error!", error);
       }
@@ -102,8 +105,6 @@ const RecipeList = () => {
     fetchData();
     console.log(listData);
   }, [clickedCategory]);
-
-  const navigate = useNavigate();
 
   const handleFoodClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -135,22 +136,29 @@ const RecipeList = () => {
             <LogoImg src={searchLogo}></LogoImg>
           </StyleSearchLogo>
         </LogoBox>
-
         <ListBox>
-          {listData.map((ele: searchData, index: number) => {
-            const date = ele.created_date.slice(0, 10);
-            return (
-              <RecipeItem
-                key={ele.recipe_idx}
-                to={`/recipe/${index}`}
-                RecipeId={ele.recipe_idx}
-                RecipeTitle={ele.recipe_title}
-                RecipeWriter={ele.members}
-                RecipeDate={date}
-              />
-            );
-          })}
+          {listData
+            .slice(offset, offset + limit)
+            .map((ele: searchData, index: number) => {
+              //const date = ele.created_date.slice(0, 10);
+              return (
+                <RecipeItem
+                  key={ele.recipe_idx}
+                  to={`/recipe/${index}`}
+                  RecipeId={ele.recipe_idx}
+                  RecipeTitle={ele.recipe_title}
+                  RecipeWriter={ele.members}
+                  RecipeDate={ele.created_date}
+                />
+              );
+            })}
         </ListBox>
+        <Pagination
+          totalPage={listData.length}
+          limit={limit}
+          page={page}
+          setPage={setPage}
+        />
         <RegisterBtn onClick={() => navigate("/recipe_register")}>
           레시피 등록
         </RegisterBtn>

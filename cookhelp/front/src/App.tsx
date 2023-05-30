@@ -36,7 +36,6 @@ function App() {
           <Route path="/" element={<Main />} />
           <Route path="/login" element={<Login />} />
           <Route path="/join" element={<Join />} />
-          {/* <Route path="/recipe" element={<Recipe />} /> */}
           {content}
           <Route path="/recipe_list" element={<RecipeList />} />
           <Route path="/recipe_register" element={<RecipeRegister />} />

@@ -31,36 +31,13 @@ const TimerContainer = styled.div`
 `;
 
 const RecipeSeq = (props: RecipeSeqProps) => {
-    // const [isChecked, setIsChecked] = useState(false);
-
-    // const handleCheckboxChange = (event: ChangeEvent<HTMLInputElement>) => {
-    //     setIsChecked(event.target.checked);
-    // };
-
     const [checkedItems, setCheckedItems] = useState<boolean[]>([]);
-
-    // const checkedItemHandler = (id: number, isChecked: boolean) => {
-    //     if (isChecked) {
-    //         checkedItems.add(id);
-    //         setCheckedItems(checkedItems);
-    //     } else if (!isChecked && checkedItems.has(id)) {
-    //         checkedItems.delete(id);
-    //         setCheckedItems(checkedItems);
-    //     }
-    // };
 
     const checkedItemHandler = (index: number, isChecked: boolean) => {
         const updatedCheckedItems = [...checkedItems];
         updatedCheckedItems[index] = isChecked;
         setCheckedItems(updatedCheckedItems);
       };
-
-    // const [bChecked, setChecked] = useState(false);
-
-    // const checkHandler = ({ target }: { target: HTMLInputElement }, id: number) => {
-    //     setChecked(!bChecked);
-    //     checkedItemHandler(id, target.checked);
-    // };
 
     return (
         <DetailDiv>
@@ -71,17 +48,19 @@ const RecipeSeq = (props: RecipeSeqProps) => {
                         type="text"
                         name={`recipe_step_${i + 1}`}
                         placeholder="요리 순서에 대한 소제목을 입력해주세요."
-                        // onChange={props.handleImgUpload}
+                        onChange={props.handleValueChange}
                         required
                     />
                     <label>상세 설명</label>
                     <Textarea
                         placeholder="요리 순서에 대한 설명을 적어주세요."
                         name={`rd_${i + 1}`}
+                        onChange={props.handleValueChange}
                         required
                     />
                     <input type="file"
                     name={`rd_${i + 1}_img`}
+                    onChange={(e) => props.handleImgUpload(e, i+1)}
                     />
 
                     <TimerContainer>
@@ -91,7 +70,6 @@ const RecipeSeq = (props: RecipeSeqProps) => {
                             onChange={(e) => checkHandler(e)} /> */}
                             <input
                             type="checkbox"
-                            
                             checked={checkedItems[i] || false}
                             onChange={(e) => checkedItemHandler(i, e.target.checked)}
                             />
@@ -100,7 +78,8 @@ const RecipeSeq = (props: RecipeSeqProps) => {
                         {checkedItems[i] && (<Input 
                         type="text"
                         placeholder="몇분" 
-                        name={`timer_${i + 1}`}
+                        name={`timer_rd_${i + 1}`}
+                        onChange={props.handleValueChange}
                         style={{ marginLeft: "1rem", width: "5rem" }} />)}
 
                     </TimerContainer>

@@ -56,5 +56,21 @@ export interface ListProps {
 
 export interface RecipeSeqProps {
   countList: number[];
-  handleImgUpload: (event: React.ChangeEvent<HTMLInputElement>, index: number) => void;
+  handleImgUpload: (
+    event: React.ChangeEvent<HTMLInputElement>,
+    index: number
+  ) => void;
+  handleValueChange: (
+    e:
+      | React.ChangeEvent<HTMLInputElement>
+      | React.ChangeEvent<HTMLTextAreaElement>
+      | React.ChangeEvent<HTMLSelectElement>
+  ) => void;
+}
+
+export interface PaginationProps {
+  totalPage: number;
+  limit: number;
+  page: number;
+  setPage: React.Dispatch<React.SetStateAction<number>>;
 }
