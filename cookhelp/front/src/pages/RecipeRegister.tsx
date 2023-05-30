@@ -14,19 +14,16 @@ const RegisterContainer = styled(Container)`
   display: flex;
   padding: 3rem;
 `;
-
 const AdditionBtn = styled(Btn)`
 padding: 5px;
 font-size: 14px;
 `;
-
 const Title = styled.div`
 font-size: 24px;
 margin-bottom: 20px;
 margin-right: auto;
 font-weight: var(--semiBold-font);
 `;
-
 const Input = styled.input`
   padding: 5px;
   font-size: 16px;
@@ -35,7 +32,6 @@ const Input = styled.input`
   width: 20rem;
   margin-bottom: 0.5rem;
 `;
-
 const Textarea = styled.textarea`
 font-size: 16px;
 border: 1px solid var(--gray-color);
@@ -44,11 +40,9 @@ padding: 5px;
 width: 20rem;
 height: 5rem;
 `;
-
 const Label = styled.label`
 font-size: 1rem;
 margin-right: 3rem;
-
 `;
 
 const Select = styled.select``;
@@ -57,19 +51,21 @@ const FormItem = styled.div`
  flex-direction: column;
  margin-bottom: 1rem;
 `;
-
 const DetailDiv = styled.div`
     margin-bottom: 2rem;
     width: 320px;
-`
-
+`;
 const CreateListDiv = styled.div`
   padding: 3rem;
   width: 100%;
   display: flex;
   align-items: center;
   flex-direction: column;
-`
+`;
+const RegisterBtn = styled(Btn)`
+  display: flex;
+  margin: auto;
+`;
 
 const RecipeRegister = () => {
     const navigate = useNavigate();
@@ -87,7 +83,6 @@ const RecipeRegister = () => {
     const [registerData, setRegisterData] = useState({
         recipe_title: "null", // 레시피 제목
         recipe_stuff: "null", // 요리 재료
-        recipe_img: "null", // 레시피 전체 이미지
         foodstyle: "null", // 음식 종류(한,중,일,양)
 
         recipe_step_1: "null", // 요리순서 소제목 1~10
@@ -112,18 +107,7 @@ const RecipeRegister = () => {
         rd_9: "null",
         rd_10: "null",
 
-        // rd_1_img: "null", // 요리순서 이미지 1~10
-        // rd_2_img: "null",
-        // rd_3_img: "null",
-        // rd_4_img: "null",
-        // rd_5_img: "null",
-        // rd_6_img: "null",
-        // rd_7_img: "null",
-        // rd_8_img: "null",
-        // rd_9_img: "null",
-        // rd_10_img: "null",
-
-        rd_imgs: Array(10).fill("null"),
+        recipe_img: Array(11).fill("null"),
 
         timer_1: "null", // 타이머 1~10
         timer_2: "null",
@@ -147,16 +131,15 @@ const RecipeRegister = () => {
                 const imageUrl = reader.result as string;
 
                 setRegisterData((prevData) => {
-                    const updatedImgs = [...prevData.rd_imgs];
+                    const updatedImgs = [...prevData.recipe_img];
                     updatedImgs[index] = imageUrl;
 
                     return {
                         ...prevData,
-                        rd_imgs: updatedImgs,
+                        recipe_img: updatedImgs,
                     };
                 });
             };
-
             reader.readAsDataURL(file);
         }
     };
@@ -237,14 +220,14 @@ const RecipeRegister = () => {
 
                 <Label>요리 순서</Label>
                 <CreateListDiv>
-                    <RecipeSeq countList={countList} handleImgUpload={handleImgUpload}/>
+                    <RecipeSeq countList={countList} handleImgUpload={handleImgUpload} handleValueChange={handleValueChange}/>
                     <Btn onClick={onAddDetailDiv}>
                         순서 추가
                     </Btn>
                 </CreateListDiv>
 
             </RegisterContainer>
-            <Btn onClick={registerBtnClick}>등록하기</Btn>
+            <RegisterBtn onClick={registerBtnClick}>등록하기</RegisterBtn>
         </>
     );
 };

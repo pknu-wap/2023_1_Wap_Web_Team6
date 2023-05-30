@@ -76,7 +76,7 @@ const RecipeList = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await fetch("http://localhost:8081/api/list");
+        const res = await fetch("http://localhost:8081/board/api/list");
         const data = await res.json();
 
         if (!res.ok) {
