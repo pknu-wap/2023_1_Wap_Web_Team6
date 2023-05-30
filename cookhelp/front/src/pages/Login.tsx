@@ -3,12 +3,12 @@ import styled from "styled-components";
 import Navbar from "../components/NavBar";
 import Container from "../UI/Container";
 import { Link } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const Title = styled.h2`
   font-size: 24px;
   margin-bottom: 20px;
 `;
-
 const Form = styled.form`
   width: 60%;
   display: flex;
@@ -64,6 +64,8 @@ const ErrorMsg = styled.p`
 `;
 
 const Login = () => {
+  const navigate = useNavigate();
+  const { state } = useLocation();
   const [login, setLogin] = useState({
     loginId: "",
     loginPassword: "",
@@ -101,28 +103,31 @@ const Login = () => {
     }
   };
 
-  const handleBtnClick = (e: React.MouseEvent<HTMLButtonElement>): void => {
-    fetch("http://localhost:8081/api/login", {
-      //auth 주소에서 받을 예정
-      method: "post", // method :통신방법
-      headers: {
-        // headers: API 응답에 대한 정보를 담음
-        "content-type": "application/json",
-      },
-      body: JSON.stringify(login), //login 객체를 보냄
-    })
-      .then((res) => res.json())
-      .then((json) => {
-        if(json.isSuccess==="True"){
-          alert('로그인 완료되었습니다!')
-        }
-        else{
-          alert(json.isSuccess)
-        }
-      }).catch(function(err) {
-        console.error(` Err: ${err}`);
-    });;
-  };
+    const handleBtnClick = (e: React.MouseEvent<HTMLButtonElement>): void => {
+      e.preventDefault(); // 버튼 클릭의 기본 동작 중지
+      fetch("http://localhost:8081/members/api/login", {
+        //auth 주소에서 받을 예정
+        method: "post", // method :통신방법
+        headers: {
+          // headers: API 응답에 대한 정보를 담음
+          "content-type": "application/json",
+        },
+        body: JSON.stringify(login), //login 객체를 보냄
+      })
+        .then(res => res.json())
+        .then(data => {
+          if(data.isLogin==="True"){
+            alert('로그인 완료되었습니다!')
+            console.log(data)
+            navigate("/");
+          }
+          else{
+            console.log(data)
+            alert(data.isLogin)
+          }
+        })
+        .catch(error => console.log("error =>", error))
+    };
 
   return (
     <>
