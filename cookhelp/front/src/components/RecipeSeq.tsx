@@ -2,7 +2,6 @@ import React, { ChangeEvent, useState } from "react"
 import styled from "styled-components"
 import { RecipeSeqProps } from "../components/type"
 
-
 const DetailDiv = styled.div`
     margin-bottom: 2rem;
     width: 320px;
@@ -70,16 +69,20 @@ const RecipeSeq = (props: RecipeSeqProps) => {
                     <label>소제목</label>
                     <Input
                         type="text"
-                        name="recipe_step_1"
+                        name={`recipe_step_${i + 1}`}
                         placeholder="요리 순서에 대한 소제목을 입력해주세요."
+                        // onChange={props.handleImgUpload}
                         required
                     />
                     <label>상세 설명</label>
                     <Textarea
                         placeholder="요리 순서에 대한 설명을 적어주세요."
+                        name={`rd_${i + 1}`}
                         required
                     />
-                    <input type='file' />
+                    <input type="file"
+                    name={`rd_${i + 1}_img`}
+                    />
 
                     <TimerContainer>
                         <div>
@@ -94,7 +97,11 @@ const RecipeSeq = (props: RecipeSeqProps) => {
                             />
                             <label>타이머</label>
                         </div>
-                        {checkedItems[i] && (<Input type="text" placeholder="몇분" style={{ marginLeft: "1rem", width: "5rem" }} />)}
+                        {checkedItems[i] && (<Input 
+                        type="text"
+                        placeholder="몇분" 
+                        name={`timer_${i + 1}`}
+                        style={{ marginLeft: "1rem", width: "5rem" }} />)}
 
                     </TimerContainer>
                 </SeqData>
