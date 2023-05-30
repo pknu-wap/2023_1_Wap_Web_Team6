@@ -5,6 +5,7 @@ import Login from "./pages/Login";
 import Join from "./pages/Join";
 import Recipe from "./pages/Recipe";
 import RecipeList from "./pages/RecipeList";
+import RecipeRegister from "./pages/RecipeRegister";
 import cardData from "./tmpDB/tmpRecipeDB";
 import { RecipeCard } from "./components/type";
 
@@ -38,6 +39,8 @@ function App() {
           {/* <Route path="/recipe" element={<Recipe />} /> */}
           {content}
           <Route path="/recipe_list" element={<RecipeList />} />
+          <Route path="/recipe_register" element={<RecipeRegister />} />
+
           <Route path="/*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

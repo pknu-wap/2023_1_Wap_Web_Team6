@@ -24,25 +24,37 @@ export interface ArrowButtonProps {
 }
 
 export interface searchData {
-  id: number;
-  img: string;
-  title: string;
-  writer: string;
-  date: string;
+  recipe_idx: number;
+  img?: string;
+  recipe_title: string;
+  members: string;
+  created_date: string;
   views?: number;
 }
 
 export interface RecipeItemProps {
   RecipeId: number;
   RecipeTitle: string;
-  RecipeImg: string;
   RecipeWriter: string;
   RecipeDate: string;
   to: string;
+}
+
+export interface fetchRecipeList {
+  created_date: string;
+  foodstyle: string;
+  members: string;
+  recipe_idx: number;
+  recipe_title: string;
 }
 
 export interface ListProps {
   stepDetail: string;
   listNum: number;
   setSelectIdx: React.Dispatch<React.SetStateAction<number>>;
+}
+
+export interface RecipeSeqProps {
+  countList: number[];
+  handleImgUpload: (event: React.ChangeEvent<HTMLInputElement>, index: number) => void;
 }
