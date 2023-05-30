@@ -168,23 +168,25 @@ const RecipeRegister = () => {
         });
     };
 
-    const registerBtnClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    const registerBtnClick = async (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
-        fetch("http://localhost:8081/board/api/upload", {
-            method: "post",
-            headers: {
-                "content-type": "application/json",
-            },
-            body: JSON.stringify(registerData)
-        })
-            .then((res) => res.json())
-            .then((json) => {
-                console.log("게시물 등록 성공");
-                navigate("/recipe_list");
-            })
-            .catch(function (err) {
-                console.log("Error", err);
-            })
+        try {
+            const response = await fetch("http://localhost:8081/board/api/upload", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(registerData)
+            });
+           
+            const result = await response.json();
+            console.log("게시물 등록 성공");
+            console.log(registerData);
+
+            navigate("/recipe_list");
+        } catch (error) {
+            console.log("Error:", error);
+        }
     };
 
     return (
