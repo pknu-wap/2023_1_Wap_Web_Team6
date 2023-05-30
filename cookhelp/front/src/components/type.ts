@@ -56,4 +56,5 @@ export interface ListProps {
 
 export interface RecipeSeqProps {
   countList: number[];
+  handleImgUpload: (event: React.ChangeEvent<HTMLInputElement>, index: number) => void;
 }
