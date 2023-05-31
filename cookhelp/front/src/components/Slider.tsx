@@ -3,6 +3,7 @@ import styled from "styled-components";
 import useSliderCard from "../hooks/useSliderCard";
 import Timer from "./Timer";
 import { RecipeCard, ArrowButtonProps, CardProps } from "./type";
+import Dictaphone from "./Dictaphone";
 
 const SliderContainer = styled.div`
   margin: 1rem 0;
@@ -96,6 +97,7 @@ const Slider = ({
     <SliderContainer>
       {card.length !== 0 && (
         <>
+          <Dictaphone goForward={goForward} goBack={goBack} />
           <ImgBox>
             <ArrowBack onClick={goBack} />
             <Card currentCard={card[cardIdx]} />
