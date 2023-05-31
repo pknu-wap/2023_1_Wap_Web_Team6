@@ -167,10 +167,12 @@ const RecipeRegister = () => {
         });
     };
 
-    const formData = new FormData();
+    
 
     const registerBtnClick = async (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
+        
+        const formData = new FormData();
 
         recipe_img.forEach((img) => {
             formData.append("recipe_img", img);

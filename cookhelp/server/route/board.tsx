@@ -45,6 +45,31 @@ function fileFilter (req, file, cb) {
   
 }
 
+// Multer 디렉토리 설정
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+      // 파일 저장 경로 설정
+      cb(null, './img_server');
+    },
+    filename: function (req, file, cb) {
+      // 저장될 파일명 설정("YYYYMMDDTTMM")
+      const currentDate = new Date();
+
+      const year = currentDate.getFullYear();
+      const month = (currentDate.getMonth() + 1).toString().padStart(2, '0');
+      const day = currentDate.getDate().toString().padStart(2, '0');
+      const hour = currentDate.getHours().toString().padStart(2, '0');
+      const minute = currentDate.getMinutes().toString().padStart(2, '0');
+      
+      const formattedDate = `${year}${month}${day}${hour}${minute}`;
+      
+      cb(null, formattedDate + '-' + file.originalname);
+    }
+});
+
+
+const upload = multer({ storage: storage }); // 파일이 저정될 경로 설정
+
 var MySQLStore = require('express-mysql-session')(session);
 var sessionStore = new MySQLStore(sessionOption);
 router.use(session({  
@@ -71,153 +96,93 @@ router.get("/api/list", (req, res) => {
 });
 
 
-// Multer 디렉토리 설정
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-      // 파일 저장 경로 설정
-      cb(null, './img_server');
-    },
-    filename: function (req, file, cb) {
-      // 저장될 파일명 설정
-      cb(null, Date.now() + '-' + file.originalname);
-    }
-});
-
-
-const upload = multer({ storage: storage }); // 파일이 저정될 경로 설정
-
-
 // 파일 업로드 처리
-// router.post('/api/upload', upload.array('recipe_img'), function (req, res, next) {
-
-//     const recipe_title = req.body.recipe_title;
-//     // const members = req.body.members;
-//     const recipe_stuff = req.body.recipe_stuff;
-//     // const recipe_img = `../img_server/${req.file.filename}`;
-//     const recipe_img = req.body.recipe_img;
-//     const foodstyle = req.body.foodstyle;
-
-//     const recipe_step_1 = req.body.recipe_step_1;
-//     const recipe_step_2 = req.body.recipe_step_2;
-//     const recipe_step_3 = req.body.recipe_step_3;
-//     const recipe_step_4 = req.body.recipe_step_4;
-//     const recipe_step_5 = req.body.recipe_step_5;
-//     const recipe_step_6 = req.body.recipe_step_6;
-//     const recipe_step_7 = req.body.recipe_step_7;
-//     const recipe_step_8 = req.body.recipe_step_8;
-//     const recipe_step_9 = req.body.recipe_step_9;
-//     const recipe_step_10 = req.body.recipe_step_10;
-
-//     const rd_1 = req.body.rd_1;
-//     const rd_1_img = req.body.rd_1_img;
-//     // const rd_1_img = `../img_server/${req.file.filename}`;
-//     const rd_1_video = req.body.rd_1_video;
-//     const timer_rd_1 = req.body.timer_rd_1;
-
-//     const rd_2 = req.body.rd_2;
-//     const rd_2_img = req.body.rd_2_img;
-//     const rd_2_video = req.body.rd_2_video;
-//     const timer_rd_2 = req.body.timer_rd_2;
-//     const rd_3 = req.body.rd_3;
-//     const rd_3_img = req.body.rd_3_img;
-//     const rd_3_video = req.body.rd_3_video;
-//     const timer_rd_3 = req.body.timer_rd_3;
-
-//     const rd_4 = req.body.rd_4;
-//     const rd_4_img = req.body.rd_4_img;
-//     const rd_4_video = req.body.rd_4_video;
-//     const timer_rd_4 = req.body.timer_rd_4;
-//     const rd_5 = req.body.rd_5;
-//     const rd_5_img = req.body.rd_5_img;
-//     const rd_5_video = req.body.rd_5_video;
-//     const timer_rd_5 = req.body.timer_rd_5;
-//     const rd_6 = req.body.rd_6;
-//     const rd_6_img = req.body.rd_6_img;
-//     const rd_6_video = req.body.rd_6_video;
-//     const timer_rd_6 = req.body.timer_rd_6;
-//     const rd_7 = req.body.rd_7;
-//     const rd_7_img = req.body.rd_7_img;
-//     const rd_7_video = req.body.rd_7_video;
-//     const timer_rd_7 = req.body.timer_rd_7;
-//     const rd_8 = req.body.rd_8;
-//     const rd_8_img = req.body.rd_8_img;
-//     const rd_8_video = req.body.rd_8_video;
-//     const timer_rd_8 = req.body.timer_rd_8;
-//     const rd_9 = req.body.rd_9;
-//     const rd_9_img = req.body.rd_9_img;
-//     const rd_9_video = req.body.rd_9_video;
-//     const timer_rd_9 = req.body.timer_rd_9;
-//     const rd_10 = req.body.rd_10;
-//     const rd_10_img = req.body.rd_10_img;
-//     const rd_10_video = req.body.rd_10_video;
-//     const timer_rd_10 = req.body.timer_rd_10;
-
-    
-//     // 반복 처리 (미완성)
-//     // const recipe_steps: string[] = [];
-//     // const recipe_descriptions: string[] = [];
-//     // const rd_img: string[] = [];
-//     // const rd_video: string[] = [];
-
-//     // for (let i = 1; i <= 10; i++) {
-//     //     recipe_steps.push(req.body[`recipe_step_${i}`]);
-//     //     recipe_descriptions.push(req.body[`recipe_description_${i}`]);
-//     //     rd_img.push(req.body[`rd_${i}_img`]);
-//     //     rd_video.push(req.body[`rd_${i}_video`]);
-//     // }
-
-//     const sendData = { isSuccess: "" };
-
-//     const query = `INSERT INTO cookhelper (recipe_title, recipe_stuff, recipe_img, recipe_step_1, recipe_step_2, recipe_step_3, recipe_step_4, recipe_step_5, recipe_step_6, recipe_step_7, recipe_step_8, recipe_step_9, recipe_step_10, rd_1, rd_1_img, rd_1_video, timer_rd_1, rd_2, rd_2_img, rd_2_video, timer_rd_2, rd_3, rd_3_img, rd_3_video, timer_rd_3, rd_4, rd_4_img, rd_4_video, timer_rd_4, rd_5, rd_5_img, rd_5_video, timer_rd_5, rd_6, rd_6_img, rd_6_video, timer_rd_6, rd_7, rd_7_img, rd_7_video, timer_rd_7, rd_8, rd_8_img, rd_8_video, timer_rd_8, rd_9, rd_9_img, rd_9_video, timer_rd_9, rd_10, rd_10_img, rd_10_video, timer_rd_10, created_date, foodstyle) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);`;
-
-//     const testQuery = `INSERT INTO cookhelper (recipe_title, recipe_stuff, recipe_img, members) VALUES (?, ?, ?,'test');`
-
-//     const testValues = [recipe_title, recipe_stuff, recipe_img];
-    
-//     const values = [
-//         recipe_title, recipe_stuff, recipe_img, recipe_step_1, recipe_step_2, recipe_step_3, recipe_step_4, recipe_step_5, recipe_step_6, recipe_step_7, recipe_step_8, recipe_step_9, recipe_step_10,
-//         rd_1, rd_1_img, rd_1_video, timer_rd_1, rd_2, rd_2_img, rd_2_video, timer_rd_2, rd_3, rd_3_img, rd_3_video, timer_rd_3, rd_4, rd_4_img, rd_4_video, timer_rd_4, rd_5, rd_5_img, rd_5_video, timer_rd_5,
-//         rd_6, rd_6_img, rd_6_video, timer_rd_6, rd_7, rd_7_img, rd_7_video, timer_rd_7, rd_8, rd_8_img, rd_8_video, timer_rd_8, rd_9, rd_9_img, rd_9_video, timer_rd_9, rd_10, rd_10_img, rd_10_video, timer_rd_10,
-//         foodstyle
-//     ];
-        
-//         db.query(testQuery, testValues, function (error, result, fields) {
-//             if (error) {
-//                 console.error("데이터 삽입 오류", error)
-//                 sendData.isSuccess = "데이터 삽입 오류 발생"
-//             } else {
-//                 sendData.isSuccess = "True";
-//             }
-//         })
-
-//         console.log("레시피 데이터 저장 완료");
-//         // 업로드 완료 시 동작할 코드 작성
-//         res.send('파일 업로드 완료.');
-// });
-
-//ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
-
 router.post('/api/upload', upload.array('recipe_img'), function (req, res, next) {
 
-    const title = req.body.recipe_title;
-    const stuff = req.body.recipe_stuff;
-    const img = `../img_server/${req.file.filename}`;
-    //const img = req.body.recipe_img;
+    const recipe_title = req.body.recipe_title;
+    // const members = req.body.members;
+    const members = "관리자";
+    const recipe_stuff = req.body.recipe_stuff;
+    const recipe_img = req.files.map(file => `./img_server/${file.filename}`);
 
-    console.log(img);
+    console.log(recipe_img);
 
-    const query = `INSERT INTO testtable (title, stuff, img_path) VALUES (?, ?, ?);`
-    const value = [title, stuff, img]
+    const recipe_step_1 = req.body.recipe_step_1;
+    const recipe_step_2 = req.body.recipe_step_2;
+    const recipe_step_3 = req.body.recipe_step_3;
+    const recipe_step_4 = req.body.recipe_step_4;
+    const recipe_step_5 = req.body.recipe_step_5;
+    const recipe_step_6 = req.body.recipe_step_6;
+    const recipe_step_7 = req.body.recipe_step_7;
+    const recipe_step_8 = req.body.recipe_step_8;
+    const recipe_step_9 = req.body.recipe_step_9;
+    const recipe_step_10 = req.body.recipe_step_10;
 
+    const rd_1 = req.body.rd_1;
+    const rd_1_video = req.body.rd_1_video;
+    const timer_rd_1 = req.body.timer_rd_1;
+    const rd_2 = req.body.rd_2;
+    const rd_2_video = req.body.rd_2_video;
+    const timer_rd_2 = req.body.timer_rd_2;
+    const rd_3 = req.body.rd_3;
+    const rd_3_video = req.body.rd_3_video;
+    const timer_rd_3 = req.body.timer_rd_3;
+    const rd_4 = req.body.rd_4;
+    const rd_4_video = req.body.rd_4_video;
+    const timer_rd_4 = req.body.timer_rd_4;
+    const rd_5 = req.body.rd_5;
+    const rd_5_video = req.body.rd_5_video;
+    const timer_rd_5 = req.body.timer_rd_5;
+    const rd_6 = req.body.rd_6;
+    const rd_6_video = req.body.rd_6_video;
+    const timer_rd_6 = req.body.timer_rd_6;
+    const rd_7 = req.body.rd_7;
+    const rd_7_video = req.body.rd_7_video;
+    const timer_rd_7 = req.body.timer_rd_7;
+    const rd_8 = req.body.rd_8;
+    const rd_8_video = req.body.rd_8_video;
+    const timer_rd_8 = req.body.timer_rd_8;
+    const rd_9 = req.body.rd_9;
+    const rd_9_video = req.body.rd_9_video;
+    const timer_rd_9 = req.body.timer_rd_9;
+    const rd_10 = req.body.rd_10;
+    const rd_10_video = req.body.rd_10_video;
+    const timer_rd_10 = req.body.timer_rd_10;
+
+    const created_date = Date.now();
+    const foodstyle = req.body.foodstyle;
+
+    // 반복 처리 (미완성)
+    // const recipe_steps: string[] = [];
+    // const recipe_descriptions: string[] = [];
+    // const rd_img: string[] = [];
+    // const rd_video: string[] = [];
+
+    // for (let i = 1; i <= 10; i++) {
+    //     recipe_steps.push(req.body[`recipe_step_${i}`]);
+    //     recipe_descriptions.push(req.body[`recipe_description_${i}`]);
+    //     rd_img.push(req.body[`rd_${i}_img`]);
+    //     rd_video.push(req.body[`rd_${i}_video`]);
+    // }
+
+    
+    const query = `INSERT INTO cookhelper (recipe_title, members, recipe_stuff, recipe_img, recipe_step_1, recipe_step_2, recipe_step_3, recipe_step_4, recipe_step_5, recipe_step_6, recipe_step_7, recipe_step_8, recipe_step_9, recipe_step_10, rd_1, rd_1_video, timer_rd_1, rd_2, rd_2_video, timer_rd_2, rd_3, rd_3_video, timer_rd_3, rd_4, rd_4_video, timer_rd_4, rd_5, rd_5_video, timer_rd_5, rd_6, rd_6_video, timer_rd_6, rd_7, rd_7_video, timer_rd_7, rd_8, rd_8_video, timer_rd_8, rd_9, rd_9_video, timer_rd_9, rd_10, rd_10_video, timer_rd_10, created_date, foodstyle) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);`;
+    const values = [
+        recipe_title, members, recipe_stuff, ...recipe_img, recipe_step_1, recipe_step_2, recipe_step_3, recipe_step_4, recipe_step_5, recipe_step_6, recipe_step_7, recipe_step_8, recipe_step_9, recipe_step_10,
+        rd_1, rd_1_video, timer_rd_1, rd_2, rd_2_video, timer_rd_2, rd_3, rd_3_video, timer_rd_3, rd_4, rd_4_video, timer_rd_4, rd_5, rd_5_video, timer_rd_5,
+        rd_6, rd_6_video, timer_rd_6, rd_7, rd_7_video, timer_rd_7, rd_8, rd_8_video, timer_rd_8, rd_9, rd_9_video, timer_rd_9, rd_10, rd_10_video, timer_rd_10,
+        created_date, foodstyle
+    ];
+    
     const sendData = { isSuccess: "" };
 
-    db.query(query, value, function (error, result, fields) {
+    db.query(query, values, function (error, result, fields) {
         if (error) {
             console.error("데이터 삽입 오류", error)
-            sendData.isSuccess = "데이터 삽입 오류 발생"
+            sendData.isSuccess = "데이터 삽입 오류 발생";
         } else {
             sendData.isSuccess = "True";
-            console.log("레시피 데이터 저장 완료.");
+            console.log("파일 업로드 완료.");
         }
     })
 
@@ -225,7 +190,38 @@ router.post('/api/upload', upload.array('recipe_img'), function (req, res, next)
     res.send('파일 업로드 완료.');
 });
 
-//ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
+// ===================================================================================================================================================================================================
+
+// router.post('/api/upload', upload.array('recipe_img'), function (req, res, next) {
+
+//     const title = req.body.recipe_title;
+//     const stuff = req.body.recipe_stuff;
+//     // const img = req.files.map(file => `./img_server/${file.filename}`);
+//     const img = req.files.map(files => `./img_server/${files.filename}`);
+//     // const img = req.body.recipe_img;
+
+//     console.log(img);
+
+//     const query = `INSERT INTO testtable (title, stuff, img_path) VALUES (?, ?, ?);`
+//     const value = [title, stuff, ...img];
+
+//     const sendData = { isSuccess: "" };
+
+//     db.query(query, value, function (error, result, fields) {
+//         if (error) {
+//             console.error("데이터 삽입 오류", error)
+//             sendData.isSuccess = "데이터 삽입 오류 발생"
+//         } else {
+//             sendData.isSuccess = "True";
+//             console.log("레시피 데이터 저장 완료.");
+//         }
+//     })
+
+//     // 업로드 완료 시 동작할 코드 작성
+//     res.send('파일 업로드 완료.');
+// });
+
+// ===================================================================================================================================================================================================
 
 
 // 요리 도우미 구현
