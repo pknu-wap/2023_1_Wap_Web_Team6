@@ -84,7 +84,7 @@ const RecipeRegister = () => {
         recipe_title: "null", // 레시피 제목
         recipe_stuff: "null", // 요리 재료
         foodstyle: "null", // 음식 종류(한,중,일,양)
-        recipe_img: Array(11).fill("null"), // 이미지 배열
+        recipe_img: Array(1).fill("null"), // 이미지 배열
         members: "작성자",
 
         recipe_step_1: "null", // 요리순서 소제목 1~10
