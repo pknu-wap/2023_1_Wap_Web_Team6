@@ -75,7 +75,7 @@ router.get("/api/list", (req, res) => {
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
       // 파일 저장 경로 설정
-      cb(null, './img');
+      cb(null, './img_server');
     },
     filename: function (req, file, cb) {
       // 저장될 파일명 설정
@@ -197,12 +197,12 @@ const upload = multer({ storage: storage }); // 파일이 저정될 경로 설�
 
 //ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
 
-router.post('/api/upload', upload.single('recipe_img'), function (req, res, next) {
+router.post('/api/upload', upload.array('recipe_img'), function (req, res, next) {
 
     const title = req.body.recipe_title;
     const stuff = req.body.recipe_stuff;
-    // const img = `img/${req.file.filename}`;
-    const img = req.body.recipe_img;
+    const img = `../img_server/${req.file.filename}`;
+    //const img = req.body.recipe_img;
 
     console.log(img);
 
