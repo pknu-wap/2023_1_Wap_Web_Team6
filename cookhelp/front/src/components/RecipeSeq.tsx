@@ -60,7 +60,7 @@ const RecipeSeq = (props: RecipeSeqProps) => {
                     />
                     <input type="file"
                     name="recipe_img"
-                    // onChange={(e) => props.handleImgUpload(e, i+1)}
+                    onChange={(e) => props.handleImgUpload(e)}
                     />
 
                     <TimerContainer>
