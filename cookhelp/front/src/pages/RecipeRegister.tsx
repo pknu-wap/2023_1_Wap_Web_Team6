@@ -83,11 +83,13 @@ const RecipeRegister = () => {
         setCountList(countArr)
     }
 
-    const [registerData, setRegisterData] = useState<RegisterData>({
+    const [recipe_img, setRecipe_Img] = useState<File[]>([]);
+
+    const [registerData, setRegisterData] = useState({
         recipe_title: "null", // 레시피 제목
         recipe_stuff: "null", // 요리 재료
         foodstyle: "null", // 음식 종류(한,중,일,양)
-        recipe_img: Array(1).fill("null"), // 이미지 배열
+        //recipe_img: Array(11).fill("null"), // 이미지 배열
         members: "작성자",
 
         recipe_step_1: "null", // 요리순서 소제목 1~10
@@ -147,21 +149,16 @@ const RecipeRegister = () => {
     //     }
     // };
 
-    const handleImgUpload = (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
-        const file = e.target.files?.[0];
-      
-        if (file) {
-          setRegisterData((prevData) => {
-            const updatedImgs = [...prevData.recipe_img];
-            updatedImgs[index] = URL.createObjectURL(file);
-      
-            return {
-              ...prevData,
-              recipe_img: updatedImgs,
-            };
-          });
+    const handleImgUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const files = e.target.files;
+        if (files) {
+            const updatedImgs = [];
+            for (let i = 0; i < files.length; i++) {
+                updatedImgs.push(files[i]);
+            }
+            setRecipe_Img(updatedImgs);
         }
-      };
+    };
 
     const handleValueChange = (e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement> | React.ChangeEvent<HTMLSelectElement>) => {
         setRegisterData({
@@ -170,67 +167,31 @@ const RecipeRegister = () => {
         });
     };
 
-    const formData = new FormData();
+    
 
     const registerBtnClick = async (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
-
-        formData.append("recipe_title", registerData.recipe_title);
-        formData.append("recipe_stuff", registerData.recipe_stuff);
-        formData.append("foodstyle", registerData.foodstyle);
-        registerData.recipe_img.forEach((imageUrl, index) => {
-            formData.append(`recipe_img[${index}]`, imageUrl);
-        });
-        formData.append("members", registerData.members);
-
-        for (let i = 1; i <= 10; i++) {
-            const stepKey = `recipe_step_${i}` as keyof typeof registerData;
-            const stepValue = registerData[stepKey];
-          
-            if (Array.isArray(stepValue)) {
-              stepValue.forEach((item, index) => {
-                formData.append(`${stepKey}[${index}]`, item);
-              });
-            } else {
-              formData.append(stepKey, stepValue);
-            }
-          }
-          formData.append("rd_1", registerData.rd_1);
-          formData.append("rd_2", registerData.rd_2);
-          formData.append("rd_3", registerData.rd_3);
-          formData.append("rd_4", registerData.rd_4);
-          formData.append("rd_5", registerData.rd_5);
-          formData.append("rd_6", registerData.rd_6);
-          formData.append("rd_7", registerData.rd_7);
-          formData.append("rd_8", registerData.rd_8);
-          formData.append("rd_9", registerData.rd_9);
-          formData.append("rd_10", registerData.rd_10);
-          
-          formData.append("timer_rd_1", registerData.timer_rd_1);
-          formData.append("timer_rd_2", registerData.timer_rd_2);
-          formData.append("timer_rd_3", registerData.timer_rd_3);
-          formData.append("timer_rd_4", registerData.timer_rd_4);
-          formData.append("timer_rd_5", registerData.timer_rd_5);
-          formData.append("timer_rd_6", registerData.timer_rd_6);
-          formData.append("timer_rd_7", registerData.timer_rd_7);
-          formData.append("timer_rd_8", registerData.timer_rd_8);
-          formData.append("timer_rd_9", registerData.timer_rd_9);
-          formData.append("timer_rd_10", registerData.timer_rd_10);
         
+        const formData = new FormData();
+
+        recipe_img.forEach((img) => {
+            formData.append("recipe_img", img);
+        });
+        Object.entries(registerData).forEach(([key, value]) => {
+            formData.append(key, value);
+        });
+
         try {
             const response = await fetch("http://localhost:8081/board/api/upload", {
                 method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify(registerData)
+                body: formData
             });
 
             const result = await response.json();
+            navigate("/recipe_list");
             console.log("게시물 등록 성공");
             console.log(registerData);
 
-            navigate("/recipe_list");
         } catch (error) {
             console.log("Error:", error);
         }
@@ -277,8 +238,8 @@ const RecipeRegister = () => {
                         <Label>요리 이미지</Label>
                         <Input
                             type="file"
-                            name="rd_1_img"
-                            onChange={(e) => handleImgUpload(e, 0)}
+                            name="recipe_img"
+                            onChange={(e) => handleImgUpload(e)}
                             required
                         />
                     </FormItem>
