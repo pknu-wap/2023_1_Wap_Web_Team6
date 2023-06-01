@@ -144,7 +144,7 @@ const RecipeList = () => {
               return (
                 <RecipeItem
                   key={ele.recipe_idx}
-                  to={`/recipe/${index}`}
+                  to={`/recipe/${index + 1}`}
                   RecipeId={ele.recipe_idx}
                   RecipeTitle={ele.recipe_title}
                   RecipeWriter={ele.members}

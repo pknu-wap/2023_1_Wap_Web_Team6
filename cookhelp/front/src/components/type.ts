@@ -56,9 +56,7 @@ export interface ListProps {
 
 export interface RecipeSeqProps {
   countList: number[];
-  handleImgUpload: (
-    event: React.ChangeEvent<HTMLInputElement>,
-  ) => void;
+  handleImgUpload: (event: React.ChangeEvent<HTMLInputElement>) => void;
   handleValueChange: (
     e:
       | React.ChangeEvent<HTMLInputElement>
@@ -92,7 +90,7 @@ export interface RegisterData {
   recipe_step_9: string;
   recipe_step_10: string;
 
-  rd_1: string; 
+  rd_1: string;
   rd_2: string;
   rd_3: string;
   rd_4: string;
@@ -103,7 +101,7 @@ export interface RegisterData {
   rd_9: string;
   rd_10: string;
 
-  timer_rd_1: string; 
+  timer_rd_1: string;
   timer_rd_2: string;
   timer_rd_3: string;
   timer_rd_4: string;
@@ -113,4 +111,8 @@ export interface RegisterData {
   timer_rd_8: string;
   timer_rd_9: string;
   timer_rd_10: string;
+}
+
+export interface DeckData {
+  [key: string]: string | null;
 }
