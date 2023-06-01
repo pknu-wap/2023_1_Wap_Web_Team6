@@ -9,218 +9,122 @@ const bcrypt = require('bcrypt');
 const db = require('../lib/db.tsx');
 const sessionOption = require('../lib/sessionOption.tsx');
 
-// multer
-const multer = require('multer');
-
-
-// router
+// rouer 부분
 const router = express.Router();
 module.exports = router;
-
 
 router.use(bodyParser.json())
 router.use(bodyParser.urlencoded({extended:true}))
 router.use(cors())
 
-function fileFilter (req, file, cb) {
+const MySQLStore = require('express-mysql-session')(session);
+const sessionStore = new MySQLStore(sessionOption);
 
-    // 이 함수는 boolean 값과 함께 `cb`를 호출함으로써 해당 파일을 업로드 할지 여부를 나타낼 수 있습니다.
-    // 이 파일을 거부하려면 다음과 같이 `false` 를 전달합니다:
-    cb(null, false)
-  
-    // 이 파일을 허용하려면 다음과 같이 `true` 를 전달합니다:
-    cb(null, true)
-  
-    // 무언가 문제가 생겼다면 언제나 에러를 전달할 수 있습니다:
-    cb(new Error('I don\'t have a clue!'))
-  
-}
+const sessionMiddleware = session({
+  key: 'session_cookie_name',
+  secret: 'hello',
+  store: sessionStore,
+  resave: false,
+  saveUninitialized: false
+});
 
-var MySQLStore = require('express-mysql-session')(session);
-var sessionStore = new MySQLStore(sessionOption);
-router.use(session({  
-   key: 'session_cookie_name',
-    secret: '~',
-   store: sessionStore,
-   resave: false,
-   saveUninitialized: false
-}))
-
+router.use(sessionMiddleware);
 
 router.get('/', (req, res) => {
-    res.send('Hello, board');
+    res.send('Hello, members');
+  });
+
+router.get('/api/authcheck', (req, res) => {   
+  const sendData = { isLogin: "" };
+  console.log(req.session.is_logined)
+  console.log(req.session.nickname)
+  if (req.session.is_logined) {
+      sendData.isLogin = "True"
+  } else {
+      sendData.isLogin = "False"
+  }
+  res.send(sendData);
+})
+
+router.get('/api/logout', function (req, res) {
+  req.session.destroy(function (err) {
+      res.redirect('/');
+  });
 });
 
-  
-// 레시피 리스트 불러오기
-router.get("/api/list", (req, res) => {
-    const sqlQuery = "SELECT recipe_idx, recipe_title, members, DATE_FORMAT(created_date, '%Y-%m-%d') AS created_date, foodstyle FROM cookhelper;";
-    db.query(sqlQuery, (err, result) => {
-        res.send(result)
-        console.log('게시판 목록 생성 완료.')
-    });
-});
+router.post("/api/login", (req, res) => {
+    const userId = req.body.loginId;
+    const password = req.body.loginPassword;
+    const sendData = { isLogin: "" };
 
+    if (userId && password) {
+      db.query('SELECT * FROM members WHERE id = ?', [userId], function (error, results, fields) {
+        if (error) throw error;
+        if (results.length > 0) {
+          if (results[0].password == password) {
+            req.session.is_logined = true;
+            req.session.nickname = userId;
 
-// Multer 디렉토리 설정
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-      // 파일 저장 경로 설정
-      cb(null, '../img_server/');
-    },
-    filename: function (req, file, cb) {
-      // 저장될 파일명 설정
-      cb(null, Date.now() + '-' + file.originalname);
+            req.session.save(function (err) {
+              if (err) {
+                console.error('세션 저장 오류:', err);
+                sendData.isLogin = "세션 저장 오류가 발생했습니다.";
+                res.send(sendData);
+              } else {
+                sendData.isLogin = "True";
+                console.log(req.session.is_logined, req.session.nickname)
+                console.log(userId, '로그인');
+                res.send(sendData);
+              }
+            });
+          } else {
+            sendData.isLogin = "로그인 정보가 일치하지 않습니다.";
+            console.log('비밀번호가 틀렸습니다.');
+            res.send(sendData);
+          }
+        } else {
+          sendData.isLogin = "아이디 정보가 일치하지 않습니다.";
+          console.log('아이디가 없습니다.');
+          res.send(sendData);
+        }
+      });
+    } else {
+      sendData.isLogin = "아이디와 비밀번호를 입력하세요!";
+      res.send(sendData);
     }
 });
 
-
-const upload = multer({ storage: storage }); // 파일이 저정될 경로 설정
-
-
-// 파일 업로드 처리
-router.post('/api/upload', upload.array('recipe_img'), function (req, res, next) {
-
-    const recipe_title = req.body.recipe_title;
-    const members = req.body.members;
-    const recipe_stuff = req.body.recipe_stuff;
-    const recipe_img = req.body.recipe_img;
-    const timer = req.body.timer;
-    const foodstyle = req.body.foodstyle;
-
-    const recipe_step_1 = req.body.recipe_step_1;
-    const recipe_step_2 = req.body.recipe_step_2;
-    const recipe_step_3 = req.body.recipe_step_3;
-    const recipe_step_4 = req.body.recipe_step_4;
-    const recipe_step_5 = req.body.recipe_step_5;
-    const recipe_step_6 = req.body.recipe_step_6;
-    const recipe_step_7 = req.body.recipe_step_7;
-    const recipe_step_8 = req.body.recipe_step_8;
-    const recipe_step_9 = req.body.recipe_step_9;
-    const recipe_step_10 = req.body.recipe_step_10;
-
-    const rd_1 = req.body.rd_1;
-    const rd_1_img = `../img_server/${req.file.filename}`;
-    const rd_1_video = req.body.rd_1_video;
-    const rd_2 = req.body.rd_2;
-    const rd_2_img = req.body.rd_2_img;
-    const rd_2_video = req.body.rd_2_video;
-    const rd_3 = req.body.rd_3;
-    const rd_3_img = req.body.rd_3_img;
-    const rd_3_video = req.body.rd_3_video;
-    const rd_4 = req.body.rd_4;
-    const rd_4_img = req.body.rd_4_img;
-    const rd_4_video = req.body.rd_4_video;
-    const rd_5 = req.body.rd_5;
-    const rd_5_img = req.body.rd_5_img;
-    const rd_5_video = req.body.rd_5_video;
-    const rd_6 = req.body.rd_6;
-    const rd_6_img = req.body.rd_6_img;
-    const rd_6_video = req.body.rd_6_video;
-    const rd_7 = req.body.rd_7;
-    const rd_7_img = req.body.rd_7_img;
-    const rd_7_video = req.body.rd_7_video;
-    const rd_8 = req.body.rd_8;
-    const rd_8_img = req.body.rd_8_img;
-    const rd_8_video = req.body.rd_8_video;
-    const rd_9 = req.body.rd_9;
-    const rd_9_img = req.body.rd_9_img;
-    const rd_9_video = req.body.rd_9_video;
-    const rd_10 = req.body.rd_10;
-    const rd_10_img = req.body.rd_10_img;
-    const rd_10_video = req.body.rd_10_video;
-
+router.post("/api/Join", (req, res) => {  // 데이터 받아서 결과 전송
+    const userId = req.body.joinId;
+    const userPassword = req.body.joinPassword;
+    const userName = req.body.joinName;
+    const userSelectFood = req.body.joinSelectFood;
     
-    // 반복 처리 (미완성)
-    // const recipe_steps: string[] = [];
-    // const recipe_descriptions: string[] = [];
-    // const rd_img: string[] = [];
-    // const rd_video: string[] = [];
-
-    // for (let i = 1; i <= 10; i++) {
-    //     recipe_steps.push(req.body[`recipe_step_${i}`]);
-    //     recipe_descriptions.push(req.body[`recipe_description_${i}`]);
-    //     rd_img.push(req.body[`rd_${i}_img`]);
-    //     rd_video.push(req.body[`rd_${i}_video`]);
-    // }
-
     const sendData = { isSuccess: "" };
 
-    const query = `INSERT INTO cookhelper (recipe_title, members, recipe_stuff, recipe_img, recipe_step_1, recipe_step_2, recipe_step_3, recipe_step_4, recipe_step_5, recipe_step_6, recipe_step_7, recipe_step_8, recipe_step_9, recipe_step_10, rd_1, rd_1_img, rd_1_video, rd_2, rd_2_img, rd_2_video, rd_3, rd_3_img, rd_3_video, rd_4, rd_4_img, rd_4_video, rd_5, rd_5_img, rd_5_video, rd_6, rd_6_img, rd_6_video, rd_7, rd_7_img, rd_7_video, rd_8, rd_8_img, rd_8_video, rd_9, rd_9_img, rd_9_video, rd_10, rd_10_img, rd_10_video, timer, created_date, foodstyle) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);`;
-    
-    const values = [
-        recipe_title, members, recipe_stuff, recipe_img, recipe_step_1, recipe_step_2, recipe_step_3, recipe_step_4, recipe_step_5, recipe_step_6, recipe_step_7, recipe_step_8, recipe_step_9, recipe_step_10,
-        rd_1, rd_1_img, rd_1_video, rd_2, rd_2_img, rd_2_video, rd_3, rd_3_img, rd_3_video, rd_4, rd_4_img, rd_4_video, rd_5, rd_5_img, rd_5_video, rd_6, rd_6_img, rd_6_video, rd_7, rd_7_img, rd_7_video, rd_8, rd_8_img, rd_8_video,
-        rd_9, rd_9_img, rd_9_video, rd_10, rd_10_img, rd_10_video, timer, foodstyle
-    ];
-        
-        db.query(query, values, function (error, result, fields) {
-            if (error) {
-                console.error("데이터 삽입 오류", error)
-                sendData.isSuccess = "데이터 삽입 오류 발생"
-            } else {
-                sendData.isSuccess = "True";
+    if (userId && userPassword && userName && userSelectFood) {
+        db.query('SELECT * FROM members WHERE id = ?', [userId], function(error, results, fields) { // DB에 같은 이름의 회원아이디가 있는지 확인
+            if (error) throw error;
+            if (results.length <= 0) {         // DB에 같은 이름의 회원아이디가 없고, 비밀번호가 올바르게 입력된 경우
+                db.query('INSERT INTO members (id, password, nickname, foodstyle) VALUES(?,?,?,?)', [userId, userPassword, userName, userSelectFood], function (error, data) {
+                    if (error) throw error;                    
+                    console.log('회원가입 성공!')
+                    req.session.save(function () {    
+                        sendData.isSuccess = "True"
+                        res.send(sendData);
+                    });
+                });
             }
-        })
-
-        console.log("레시피 데이터 저장 완료");
-        // 업로드 완료 시 동작할 코드 작성
-        res.send('파일 업로드 완료.');
-});
-
-// 요리 도우미 구현
-router.get("/api/recipehelper/:recipe_idx", (req, res) => {
-
-    // const recipe_idx = 1;
-    const recipe_idx = req.params.recipe_idx;
-
-    const sqlQuery = `SELECT *, DATE_FORMAT(created_date, '%Y-%m-%d') AS formatted_date FROM cookhelper WHERE recipe_idx = '${recipe_idx}';`;
-    db.query(sqlQuery, (err, result) => {
-        if (err) {
-            console.log("데이터 조회 오류", err);
-            res.result(500).send("데이터 조회 오류");
-            return;
-        }
-
-        console.log("데이터 전송 성공, 데이터 개수:", result.length)
-        res.send(result);
-        // console.log('게시판 목록 생성 완료. 전송 개수: ', recipeResult.length, recipeResult[0]);
-    });
-});
-
-// 데이터 가공 테스트
-router.get("/api/categoryTest", (req, res) => {
-    
-    let type = "중식";
-    // let type = req.body.type;
-
-    // 입력된 값에 따라 type 변수 설정
-    switch (type) {
-      case "중식":
-        type = "중식";
-        break;
-      case "한식":
-        type = "한식";
-        break;
-      case "일식":
-        type = "일식";
-        break;
-      // 기본값 설정
-      default:
-        type = "기타";
-        break;
+            else {                                                  // DB에 같은 이름의 회원아이디가 있는 경우            
+                sendData.isSuccess = "이미 존재하는 아이디 입니다!"
+                console.log('이미 아이디가 있습니다')
+                res.send(sendData);  
+            }            
+        });        
+    } else {
+        console.log('아이디 비밀번호 입력하세요!')
+        sendData.isSuccess = "아이디와 비밀번호를 입력하세요!"
+        res.send(sendData);  
     }
-
-    const sqlQuery = `SELECT *, DATE_FORMAT(created_date, '%Y-%m-%d') AS formatted_date FROM cookhelper WHERE foodstyle = '${type}';`;
-    db.query(sqlQuery, (err, result) => {
-        if (err) {
-            console.log("데이터 조회 오류", err);
-            res.result(500).send("데이터 조회 오류");
-            return;
-        }
-
-        console.log("데이터 전송 성공, 데이터 개수:", result.length)
-        res.send(result);
-        // console.log('게시판 목록 생성 완료. 전송 개수: ', recipeResult.length, recipeResult[0]);
-    });
+  
 });
