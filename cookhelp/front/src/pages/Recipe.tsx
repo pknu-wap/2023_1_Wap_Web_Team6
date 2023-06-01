@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import NavBar from "../components/NavBar";
 import Slider from "../components/Slider";
-import { RecipeCard, ListProps, DeckData, Card } from "../components/type";
+import { ListProps, DeckData, Card } from "../components/type";
 import RecommendCard from "../components/RecommendCard";
 import { Form, useParams } from "react-router-dom";
 

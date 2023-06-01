@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import { RecipeListType, RecipeCard, Card } from "../components/type";
+import { Card } from "../components/type";
 
 const useSliderCard = (data: Card[], moveIdx: number) => {
   const [card, setCard] = useState(data); // recipe 데이터

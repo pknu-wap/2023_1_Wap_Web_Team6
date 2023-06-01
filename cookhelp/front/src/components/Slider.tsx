@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import useSliderCard from "../hooks/useSliderCard";
 import Timer from "./Timer";
-import { RecipeCard, ArrowButtonProps, CardProps, Card } from "./type";
+import { ArrowButtonProps, CardProps, Card } from "./type";
 import Dictaphone from "./Dictaphone";
 
 const SliderContainer = styled.div`
