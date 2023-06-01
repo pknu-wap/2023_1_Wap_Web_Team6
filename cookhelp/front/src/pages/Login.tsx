@@ -3,7 +3,7 @@ import styled from "styled-components";
 import Navbar from "../components/NavBar";
 import Container from "../UI/Container";
 import { Link } from "react-router-dom";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const Title = styled.h2`
   font-size: 24px;
@@ -64,8 +64,6 @@ const ErrorMsg = styled.p`
 `;
 
 const Login = () => {
-  const navigate = useNavigate();
-  const { state } = useLocation();
   const [login, setLogin] = useState({
     loginId: "",
     loginPassword: "",
@@ -103,6 +101,7 @@ const Login = () => {
     }
   };
 
+  const navigate = useNavigate();
     const handleBtnClick = (e: React.MouseEvent<HTMLButtonElement>): void => {
       e.preventDefault(); // 버튼 클릭의 기본 동작 중지
       fetch("http://localhost:8081/members/api/login", {
@@ -118,7 +117,6 @@ const Login = () => {
         .then(data => {
           if(data.isLogin==="True"){
             alert('로그인 완료되었습니다!')
-            console.log(data)
             navigate("/");
           }
           else{
