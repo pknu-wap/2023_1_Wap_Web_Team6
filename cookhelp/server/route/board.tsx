@@ -102,9 +102,6 @@ router.post('/api/upload', upload.array('recipe_img'), function (req, res, next)
     // const members = req.body.members;
     const members = "관리자";
     const recipe_stuff = req.body.recipe_stuff;
-    const recipe_img = req.files.map(file => `./img_server/${file.filename}`);
-
-    console.log(recipe_img);
 
     const recipe_step_1 = req.body.recipe_step_1;
     const recipe_step_2 = req.body.recipe_step_2;
@@ -151,16 +148,38 @@ router.post('/api/upload', upload.array('recipe_img'), function (req, res, next)
     const created_date = Date.now();
     const foodstyle = req.body.foodstyle;
 
-    const recipe_img_1 = recipe_img[1] || null;
-    const recipe_img_2 = recipe_img[2] || null;
-    const recipe_img_3 = recipe_img[3] || null;
-    const recipe_img_4 = recipe_img[4] || null;
-    const recipe_img_5 = recipe_img[5] || null;
-    const recipe_img_6 = recipe_img[6] || null;
-    const recipe_img_7 = recipe_img[7] || null;
-    const recipe_img_8 = recipe_img[8] || null;
-    const recipe_img_9 = recipe_img[9] || null;
-    const recipe_img_10 = recipe_img[10] || null;
+    // 대표 이미지
+    const recipe_img_array = req.files.map(file => `./img_server/${file.filename}`);
+    
+
+    // 세부 이미지
+    const recipe_img = recipe_img_array[0];
+
+    console.log(recipe_img);
+
+
+    const recipe_img_1 = recipe_img_array[1];
+    const recipe_img_2 = recipe_img_array[2];
+    const recipe_img_3 = recipe_img_array[3];
+    const recipe_img_4 = recipe_img_array[4];
+    const recipe_img_5 = recipe_img_array[5];
+    const recipe_img_6 = recipe_img_array[6];
+    const recipe_img_7 = recipe_img_array[7];
+    const recipe_img_8 = recipe_img_array[8];
+    const recipe_img_9 = recipe_img_array[9];
+    const recipe_img_10 = recipe_img_array[10];
+
+
+    // const recipe_img_1 = recipe_img.length >= 1 ? recipe_img[0] : null;
+    // const recipe_img_2 = recipe_img.length >= 2 ? recipe_img[1] : null;
+    // const recipe_img_3 = recipe_img.length >= 3 ? recipe_img[2] : null;
+    // const recipe_img_4 = recipe_img.length >= 4 ? recipe_img[3] : null;
+    // const recipe_img_5 = recipe_img.length >= 5 ? recipe_img[4] : null;
+    // const recipe_img_6 = recipe_img.length >= 6 ? recipe_img[5] : null;
+    // const recipe_img_7 = recipe_img.length >= 7 ? recipe_img[6] : null;
+    // const recipe_img_8 = recipe_img.length >= 8 ? recipe_img[7] : null;
+    // const recipe_img_9 = recipe_img.length >= 9 ? recipe_img[8] : null;
+    // const recipe_img_10 = recipe_img.length >= 10 ? recipe_img[9] : null;
 
     // 반복 처리 (미완성)
     // const recipe_steps: string[] = [];
@@ -178,7 +197,7 @@ router.post('/api/upload', upload.array('recipe_img'), function (req, res, next)
     
     const query = `INSERT INTO cookhelper (recipe_title, members, recipe_stuff, recipe_img, recipe_step_1, recipe_step_2, recipe_step_3, recipe_step_4, recipe_step_5, recipe_step_6, recipe_step_7, recipe_step_8, recipe_step_9, recipe_step_10, rd_1, rd_1_video, timer_rd_1, rd_2, rd_2_video, timer_rd_2, rd_3, rd_3_video, timer_rd_3, rd_4, rd_4_video, timer_rd_4, rd_5, rd_5_video, timer_rd_5, rd_6, rd_6_video, timer_rd_6, rd_7, rd_7_video, timer_rd_7, rd_8, rd_8_video, timer_rd_8, rd_9, rd_9_video, timer_rd_9, rd_10, rd_10_video, timer_rd_10, created_date, foodstyle, recipe_img_1, recipe_img_2, recipe_img_3, recipe_img_4, recipe_img_5, recipe_img_6, recipe_img_7, recipe_img_8, recipe_img_9, recipe_img_10) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);`;
     const values = [
-        recipe_title, members, recipe_stuff, ...recipe_img, recipe_step_1, recipe_step_2, recipe_step_3, recipe_step_4, recipe_step_5, recipe_step_6, recipe_step_7, recipe_step_8, recipe_step_9, recipe_step_10,
+        recipe_title, members, recipe_stuff, recipe_img, recipe_step_1, recipe_step_2, recipe_step_3, recipe_step_4, recipe_step_5, recipe_step_6, recipe_step_7, recipe_step_8, recipe_step_9, recipe_step_10,
         rd_1, rd_1_video, timer_rd_1, rd_2, rd_2_video, timer_rd_2, rd_3, rd_3_video, timer_rd_3, rd_4, rd_4_video, timer_rd_4, rd_5, rd_5_video, timer_rd_5,
         rd_6, rd_6_video, timer_rd_6, rd_7, rd_7_video, timer_rd_7, rd_8, rd_8_video, timer_rd_8, rd_9, rd_9_video, timer_rd_9, rd_10, rd_10_video, timer_rd_10,
         created_date, foodstyle, recipe_img_1, recipe_img_2, recipe_img_3, recipe_img_4, recipe_img_5, recipe_img_6,
@@ -216,9 +235,17 @@ router.get("/api/recipehelper/:recipe_idx", (req, res) => {
             return;
         }
 
-        console.log("데이터 전송 성공, 데이터 개수:", result.length)
-        res.send(result);
-        // console.log('게시판 목록 생성 완료. 전송 개수: ', recipeResult.length, recipeResult[0]);
+        // 특정 컬럼 값 추출
+        const recipeStuff = result.length > 0 ? result[0].recipe_stuff : null;
+        console.log("recipe_stuff 값:", recipeStuff);
+
+        // 레시피 재료를 배열로 변환
+        const recipeStuffArray = recipeStuff ? recipeStuff.split('/') : [];
+        console.log("recipe_stuff_array 값:", recipeStuffArray);
+        console.log("데이터 전송 성공, 데이터 개수:", result.length);
+        
+        // 클라이언트로 결과 및 recipeStuffArray 전송
+        res.send({ result: result, recipeStuffArray: recipeStuffArray });
     });
 });
 
