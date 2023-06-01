@@ -7,6 +7,13 @@ export interface RecipeListType {
   timer?: number;
 }
 
+export interface Card {
+  listNums: number;
+  pic: string | null;
+  detail: string | null;
+  timer: number | null;
+}
+
 export interface RecipeCard {
   id: number;
   RecipeName: string;
@@ -16,7 +23,7 @@ export interface RecipeCard {
 }
 
 export interface CardProps {
-  currentCard: RecipeListType;
+  currentCard: Card;
 }
 
 export interface ArrowButtonProps {
