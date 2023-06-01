@@ -30,19 +30,45 @@ router.use(bodyParser.urlencoded({
 }));
 router.use(cors());
 
+// 파일 필터링
 function fileFilter (req, file, cb) {
-
     // 이 함수는 boolean 값과 함께 `cb`를 호출함으로써 해당 파일을 업로드 할지 여부를 나타낼 수 있습니다.
     // 이 파일을 거부하려면 다음과 같이 `false` 를 전달합니다:
     cb(null, false)
-  
+
     // 이 파일을 허용하려면 다음과 같이 `true` 를 전달합니다:
     cb(null, true)
-  
+
     // 무언가 문제가 생겼다면 언제나 에러를 전달할 수 있습니다:
     cb(new Error('I don\'t have a clue!'))
-  
 }
+
+// 날짜 데이트 변환 함수
+function transDate(num) {
+    const currentDate = new Date();
+
+    // 저장될 파일명 설정
+    let formattedDate = '';
+
+    if (num === 1) {
+        // YYYYMMDDTTMM 형식으로 변환
+        const year = currentDate.getFullYear();
+        const month = (currentDate.getMonth() + 1).toString().padStart(2, '0');
+        const day = currentDate.getDate().toString().padStart(2, '0');
+        const hour = currentDate.getHours().toString().padStart(2, '0');
+        const minute = currentDate.getMinutes().toString().padStart(2, '0');
+        formattedDate = `${year}${month}${day}${hour}${minute}`;
+    } else if (num === 2) {
+        // YYYYMMDD 형식으로 변환
+        const year = currentDate.getFullYear();
+        const month = (currentDate.getMonth() + 1).toString().padStart(2, '0');
+        const day = currentDate.getDate().toString().padStart(2, '0');
+        formattedDate = `${year}${month}${day}`;
+    }
+
+    return formattedDate;
+}
+
 
 // Multer 디렉토리 설정
 const storage = multer.diskStorage({
@@ -51,18 +77,9 @@ const storage = multer.diskStorage({
       cb(null, './img_server');
     },
     filename: function (req, file, cb) {
-      // 저장될 파일명 설정("YYYYMMDDTTMM")
-      const currentDate = new Date();
 
-      const year = currentDate.getFullYear();
-      const month = (currentDate.getMonth() + 1).toString().padStart(2, '0');
-      const day = currentDate.getDate().toString().padStart(2, '0');
-      const hour = currentDate.getHours().toString().padStart(2, '0');
-      const minute = currentDate.getMinutes().toString().padStart(2, '0');
-      
-      const formattedDate = `${year}${month}${day}${hour}${minute}`;
-      
-      cb(null, formattedDate + '-' + file.originalname);
+        const formattedDate = transDate(1)
+        cb(null, formattedDate + '-' + file.originalname);
     }
 });
 
@@ -145,19 +162,17 @@ router.post('/api/upload', upload.array('recipe_img'), function (req, res, next)
     const rd_10_video = req.body.rd_10_video;
     const timer_rd_10 = req.body.timer_rd_10;
 
-    const created_date = Date.now();
+    const created_date = transDate(2)
     const foodstyle = req.body.foodstyle;
 
-    // 대표 이미지
+    // 저장한 이미지를 배열에 저장. 후 배열의 순서에 따라 해당 값을 할당.
     const recipe_img_array = req.files.map(file => `./img_server/${file.filename}`);
-    
+
+    // 대표 이미지
+    const recipe_img = recipe_img_array[0];
+    console.log(recipe_img);    
 
     // 세부 이미지
-    const recipe_img = recipe_img_array[0];
-
-    console.log(recipe_img);
-
-
     const recipe_img_1 = recipe_img_array[1];
     const recipe_img_2 = recipe_img_array[2];
     const recipe_img_3 = recipe_img_array[3];
@@ -169,30 +184,6 @@ router.post('/api/upload', upload.array('recipe_img'), function (req, res, next)
     const recipe_img_9 = recipe_img_array[9];
     const recipe_img_10 = recipe_img_array[10];
 
-
-    // const recipe_img_1 = recipe_img.length >= 1 ? recipe_img[0] : null;
-    // const recipe_img_2 = recipe_img.length >= 2 ? recipe_img[1] : null;
-    // const recipe_img_3 = recipe_img.length >= 3 ? recipe_img[2] : null;
-    // const recipe_img_4 = recipe_img.length >= 4 ? recipe_img[3] : null;
-    // const recipe_img_5 = recipe_img.length >= 5 ? recipe_img[4] : null;
-    // const recipe_img_6 = recipe_img.length >= 6 ? recipe_img[5] : null;
-    // const recipe_img_7 = recipe_img.length >= 7 ? recipe_img[6] : null;
-    // const recipe_img_8 = recipe_img.length >= 8 ? recipe_img[7] : null;
-    // const recipe_img_9 = recipe_img.length >= 9 ? recipe_img[8] : null;
-    // const recipe_img_10 = recipe_img.length >= 10 ? recipe_img[9] : null;
-
-    // 반복 처리 (미완성)
-    // const recipe_steps: string[] = [];
-    // const recipe_descriptions: string[] = [];
-    // const rd_img: string[] = [];
-    // const rd_video: string[] = [];
-
-    // for (let i = 1; i <= 10; i++) {
-    //     recipe_steps.push(req.body[`recipe_step_${i}`]);
-    //     recipe_descriptions.push(req.body[`recipe_description_${i}`]);
-    //     rd_img.push(req.body[`rd_${i}_img`]);
-    //     rd_video.push(req.body[`rd_${i}_video`]);
-    // }
 
     
     const query = `INSERT INTO cookhelper (recipe_title, members, recipe_stuff, recipe_img, recipe_step_1, recipe_step_2, recipe_step_3, recipe_step_4, recipe_step_5, recipe_step_6, recipe_step_7, recipe_step_8, recipe_step_9, recipe_step_10, rd_1, rd_1_video, timer_rd_1, rd_2, rd_2_video, timer_rd_2, rd_3, rd_3_video, timer_rd_3, rd_4, rd_4_video, timer_rd_4, rd_5, rd_5_video, timer_rd_5, rd_6, rd_6_video, timer_rd_6, rd_7, rd_7_video, timer_rd_7, rd_8, rd_8_video, timer_rd_8, rd_9, rd_9_video, timer_rd_9, rd_10, rd_10_video, timer_rd_10, created_date, foodstyle, recipe_img_1, recipe_img_2, recipe_img_3, recipe_img_4, recipe_img_5, recipe_img_6, recipe_img_7, recipe_img_8, recipe_img_9, recipe_img_10) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);`;
@@ -206,6 +197,7 @@ router.post('/api/upload', upload.array('recipe_img'), function (req, res, next)
     
     const sendData = { isSuccess: "" };
 
+    // DB에 데이터 전송
     db.query(query, values, function (error, result, fields) {
         if (error) {
             console.error("데이터 삽입 오류", error)
@@ -224,7 +216,7 @@ router.post('/api/upload', upload.array('recipe_img'), function (req, res, next)
 // 요리 도우미 구현
 router.get("/api/recipehelper/:recipe_idx", (req, res) => {
 
-    // const recipe_idx = 1;
+    // 전달받은 리스트의 인덱스
     const recipe_idx = req.params.recipe_idx;
 
     const sqlQuery = `SELECT *, DATE_FORMAT(created_date, '%Y-%m-%d') AS formatted_date FROM cookhelper WHERE recipe_idx = '${recipe_idx}';`;
@@ -300,5 +292,4 @@ router.post('/api/uploadTestTable', upload.array('recipe_img'), function (req, r
     // 업로드 완료 시 동작할 코드 작성
     res.send('파일 업로드 완료.');
 });
-
 // ===================================================================================================================================================================================================
