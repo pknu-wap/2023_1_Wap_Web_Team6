@@ -1,4 +1,3 @@
-// import 부분
 const express = require('express');
 const session = require('express-session');
 const bodyParser = require('body-parser');
@@ -29,7 +28,7 @@ router.use(bodyParser.urlencoded({
     limit:"50mb",
     extended: false
 }));
-router.use(cors())
+router.use(cors());
 
 function fileFilter (req, file, cb) {
 
@@ -152,6 +151,17 @@ router.post('/api/upload', upload.array('recipe_img'), function (req, res, next)
     const created_date = Date.now();
     const foodstyle = req.body.foodstyle;
 
+    const recipe_img_1 = recipe_img[1] || null;
+    const recipe_img_2 = recipe_img[2] || null;
+    const recipe_img_3 = recipe_img[3] || null;
+    const recipe_img_4 = recipe_img[4] || null;
+    const recipe_img_5 = recipe_img[5] || null;
+    const recipe_img_6 = recipe_img[6] || null;
+    const recipe_img_7 = recipe_img[7] || null;
+    const recipe_img_8 = recipe_img[8] || null;
+    const recipe_img_9 = recipe_img[9] || null;
+    const recipe_img_10 = recipe_img[10] || null;
+
     // 반복 처리 (미완성)
     // const recipe_steps: string[] = [];
     // const recipe_descriptions: string[] = [];
@@ -166,12 +176,13 @@ router.post('/api/upload', upload.array('recipe_img'), function (req, res, next)
     // }
 
     
-    const query = `INSERT INTO cookhelper (recipe_title, members, recipe_stuff, recipe_img, recipe_step_1, recipe_step_2, recipe_step_3, recipe_step_4, recipe_step_5, recipe_step_6, recipe_step_7, recipe_step_8, recipe_step_9, recipe_step_10, rd_1, rd_1_video, timer_rd_1, rd_2, rd_2_video, timer_rd_2, rd_3, rd_3_video, timer_rd_3, rd_4, rd_4_video, timer_rd_4, rd_5, rd_5_video, timer_rd_5, rd_6, rd_6_video, timer_rd_6, rd_7, rd_7_video, timer_rd_7, rd_8, rd_8_video, timer_rd_8, rd_9, rd_9_video, timer_rd_9, rd_10, rd_10_video, timer_rd_10, created_date, foodstyle) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);`;
+    const query = `INSERT INTO cookhelper (recipe_title, members, recipe_stuff, recipe_img, recipe_step_1, recipe_step_2, recipe_step_3, recipe_step_4, recipe_step_5, recipe_step_6, recipe_step_7, recipe_step_8, recipe_step_9, recipe_step_10, rd_1, rd_1_video, timer_rd_1, rd_2, rd_2_video, timer_rd_2, rd_3, rd_3_video, timer_rd_3, rd_4, rd_4_video, timer_rd_4, rd_5, rd_5_video, timer_rd_5, rd_6, rd_6_video, timer_rd_6, rd_7, rd_7_video, timer_rd_7, rd_8, rd_8_video, timer_rd_8, rd_9, rd_9_video, timer_rd_9, rd_10, rd_10_video, timer_rd_10, created_date, foodstyle, recipe_img_1, recipe_img_2, recipe_img_3, recipe_img_4, recipe_img_5, recipe_img_6, recipe_img_7, recipe_img_8, recipe_img_9, recipe_img_10) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);`;
     const values = [
         recipe_title, members, recipe_stuff, ...recipe_img, recipe_step_1, recipe_step_2, recipe_step_3, recipe_step_4, recipe_step_5, recipe_step_6, recipe_step_7, recipe_step_8, recipe_step_9, recipe_step_10,
         rd_1, rd_1_video, timer_rd_1, rd_2, rd_2_video, timer_rd_2, rd_3, rd_3_video, timer_rd_3, rd_4, rd_4_video, timer_rd_4, rd_5, rd_5_video, timer_rd_5,
         rd_6, rd_6_video, timer_rd_6, rd_7, rd_7_video, timer_rd_7, rd_8, rd_8_video, timer_rd_8, rd_9, rd_9_video, timer_rd_9, rd_10, rd_10_video, timer_rd_10,
-        created_date, foodstyle
+        created_date, foodstyle, recipe_img_1, recipe_img_2, recipe_img_3, recipe_img_4, recipe_img_5, recipe_img_6,
+        recipe_img_7, recipe_img_8, recipe_img_9, recipe_img_10
     ];
     
     const sendData = { isSuccess: "" };
@@ -189,39 +200,6 @@ router.post('/api/upload', upload.array('recipe_img'), function (req, res, next)
     // 업로드 완료 시 동작할 코드 작성
     res.send('파일 업로드 완료.');
 });
-
-// ===================================================================================================================================================================================================
-
-// router.post('/api/upload', upload.array('recipe_img'), function (req, res, next) {
-
-//     const title = req.body.recipe_title;
-//     const stuff = req.body.recipe_stuff;
-//     // const img = req.files.map(file => `./img_server/${file.filename}`);
-//     const img = req.files.map(files => `./img_server/${files.filename}`);
-//     // const img = req.body.recipe_img;
-
-//     console.log(img);
-
-//     const query = `INSERT INTO testtable (title, stuff, img_path) VALUES (?, ?, ?);`
-//     const value = [title, stuff, ...img];
-
-//     const sendData = { isSuccess: "" };
-
-//     db.query(query, value, function (error, result, fields) {
-//         if (error) {
-//             console.error("데이터 삽입 오류", error)
-//             sendData.isSuccess = "데이터 삽입 오류 발생"
-//         } else {
-//             sendData.isSuccess = "True";
-//             console.log("레시피 데이터 저장 완료.");
-//         }
-//     })
-
-//     // 업로드 완료 시 동작할 코드 작성
-//     res.send('파일 업로드 완료.');
-// });
-
-// ===================================================================================================================================================================================================
 
 
 // 요리 도우미 구현
@@ -245,30 +223,13 @@ router.get("/api/recipehelper/:recipe_idx", (req, res) => {
 });
 
 
-// 데이터 가공 테스트
-router.get("/api/categoryTest", (req, res) => {
-    
-    let type = "중식";
-    // let type = req.body.type;
+// 리스트에서 검색기능 구현.
+router.get("/api/search/:keyword", (req, res) => {
 
-    // 입력된 값에 따라 type 변수 설정
-    switch (type) {
-      case "중식":
-        type = "중식";
-        break;
-      case "한식":
-        type = "한식";
-        break;
-      case "일식":
-        type = "일식";
-        break;
-      // 기본값 설정
-      default:
-        type = "기타";
-        break;
-    }
+    // const recipe_idx = 1;
+    const keyword = req.params.keyword;
 
-    const sqlQuery = `SELECT *, DATE_FORMAT(created_date, '%Y-%m-%d') AS formatted_date FROM cookhelper WHERE foodstyle = '${type}';`;
+    const sqlQuery = `SELECT recipe_idx, recipe_title, members, created_date FROM cookhelp WHERE recipe_title LIKE '%${keyword}%';`;
     db.query(sqlQuery, (err, result) => {
         if (err) {
             console.log("데이터 조회 오류", err);
@@ -281,3 +242,36 @@ router.get("/api/categoryTest", (req, res) => {
         // console.log('게시판 목록 생성 완료. 전송 개수: ', recipeResult.length, recipeResult[0]);
     });
 });
+
+// 아래부터 테스트 함수들.
+// ===================================================================================================================================================================================================
+// 데이터 삽입 테스트, 현재 상황 : 여러개 이미지를 받아 지정경로에 저장.
+router.post('/api/uploadTestTable', upload.array('recipe_img'), function (req, res, next) {
+
+    const title = req.body.recipe_title;
+    const stuff = req.body.recipe_stuff;
+    // const img = req.files.map(file => `./img_server/${file.filename}`);
+    const img = req.files.map(files => `./img_server/${files.filename}`);
+
+    console.log(img);
+
+    const query = `INSERT INTO testtable (title, stuff, img_path) VALUES (?, ?, ?);`
+    const value = [title, stuff, ...img];
+
+    const sendData = { isSuccess: "" };
+
+    db.query(query, value, function (error, result, fields) {
+        if (error) {
+            console.error("데이터 삽입 오류", error)
+            sendData.isSuccess = "데이터 삽입 오류 발생"
+        } else {
+            sendData.isSuccess = "True";
+            console.log("레시피 데이터 저장 완료.");
+        }
+    })
+
+    // 업로드 완료 시 동작할 코드 작성
+    res.send('파일 업로드 완료.');
+});
+
+// ===================================================================================================================================================================================================
