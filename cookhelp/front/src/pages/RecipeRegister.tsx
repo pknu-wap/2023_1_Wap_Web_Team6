@@ -152,11 +152,11 @@ const RecipeRegister = () => {
     const handleImgUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
         const files = e.target.files;
         if (files) {
-            const updatedImgs = [];
+            const updatedImgs: File[] = [];
             for (let i = 0; i < files.length; i++) {
                 updatedImgs.push(files[i]);
             }
-            setRecipe_Img(updatedImgs);
+            setRecipe_Img((prevImgs) => [...prevImgs, ...updatedImgs]);
         }
     };
 
@@ -168,7 +168,6 @@ const RecipeRegister = () => {
     };
 
     
-
     const registerBtnClick = async (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
         
