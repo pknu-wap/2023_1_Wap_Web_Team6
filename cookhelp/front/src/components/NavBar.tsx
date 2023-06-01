@@ -63,14 +63,16 @@ const Navbar = () => {
 
   const navigate = useNavigate();
   useEffect(() => {
-    fetch("http://localhost:8081/members/api/authcheck")
+    fetch("http://localhost:8081/members/api/authcheck", {credentials: 'include'})
       .then((res) => res.json())
       .then((json) => {        
         if (json.isLogin === "True") {
           console.log('hello')
           setMode("WELCOME");
+          console.log(json)
         }
         else {
+          console.log(json)
           setMode("LOGIN");
         }
       });
@@ -86,7 +88,8 @@ const Navbar = () => {
   }
   else if (mode === 'WELCOME') {
     content = <>
-    <AuthButton onClick={() => navigate("/Join")}>로그아웃</AuthButton>
+    <AuthButton onClick={() => navigate("/myPage")}>마이페이지</AuthButton>
+    <AuthButton onClick={() => navigate("")}>로그아웃</AuthButton>
     </>
   }
 

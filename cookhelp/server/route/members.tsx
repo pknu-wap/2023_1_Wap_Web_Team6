@@ -15,20 +15,23 @@ module.exports = router;
 
 const MySQLStore = require('express-mysql-session')(session);
 const sessionStore = new MySQLStore(sessionOption);
+// 세션 스토어 저장 부분
 const sessionMiddleware = session({
   key: 'session_cookie_name',
   secret: 'hello',
-  store: sessionStore,
-  secure: true,
-  resave: false,              // 변경된 부분
-  saveUninitialized: true    // 변경된 부분
+  store: sessionStore,    // 세션 스토어는 mysql 에 sessions 저장 부분
+  resave: true,
+  saveUninitialized: true
 });
 
-router.use(bodyParser.json())
-router.use(cors())
 router.use(sessionMiddleware);
+router.use(bodyParser.json())
 router.use(bodyParser.urlencoded({extended:true}))
-
+router.use(cors({
+  origin: ["http://localhost:3000"],
+  method: ["POST","GET"],
+  credentials:true
+}))
 router.get('/', (req, res) => {
   console.log(req.session);
   console.log(req.sessionID)
@@ -40,28 +43,35 @@ router.get('/', (req, res) => {
   req.session.save();
   console.log(req.session)
   res.send(`Hello Dormamu we meet ${req.session.num} times`);
-  });
-router.get("/logout",function(req,res){
-  req.session.destroy();
-  console.log("logout success");       
 });
+  
+// router.get("/logout",function(req,res){
+//   req.session.destroy();
+//   console.log("logout success");       
+// });
+// ======================================================================================================
+// 로그아웃 
 // router.get('/api/logout', function (req, res) {
 //   req.session.destroy(function (err) {
 //       res.redirect('/');
 //   });
 // });
-
+// ======================================================================================================
+// 회원 체크(세션에 넣어주기(navBar에서 이용)) 
 router.get('/api/authcheck', (req, res) => {      
   const sendData = { isLogin: "" };
   console.log(req.sessionID)
   console.log(req.session)
-  if (req.session.is_logined) {
+  if (req.session.is_logined && req.loginSessionId === req.sessionID) {
       sendData.isLogin = "True"
   } else {
       sendData.isLogin = "False"
   }
   res.send(sendData);
 })
+
+// ======================================================================================================
+// 로그인 
 router.post("/api/login", (req, res) => {
     const userId = req.body.loginId;
     const password = req.body.loginPassword;
@@ -74,6 +84,7 @@ router.post("/api/login", (req, res) => {
           if (results[0].password == password) {
             req.session.is_logined = true;
             req.session.nickname = userId;
+            const loginSessionId = req.sessionID;
 
             req.session.save(function (err) {
               if (err) {
@@ -81,10 +92,9 @@ router.post("/api/login", (req, res) => {
                 sendData.isLogin = "세션 저장 오류가 발생했습니다.";
                 res.send(sendData);
               } else {
+                req.loginSessionId = loginSessionId;
                 sendData.isLogin = "True";
-                console.log(req.sessionID)
-                console.log(req.session.is_logined, req.session.nickname)
-                console.log(userId, '로그인');
+                console.log(req.sessionID);
                 console.log(req.session);
                 res.send(sendData);
               }
@@ -106,6 +116,8 @@ router.post("/api/login", (req, res) => {
     }
 });
 
+// ======================================================================================================
+// 회원가입
 router.post("/api/Join", (req, res) => {  // 데이터 받아서 결과 전송
     const userId = req.body.joinId;
     const userPassword = req.body.joinPassword;
@@ -127,8 +139,8 @@ router.post("/api/Join", (req, res) => {  // 데이터 받아서 결과 전송
                         sendData.isSuccess = "True"
                         res.send(sendData);
                     });
-                    db.query(`INSERT INTO logTable (created, username, action, command, actiondetail) VALUES (NOW(), ?, 'login' , ?, ?)`
-                            , [req.session.nickname, '-', `React 로그인 테스트`], function (error, result) { });
+                    // db.query(`INSERT INTO logTable (created, username, action, command, actiondetail) VALUES (NOW(), ?, 'login' , ?, ?)`
+                    //         , [req.session.nickname, '-', `React 로그인 테스트`], function (error, result) { });
                 });
             }
             else {                                                  // DB에 같은 이름의 회원아이디가 있는 경우            
@@ -144,3 +156,37 @@ router.post("/api/Join", (req, res) => {  // 데이터 받아서 결과 전송
     }
 });
 
+// ======================================================================================================
+// 회원 정보 가져오기
+router.get('/api/info', (req, res) => {      
+  const userId = req.body.loginId;
+
+  const sendData = { isSuccess: "" };
+})
+// ======================================================================================================
+// 회원 정보 수정하기
+router.get('/api/modify', (req, res) => {      
+  const userId = req.body.modifyId;
+  const userPassword = req.body.modifyPassword;
+  const userName = req.body.modifyName;
+  const userSelectFood = req.body.modifySelectFood;
+
+  const sendData = { isSuccess: "" };
+
+  if (userId && userPassword && userName && userSelectFood) {
+      db.query('UPDATE members SET PASSWORD ="?", nickname="?", foodstyle="?" WHERE id ="?"', [userPassword, userName, userSelectFood, userId], function (error, data) {
+          if (error) throw error;                    
+            console.log('회원정보 수정 완료!')
+            req.session.is_logined = true;
+            req.session.nickname = userId;
+            req.session.save(function () {    
+              sendData.isSuccess = "True"
+              res.send(sendData);
+            });
+        });
+  } else {
+    console.log('아이디 비밀번호 입력하세요!')
+    sendData.isSuccess = "아이디와 비밀번호를 입력하세요!"
+    res.send(sendData);  
+  }      
+});        
