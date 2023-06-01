@@ -80,13 +80,13 @@ const Navbar = () => {
 
   if(mode==="LOGIN"){
     content = <>
-    <AuthButton onClick={() => navigate("/login")}>로그인
-    </AuthButton> <AuthButton onClick={() => navigate("/Join")}>회원가입</AuthButton>
+    <AuthButton onClick={() => navigate("/login")}>로그인</AuthButton> 
+    <AuthButton onClick={() => navigate("/Join")}>회원가입</AuthButton>
     </>
   }
   else if (mode === 'WELCOME') {
     content = <>
-    <h3>hello</h3>  
+    <AuthButton onClick={() => navigate("/Join")}>로그아웃</AuthButton>
     </>
   }
 
