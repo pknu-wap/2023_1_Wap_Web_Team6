@@ -61,13 +61,11 @@ const RecipeSeq = (props: RecipeSeqProps) => {
                     <input type="file"
                     name="recipe_img"
                     onChange={(e) => props.handleImgUpload(e)}
+                    required
                     />
 
                     <TimerContainer>
                         <div>
-                            {/* <input type="checkbox"
-                            checked={bChecked}
-                            onChange={(e) => checkHandler(e)} /> */}
                             <input
                             type="checkbox"
                             checked={checkedItems[i] || false}

@@ -82,47 +82,47 @@ const RecipeRegister = () => {
     setCountList(countArr);
   };
 
-  const [recipe_img, setRecipe_Img] = useState<File[]>([]);
+  const [recipe_img, setRecipe_Img] = useState<File[]>([]); // 이미지 배열
 
   const [registerData, setRegisterData] = useState({
-    recipe_title: "null", // 레시피 제목
-    recipe_stuff: "null", // 요리 재료
-    foodstyle: "null", // 음식 종류(한,중,일,양)
+    recipe_title: "", // 레시피 제목
+    recipe_stuff: "", // 요리 재료
+    foodstyle: "한식", // 음식 종류(한,중,일,양)
     //recipe_img: Array(11).fill("null"), // 이미지 배열
-    members: "작성자",
+    members: "",
 
-    recipe_step_1: "null", // 요리순서 소제목 1~10
-    recipe_step_2: "null",
-    recipe_step_3: "null",
-    recipe_step_4: "null",
-    recipe_step_5: "null",
-    recipe_step_6: "null",
-    recipe_step_7: "null",
-    recipe_step_8: "null",
-    recipe_step_9: "null",
-    recipe_step_10: "null",
+    recipe_step_1: "", // 요리순서 소제목 1~10
+    recipe_step_2: "",
+    recipe_step_3: "",
+    recipe_step_4: "",
+    recipe_step_5: "",
+    recipe_step_6: "",
+    recipe_step_7: "",
+    recipe_step_8: "",
+    recipe_step_9: "",
+    recipe_step_10: "",
 
-    rd_1: "null", // 요리순서 상세설명 1~10
-    rd_2: "null",
-    rd_3: "null",
-    rd_4: "null",
-    rd_5: "null",
-    rd_6: "null",
-    rd_7: "null",
-    rd_8: "null",
-    rd_9: "null",
-    rd_10: "null",
+    rd_1: "", // 요리순서 상세설명 1~10
+    rd_2: "",
+    rd_3: "",
+    rd_4: "",
+    rd_5: "",
+    rd_6: "",
+    rd_7: "",
+    rd_8: "",
+    rd_9: "",
+    rd_10: "",
 
-    timer_rd_1: "null", // 타이머 1~10
-    timer_rd_2: "null",
-    timer_rd_3: "null",
-    timer_rd_4: "null",
-    timer_rd_5: "null",
-    timer_rd_6: "null",
-    timer_rd_7: "null",
-    timer_rd_8: "null",
-    timer_rd_9: "null",
-    timer_rd_10: "null",
+    timer_rd_1: "", // 타이머 1~10
+    timer_rd_2: "",
+    timer_rd_3: "",
+    timer_rd_4: "",
+    timer_rd_5: "",
+    timer_rd_6: "",
+    timer_rd_7: "",
+    timer_rd_8: "",
+    timer_rd_9: "",
+    timer_rd_10: "",
   });
 
   // const handleImgUpload = (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
@@ -171,6 +171,7 @@ const RecipeRegister = () => {
     });
   };
 
+
   const registerBtnClick = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
 
@@ -189,9 +190,12 @@ const RecipeRegister = () => {
         body: formData,
       });
 
+      if (response.ok) {
+        navigate("/recipe_list");
+        console.log("게시물 등록 성공");
+      }
+
       const result = await response.json();
-      navigate("/recipe_list");
-      console.log("게시물 등록 성공");
       console.log(registerData);
     } catch (error) {
       console.log("Error:", error);
