@@ -67,6 +67,7 @@ const Login = () => {
   const [login, setLogin] = useState({
     loginId: "",
     loginPassword: "",
+    sessionID:localStorage.getItem('sessionID')
   });
 
   const handleValueChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -116,6 +117,8 @@ const Login = () => {
         .then(res => res.json())
         .then(data => {
           if(data.isLogin==="True"){
+            localStorage.setItem('isLogin', data.isLogin);
+            localStorage.setItem('loginId', data.loginId);
             alert('로그인 완료되었습니다!')
             navigate("/");
           }
