@@ -118,7 +118,7 @@ const Login = () => {
         .then(data => {
           if(data.isLogin==="True"){
             localStorage.setItem('isLogin', data.isLogin);
-            localStorage.setItem('nickname', data.nickname);
+            localStorage.setItem('loginId', data.loginId);
             alert('로그인 완료되었습니다!')
             navigate("/");
           }

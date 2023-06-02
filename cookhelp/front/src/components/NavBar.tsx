@@ -63,6 +63,7 @@ const Navbar = () => {
   
   const handleBtnClick = (e: React.MouseEvent<HTMLButtonElement>): void => {
     localStorage.setItem('isLogin', "False");
+    localStorage.setItem('loginId', "");
     alert("로그아웃 완료 되었습니다!")
     setMode("LOGIN");
     // e.preventDefault(); // 버튼 클릭의 기본 동작 중지
@@ -90,6 +91,7 @@ const Navbar = () => {
   };
 
   const navigate = useNavigate();
+  const id = localStorage.getItem('loginId')
   useEffect(() => {
     if(localStorage.getItem('isLogin') === "True"){
       setMode("WELCOME")
@@ -116,6 +118,7 @@ const Navbar = () => {
 
   let content:any = null;  
 
+
   if(mode==="LOGIN"){
     content = <>
     <AuthButton onClick={() => navigate("/login")}>로그인</AuthButton> 
@@ -124,7 +127,7 @@ const Navbar = () => {
   }
   else if (mode === 'WELCOME') {
     content = <>
-    <AuthButton onClick={() => navigate("/myPage")}>마이페이지</AuthButton>
+    <AuthButton onClick={() => navigate(`/myPage/${id}`)}>{id}</AuthButton>
     <AuthButton onClick={handleBtnClick}>로그아웃</AuthButton>
     </>
   }

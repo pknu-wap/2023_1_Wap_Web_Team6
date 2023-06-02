@@ -85,7 +85,7 @@ router.get('/api/authcheck', sessionMiddleware, (req, res) => {
 router.post("/api/login", (req, res) => {
     const userId = req.body.loginId;
     const password = req.body.loginPassword;
-    const sendData = { isLogin: "", nickname:""};
+    const sendData = { isLogin: "", loginId:""};
     // req.sessionID = req.body.sessionID
 
     if (userId && password) {
@@ -97,7 +97,7 @@ router.post("/api/login", (req, res) => {
                 req.session.nickname = userId;
                 req.session.save(function () {
                   sendData.isLogin = "True";
-                  sendData.nickname = userId;
+                  sendData.loginId = userId;
                   console.log(req.sessionID);
                   console.log(req.session);
                   res.send(sendData);
@@ -127,7 +127,7 @@ router.post("/api/Join", (req, res) => {  // 데이터 받아서 결과 전송
     const userName = req.body.joinName;
     const userSelectFood = req.body.joinSelectFood;
     
-    const sendData = { isSuccess: "" };
+    const sendData = { isSuccess: "", isLogin: "", loginId:"" };
 
     if (userId && userPassword && userName && userSelectFood) {
         db.query('SELECT * FROM members WHERE id = ?', [userId], function(error, results, fields) { // DB에 같은 이름의 회원아이디가 있는지 확인
@@ -138,7 +138,9 @@ router.post("/api/Join", (req, res) => {  // 데이터 받아서 결과 전송
                     console.log('회원가입 성공!')
                     req.session.is_logined = true;
                     req.session.nickname = userId;
-                    req.session.save(function () {    
+                    req.session.save(function () {   
+                        sendData.isLogin = "True";
+                        sendData.loginId = userId; 
                         sendData.isSuccess = "True"
                         res.send(sendData);
                     });
@@ -161,10 +163,21 @@ router.post("/api/Join", (req, res) => {  // 데이터 받아서 결과 전송
 
 // ======================================================================================================
 // 회원 정보 가져오기
-router.get('/api/info', (req, res) => {      
-  const userId = req.body.loginId;
-
+router.get('/api/info/:loginId', (req, res) => {      
+  const userId = req.params.loginId;
   const sendData = { isSuccess: "" };
+
+  const sqlQuery = `SELECT * FROM members WHERE id = '${userId}';`;
+  db.query(sqlQuery, (err, result) => {
+    if(err) {
+      console.log("데이터 조회 오류", err);
+      res.result(500).send("데이터 조회 오류");
+      return;
+    }
+    console.log(userId,"데이터 전송 성공")
+    res.send(result)
+  })
+
 })
 // ======================================================================================================
 // 회원 정보 수정하기
@@ -177,7 +190,7 @@ router.get('/api/modify', (req, res) => {
   const sendData = { isSuccess: "" };
 
   if (userId && userPassword && userName && userSelectFood) {
-      db.query('UPDATE members SET PASSWORD ="?", nickname="?", foodstyle="?" WHERE id ="?"', [userPassword, userName, userSelectFood, userId], function (error, data) {
+      db.query(`UPDATE members SET PASSWORD ='${userPassword}', nickname='${userName}', foodstyle='${userSelectFood}' WHERE id ='${userId}'`, function (error, data) {
           if (error) throw error;                    
             console.log('회원정보 수정 완료!')
             req.session.is_logined = true;
