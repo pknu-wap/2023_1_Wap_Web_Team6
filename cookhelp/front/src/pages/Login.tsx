@@ -67,7 +67,7 @@ const Login = () => {
   const [login, setLogin] = useState({
     loginId: "",
     loginPassword: "",
-    sessionID:localStorage.getItem('sessionID')
+    sessionID: localStorage.getItem("sessionID"),
   });
 
   const handleValueChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -103,32 +103,31 @@ const Login = () => {
   };
 
   const navigate = useNavigate();
-    const handleBtnClick = (e: React.MouseEvent<HTMLButtonElement>): void => {
-      e.preventDefault(); // 버튼 클릭의 기본 동작 중지
-      fetch("http://localhost:8081/members/api/login", {
-        //auth 주소에서 받을 예정
-        method: "post", // method :통신방법
-        headers: {
-          // headers: API 응답에 대한 정보를 담음
-          "content-type": "application/json",
-        },
-        body: JSON.stringify(login), //login 객체를 보냄
+  const handleBtnClick = (e: React.MouseEvent<HTMLButtonElement>): void => {
+    e.preventDefault(); // 버튼 클릭의 기본 동작 중지
+    fetch("http://localhost:8081/members/api/login", {
+      //auth 주소에서 받을 예정
+      method: "post", // method :통신방법
+      headers: {
+        // headers: API 응답에 대한 정보를 담음
+        "content-type": "application/json",
+      },
+      body: JSON.stringify(login), //login 객체를 보냄
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.isLogin === "True") {
+          localStorage.setItem("isLogin", data.isLogin);
+          localStorage.setItem("loginId", data.loginId);
+          alert("로그인 완료되었습니다!");
+          navigate("/");
+        } else {
+          console.log(data);
+          alert(data.isLogin);
+        }
       })
-        .then(res => res.json())
-        .then(data => {
-          if(data.isLogin==="True"){
-            localStorage.setItem('isLogin', data.isLogin);
-            localStorage.setItem('loginId', data.loginId);
-            alert('로그인 완료되었습니다!')
-            navigate("/");
-          }
-          else{
-            console.log(data)
-            alert(data.isLogin)
-          }
-        })
-        .catch(error => console.log("error =>", error))
-    };
+      .catch((error) => console.log("error =>", error));
+  };
 
   return (
     <>
@@ -152,7 +151,7 @@ const Login = () => {
             <Label>비밀번호 </Label>
             <Input
               onChange={isPassword}
-              type="text"
+              type="password"
               name="loginPassword"
               placeholder="비밀번호 입력"
             ></Input>

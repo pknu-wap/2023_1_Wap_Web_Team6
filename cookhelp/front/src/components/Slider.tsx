@@ -68,15 +68,18 @@ const ArrowForward = ({ onClick }: ArrowButtonProps) => {
 
 const ScreenCard = ({ currentCard }: CardProps) => {
   const { pic, detail } = currentCard;
-  if (!pic || !detail) {
+  if (!pic) {
     // console.log("null");
     return <p>이미지가 없습니다</p>;
   }
 
-  console.log("currentCard : ", currentCard);
+  // console.log("imgSrc : ", pic);
+  const ImgSrc = pic.slice(1);
+  console.log(pic);
+  // console.log(`http://localhost:8081/server${ImgSrc}`);
   return (
     <StyledCard>
-      <SlideImg src={pic} />
+      <SlideImg src={`http://localhost:8081/cookhelp/server${ImgSrc}`} />
       <p>{detail}</p>
     </StyledCard>
   );

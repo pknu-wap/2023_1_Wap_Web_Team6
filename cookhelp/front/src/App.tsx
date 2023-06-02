@@ -6,7 +6,7 @@ import Join from "./pages/Join";
 import Recipe from "./pages/Recipe";
 import RecipeList from "./pages/RecipeList";
 import RecipeRegister from "./pages/RecipeRegister";
-import cardData from "./tmpDB/tmpRecipeDB";
+import Mypage from "./pages/Mypage";
 
 function App() {
   const NotFound = () => {
@@ -22,6 +22,7 @@ function App() {
           <Route path="/join" element={<Join />} />
           {/* {content} */}
           <Route path="/recipe/:recipe_idx" element={<Recipe />} />
+          <Route path="/myPage/:id" element={<Mypage />} />
           <Route path="/recipe_list/:keyword?" element={<RecipeList />} />
           <Route path="/recipe_register" element={<RecipeRegister />} />
 
