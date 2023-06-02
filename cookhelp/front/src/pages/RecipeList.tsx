@@ -13,8 +13,8 @@ import Pagination from "../components/Pagination";
 const RecipeListContainer = styled(Container)`
   max-width: 60rem;
   width: 70%;
-  height: 35rem;
-  margin-bottom: 1rem;
+  height: 40rem;
+  margin-bottom: 5rem;
   display: flex;
 `;
 const StyleSearchLogo = styled.div`
@@ -24,6 +24,8 @@ const StyleSearchLogo = styled.div`
 `;
 const LogoImg = styled.img`
   width: 100%;
+  cursor: pointer;
+
 `;
 const LogoBox = styled.div`
   display: flex;
@@ -79,7 +81,7 @@ const RecipeList = () => {
   const offset = (page - 1) * limit;
 
   const [keyword, setKeyword] = useState("");
-  const params = useParams();
+  // const params = useParams();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -117,22 +119,26 @@ const RecipeList = () => {
   const RecipeSearch = async () => {
     try {
       const res = await fetch(
-        `http://localhost:8081/board/api/search/:keyword`
+        `http://localhost:8081/board/api/search/${keyword}`
       );
       const data = await res.json();
+      console.log(keyword);
+      console.log(data);
       if (!res.ok) {
         console.log("error : ", data.description);
         return;
       }
-      console.log("data : ", data.result[0]);
+      
+      setListData(data);
 
     } catch (error) {
       console.log("Error!", error);
     }
+  };
 
-    const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
       setKeyword(event.target.value);
-    };
+  };
 
     return (
       <>
@@ -156,7 +162,9 @@ const RecipeList = () => {
           <LogoBox>
             <SearchInput placeholder="레시피 검색" onChange={handleInputChange}></SearchInput>
             <StyleSearchLogo>
-              <LogoImg src={searchLogo} onClick={RecipeSearch}></LogoImg>
+              <LogoImg src={searchLogo}
+                onClick={RecipeSearch}
+              ></LogoImg>
             </StyleSearchLogo>
           </LogoBox>
           <ListBox>
@@ -189,6 +197,5 @@ const RecipeList = () => {
       </>
     );
   };
-}
 
 export default RecipeList;

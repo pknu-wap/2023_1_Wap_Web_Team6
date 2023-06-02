@@ -22,7 +22,7 @@ function App() {
           <Route path="/join" element={<Join />} />
           {/* {content} */}
           <Route path="/recipe/:recipe_idx" element={<Recipe />} />
-          <Route path="/recipe_list" element={<RecipeList />} />
+          <Route path="/recipe_list/:keyword?" element={<RecipeList />} />
           <Route path="/recipe_register" element={<RecipeRegister />} />
 
           <Route path="/*" element={<NotFound />} />
