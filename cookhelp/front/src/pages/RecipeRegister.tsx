@@ -167,10 +167,10 @@ const RecipeRegister = () => {
         });
     };
 
-    
+
     const registerBtnClick = async (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
-        
+
         const formData = new FormData();
 
         recipe_img.forEach((img) => {
@@ -186,11 +186,13 @@ const RecipeRegister = () => {
                 body: formData
             });
 
-            const result = await response.json();
-            navigate("/recipe_list");
-            console.log("게시물 등록 성공");
-            console.log(registerData);
+            if (response.ok) {
+                navigate("/recipe_list");
+                console.log("게시물 등록 성공");
+            }
 
+            const result = await response.json();
+            console.log(registerData);
         } catch (error) {
             console.log("Error:", error);
         }

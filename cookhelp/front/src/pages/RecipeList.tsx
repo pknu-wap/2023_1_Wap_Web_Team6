@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, ChangeEvent } from "react";
 import styled from "styled-components";
 import Navbar from "../components/NavBar";
 import Container from "../UI/Container";
@@ -6,7 +6,7 @@ import searchLogo from "../assets/searchLogo.png";
 import RecipeItem from "../components/RecipeItem";
 import { fetchRecipeList, searchData } from "../components/type";
 // import searchTmpData from "../tmpDB/tmpRecipeListDB";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation, useParams } from "react-router-dom";
 import Btn from "../UI/Btn";
 import Pagination from "../components/Pagination";
 
@@ -78,6 +78,9 @@ const RecipeList = () => {
   const limit = 10;
   const offset = (page - 1) * limit;
 
+  const [keyword, setKeyword] = useState("");
+  const params = useParams();
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -93,10 +96,10 @@ const RecipeList = () => {
         clickedCategory === "전체"
           ? setListData(data)
           : setListData(
-              data.filter(
-                (item: fetchRecipeList) => item.foodstyle === clickedCategory
-              )
-            );
+            data.filter(
+              (item: fetchRecipeList) => item.foodstyle === clickedCategory
+            )
+          );
       } catch (error) {
         console.log("Error!", error);
       }
@@ -111,60 +114,81 @@ const RecipeList = () => {
     setClickCategory(e.currentTarget.name);
   };
 
-  return (
-    <>
-      <Navbar />
-      <StyleBtnContainer>
-        {foodStyle.map((elm, idx) => {
-          return (
-            <ItemBtn
-              type="button"
-              key={idx}
-              onClick={handleFoodClick}
-              name={elm}
-              isActive={clickedCategory === elm}
-            >
-              {elm}
-            </ItemBtn>
-          );
-        })}
-      </StyleBtnContainer>
-      <RecipeListContainer>
-        <LogoBox>
-          <SearchInput placeholder="레시피 검색"></SearchInput>
-          <StyleSearchLogo>
-            <LogoImg src={searchLogo}></LogoImg>
-          </StyleSearchLogo>
-        </LogoBox>
-        <ListBox>
-          {listData
-            .slice(offset, offset + limit)
-            .map((ele: searchData, index: number) => {
-              //const date = ele.created_date.slice(0, 10);
-              return (
-                <RecipeItem
-                  key={ele.recipe_idx}
-                  to={`/recipe/${index + 1}`}
-                  RecipeId={ele.recipe_idx}
-                  RecipeTitle={ele.recipe_title}
-                  RecipeWriter={ele.members}
-                  RecipeDate={ele.created_date}
-                />
-              );
-            })}
-        </ListBox>
-        <Pagination
-          totalPage={listData.length}
-          limit={limit}
-          page={page}
-          setPage={setPage}
-        />
-        <RegisterBtn onClick={() => navigate("/recipe_register")}>
-          레시피 등록
-        </RegisterBtn>
-      </RecipeListContainer>
-    </>
-  );
-};
+  const RecipeSearch = async () => {
+    try {
+      const res = await fetch(
+        `http://localhost:8081/board/api/search/:keyword`
+      );
+      const data = await res.json();
+      if (!res.ok) {
+        console.log("error : ", data.description);
+        return;
+      }
+      console.log("data : ", data.result[0]);
+
+    } catch (error) {
+      console.log("Error!", error);
+    }
+
+    const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
+      setKeyword(event.target.value);
+    };
+
+    return (
+      <>
+        <Navbar />
+        <StyleBtnContainer>
+          {foodStyle.map((elm, idx) => {
+            return (
+              <ItemBtn
+                type="button"
+                key={idx}
+                onClick={handleFoodClick}
+                name={elm}
+                isActive={clickedCategory === elm}
+              >
+                {elm}
+              </ItemBtn>
+            );
+          })}
+        </StyleBtnContainer>
+        <RecipeListContainer>
+          <LogoBox>
+            <SearchInput placeholder="레시피 검색" onChange={handleInputChange}></SearchInput>
+            <StyleSearchLogo>
+              <LogoImg src={searchLogo} onClick={RecipeSearch}></LogoImg>
+            </StyleSearchLogo>
+          </LogoBox>
+          <ListBox>
+            {listData
+              .slice(offset, offset + limit)
+              .map((ele: searchData, index: number) => {
+                //const date = ele.created_date.slice(0, 10);
+                return (
+                  <RecipeItem
+                    key={ele.recipe_idx}
+                    to={`/recipe/${index}`}
+                    RecipeId={ele.recipe_idx}
+                    RecipeTitle={ele.recipe_title}
+                    RecipeWriter={ele.members}
+                    RecipeDate={ele.created_date}
+                  />
+                );
+              })}
+          </ListBox>
+          <Pagination
+            totalPage={listData.length}
+            limit={limit}
+            page={page}
+            setPage={setPage}
+          />
+          <RegisterBtn onClick={() => navigate("/recipe_register")}>
+            레시피 등록
+          </RegisterBtn>
+        </RecipeListContainer>
+      </>
+    );
+  };
+}
 
 export default RecipeList;

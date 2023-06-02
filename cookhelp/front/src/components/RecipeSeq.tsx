@@ -65,9 +65,6 @@ const RecipeSeq = (props: RecipeSeqProps) => {
 
                     <TimerContainer>
                         <div>
-                            {/* <input type="checkbox"
-                            checked={bChecked}
-                            onChange={(e) => checkHandler(e)} /> */}
                             <input
                             type="checkbox"
                             checked={checkedItems[i] || false}
