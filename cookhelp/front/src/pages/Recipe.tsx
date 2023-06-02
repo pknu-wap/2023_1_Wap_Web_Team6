@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import NavBar from "../components/NavBar";
 import Slider from "../components/Slider";
-import { RecipeCard, ListProps, DeckData } from "../components/type";
+import { ListProps, DeckData, Card } from "../components/type";
 import RecommendCard from "../components/RecommendCard";
 import { Form, useParams } from "react-router-dom";
 
@@ -94,17 +94,12 @@ const Recipe = () => {
   const [deck, setDeck] = useState();
   const [selectIdx, setSelectIdx] = useState<number>(1);
   const [recipeSteps, setRecipeSteps] = useState<string[]>([]);
-  const [timer, setTimer] = useState<number[]>([]);
   const [Ingredient, setIngredient] = useState<string[]>([]);
+  const [cards, setCards] = useState<Card[]>([]);
 
   const addRecipeStep = (step: string | null) => {
     if (step == null) return;
     setRecipeSteps((prev) => [...prev, step]);
-  };
-  const addTimer = (time: string | null) => {
-    if (time == null) return;
-    const parsedTime = parseInt(time);
-    setTimer((prev) => [...prev, parsedTime]);
   };
 
   useEffect(() => {
@@ -119,10 +114,14 @@ const Recipe = () => {
           console.log("error : ", data.description);
           return;
         }
-        console.log("data : ", data.result[0]);
+        console.log("data : ", data);
+        // console.log("data : ", data.result[0]);
         setDeck(data.result[0]);
         setIngredient(data.recipeStuffArray);
         updateContent(data.result[0]);
+        //slider에 보낼 card 변수
+        const newGenerateCard = generateCards(data.result[0]);
+        setCards(newGenerateCard);
       } catch (error) {
         console.log("Error!", error);
       }
@@ -131,9 +130,13 @@ const Recipe = () => {
     fetchRecipeHelper();
   }, []);
 
+  // let SliderContent = <></>;
+  // useEffect(() => {
+  //   SliderContent = <Slider cards={cards} selectIdx={selectIdx} />;
+  // }, [cards, deck]);
+
   const updateContent = (deckData: DeckData) => {
     setRecipeSteps([]);
-    setTimer([]);
 
     Object.keys(deckData).forEach((key) => {
       //요리 순서(소제목) 배열에 저장
@@ -141,12 +144,27 @@ const Recipe = () => {
         // console.log(deckData[key]);
         addRecipeStep(deckData[key]);
       }
-
-      // 타이머 저장
-      if (key.startsWith("timer_rd")) {
-        addTimer(deckData[key]);
-      }
     });
+  };
+  const generateCards = (deckData: DeckData) => {
+    const newCards = [];
+    for (let i = 1; i <= 10; i++) {
+      const recipeImg = deckData[`recipe_img_${i}`];
+      const rd = deckData[`rd_${i}`];
+      const timerRd = deckData[`timer_rd_${i}`];
+
+      if (recipeImg || rd || timerRd) {
+        const card = {
+          listNums: i,
+          pic: recipeImg,
+          detail: rd,
+          timer: timerRd !== null ? parseInt(timerRd) : null,
+        };
+        newCards.push(card);
+      }
+    }
+
+    return newCards;
   };
 
   let listContent = recipeSteps.map((step, idx) => (
@@ -164,6 +182,7 @@ const Recipe = () => {
 
   // console.log("deck : ", deck);
   // console.log("listContent : ", listContent);
+  // console.log(cards);
   return (
     <div>
       <NavBar />
@@ -172,7 +191,10 @@ const Recipe = () => {
           <ListTitle>요리 순서</ListTitle>
           {listContent}
         </RightSideBar>
-        <Main>{/* <Slider recipeList={deck} selectIdx={selectIdx} /> */}</Main>
+        <Main>
+          <Slider cards={cards} selectIdx={selectIdx} />
+          {/* {SliderContent} */}
+        </Main>
         <LeftSideBar>
           <ListTitle>요리 재료</ListTitle>
           {IngredientContent}

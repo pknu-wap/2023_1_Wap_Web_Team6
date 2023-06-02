@@ -91,7 +91,7 @@ const RecipeList = () => {
           console.log("error : ", data.description);
           return;
         }
-        console.log("data : ", data);
+        // console.log("data : ", data);
 
         clickedCategory === "전체"
           ? setListData(data)
@@ -106,7 +106,7 @@ const RecipeList = () => {
     };
 
     fetchData();
-    console.log(listData);
+    // console.log(listData);
   }, [clickedCategory]);
 
   const handleFoodClick = (e: React.MouseEvent<HTMLButtonElement>) => {
