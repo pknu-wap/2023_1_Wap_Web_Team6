@@ -4,7 +4,6 @@ const session = require('express-session');
 const bodyParser = require('body-parser');
 const path = require('path');
 const cors = require('cors');
-const fs = require('fs');
 const bcrypt = require('bcrypt');
 const db = require('../lib/db.tsx');
 const sessionOption = require('../lib/sessionOption.tsx');
@@ -20,11 +19,11 @@ const sessionMiddleware = session({
   key: 'session_cookie_name',
   secret: 'hello',
   store: sessionStore,    // 세션 스토어는 mysql 에 sessions 저장 부분
-  resave: true,
-  saveUninitialized: true
+  resave: false,  // 변경되지 않은 세션을 저장하지 않음
+  saveUninitialized: true,  // 초기화되지 않은 세션을 저장하지 않음
+  secure: false
 });
 
-router.use(sessionMiddleware);
 router.use(bodyParser.json())
 router.use(bodyParser.urlencoded({extended:true}))
 router.use(cors({
@@ -32,74 +31,78 @@ router.use(cors({
   method: ["POST","GET"],
   credentials:true
 }))
+
+router.use(sessionMiddleware);
+
 router.get('/', (req, res) => {
   console.log(req.session);
   console.log(req.sessionID)
   if (req.session.num === undefined) {
+    req.session.is_logined = true;
     req.session.num = 1;
   } else {
     req.session.num++;
   }
-  req.session.save();
   console.log(req.session)
   res.send(`Hello Dormamu we meet ${req.session.num} times`);
 });
   
+
 // router.get("/logout",function(req,res){
 //   req.session.destroy();
 //   console.log("logout success");       
 // });
 // ======================================================================================================
 // 로그아웃 
-// router.get('/api/logout', function (req, res) {
-//   req.session.destroy(function (err) {
-//       res.redirect('/');
-//   });
-// });
+router.post('/api/logout', function (req, res) {
+  req.session.destroy(function(err){
+    if(err){
+       console.log(err);
+    }else{
+        console.log(req.sessionID);
+        const sendData = { isLogout: "True" };
+        res.send(sendData);
+    }
+ });
+});
 // ======================================================================================================
 // 회원 체크(세션에 넣어주기(navBar에서 이용)) 
-router.get('/api/authcheck', (req, res) => {      
-  const sendData = { isLogin: "" };
+router.get('/api/authcheck', sessionMiddleware, (req, res) => {      
+  const sendData = { isLogin: "", sessionID:"" };
   console.log(req.sessionID)
   console.log(req.session)
-  if (req.session.is_logined && req.loginSessionId === req.sessionID) {
+  if (req.session.is_logined) {  
       sendData.isLogin = "True"
+      // sendData.sessionID = req.sessionID
   } else {
       sendData.isLogin = "False"
+      // sendData.sessionID = req.sessionID
   }
   res.send(sendData);
 })
-
 // ======================================================================================================
 // 로그인 
 router.post("/api/login", (req, res) => {
     const userId = req.body.loginId;
     const password = req.body.loginPassword;
-    const sendData = { isLogin: "" };
+    const sendData = { isLogin: "", nickname:""};
+    // req.sessionID = req.body.sessionID
 
     if (userId && password) {
       db.query('SELECT * FROM members WHERE id = ?', [userId], function (error, results, fields) {
         if (error) throw error;
         if (results.length > 0) {
           if (results[0].password == password) {
-            req.session.is_logined = true;
-            req.session.nickname = userId;
-            const loginSessionId = req.sessionID;
-
-            req.session.save(function (err) {
-              if (err) {
-                console.error('세션 저장 오류:', err);
-                sendData.isLogin = "세션 저장 오류가 발생했습니다.";
-                res.send(sendData);
-              } else {
-                req.loginSessionId = loginSessionId;
-                sendData.isLogin = "True";
-                console.log(req.sessionID);
-                console.log(req.session);
-                res.send(sendData);
-              }
-            });
-          } else {
+                req.session.is_logined = true;
+                req.session.nickname = userId;
+                req.session.save(function () {
+                  sendData.isLogin = "True";
+                  sendData.nickname = userId;
+                  console.log(req.sessionID);
+                  console.log(req.session);
+                  res.send(sendData);
+                });
+            } else {
             sendData.isLogin = "로그인 정보가 일치하지 않습니다.";
             console.log('비밀번호가 틀렸습니다.');
             res.send(sendData);
