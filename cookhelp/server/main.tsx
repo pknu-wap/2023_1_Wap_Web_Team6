@@ -5,11 +5,13 @@ const app = express();
 const members = require("./route/members.tsx")
 const board = require("./route/board.tsx")
 const cookhelper = require("./route/cookhelper.tsx")
+const community = require("./route/community.tsx")
 
 app.use(cors())
 app.use('/members', members);
 app.use('/board', board);
 app.use('/cookhelper', cookhelper);
+app.use('/community', community);
 app.use(function(req, res, next) {
     res.status(404).send('Sorry cant find that!');
   });
