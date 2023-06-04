@@ -182,13 +182,15 @@ const Join = () => {
       body: JSON.stringify(join), //join 객체를 보냄
     })
       .then((res) => res.json())
-      .then((json) => {
-        if (json.isSuccess === "True") {
+      .then((data) => {
+        if (data.isSuccess === "True") {
+          localStorage.setItem('isLogin', data.isLogin);
+          localStorage.setItem('loginId', data.loginId);
           alert("회원가입이 완료되었습니다!");
           console.log("회원가입완료!");
           navigate("/");
         } else {
-          alert(json.isSuccess);
+          alert(data.isSuccess);
         }
       }).catch(function(err) {
         console.error(` Err: ${err}`);

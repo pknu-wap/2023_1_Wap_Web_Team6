@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import { RecipeListType, RecipeCard } from "../components/type";
+import { Card } from "../components/type";
 
-const useSliderCard = (data: RecipeListType[], moveIdx: number) => {
+const useSliderCard = (data: Card[], moveIdx: number) => {
   const [card, setCard] = useState(data); // recipe 데이터
   const [cardIdx, setCardIdx] = useState(0); // 레시피 순서
 
@@ -20,6 +20,10 @@ const useSliderCard = (data: RecipeListType[], moveIdx: number) => {
   };
 
   useEffect(() => {
+    setCard(data);
+  }, [data]);
+
+  useEffect(() => {
     document.addEventListener("keydown", handleKeyDown);
 
     return () => {
@@ -31,6 +35,8 @@ const useSliderCard = (data: RecipeListType[], moveIdx: number) => {
     if (moveIdx != 0) setCardIdx(moveIdx - 1);
   }, [moveIdx]);
 
+  // console.log("data : ", data);
+  // console.log("card : ", card);
   return {
     card,
     setCard,

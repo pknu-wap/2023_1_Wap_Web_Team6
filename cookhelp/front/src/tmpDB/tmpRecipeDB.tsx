@@ -1,6 +1,6 @@
-import { RecipeCard } from "../components/type";
+// import { RecipeCard } from "../components/type";
 
-const cardData: RecipeCard[] = [
+const cardData = [
   {
     id: 0,
     RecipeName: "볶음밥",
