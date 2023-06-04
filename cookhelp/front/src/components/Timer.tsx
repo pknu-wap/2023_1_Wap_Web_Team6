@@ -17,7 +17,7 @@ const TimerText = styled.h1`
   margin: auto;
 `;
 
-const Timer = ({ curTime, Idx }: { curTime?: number; Idx: number }) => {
+const Timer = ({ curTime, Idx }: { curTime?: number | null; Idx: number }) => {
   const { start, stop, reset, hh, mm, ss } = useTimer(curTime || 0, 1000, Idx);
 
   // timer 값이 undefined면 null 리턴하고 종료
