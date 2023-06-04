@@ -8,14 +8,32 @@ const bcrypt = require('bcrypt');
 const db = require('../lib/db.tsx');
 const sessionOption = require('../lib/sessionOption.tsx');
 
-// multer
-const multer = require('multer');
-
+const imagePath = path.join(__dirname, 'server', '202306012244-dog.jpg');
+console.log(imagePath); // 출력: "project/server/uploads/202306012244-dog.jpg"
 
 // router
 const router = express.Router();
 module.exports = router;
 
+
+// multer
+const multer = require('multer');
+
+
+// Multer 디렉토리 설정
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+      // 파일 저장 경로 설정
+      cb(null, './img_server');
+    },
+    filename: function (req, file, cb) {
+
+        const formattedDate = transDate(1)
+        cb(null, formattedDate + '-' + file.originalname);
+    }
+});
+
+const upload = multer({ storage: storage }); // 파일이 저정될 경로 설정
 
 router.use(bodyParser.json({
     limit : "50mb"
@@ -29,6 +47,24 @@ router.use(bodyParser.urlencoded({
     extended: false
 }));
 router.use(cors());
+
+router.use('/images', express.static('/Users/sonny/Document/2023_1_Wap_Web_Team6/cookhelp/server/route/img_server/'));
+const imageUrl = '/img_server/202306012244-dog.jpg';
+const absoluteUrl = `http://localhost:8081${imageUrl}`;
+console.log(absoluteUrl);
+
+
+// session
+var MySQLStore = require('express-mysql-session')(session);
+var sessionStore = new MySQLStore(sessionOption);
+router.use(session({  
+   key: 'session_cookie_name',
+    secret: '~',
+   store: sessionStore,
+   resave: false,
+   saveUninitialized: false
+}))
+
 
 // 파일 필터링
 function fileFilter (req, file, cb) {
@@ -70,33 +106,7 @@ function transDate(num) {
 }
 
 
-// Multer 디렉토리 설정
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-      // 파일 저장 경로 설정
-      cb(null, './img_server');
-    },
-    filename: function (req, file, cb) {
-
-        const formattedDate = transDate(1)
-        cb(null, formattedDate + '-' + file.originalname);
-    }
-});
-
-
-const upload = multer({ storage: storage }); // 파일이 저정될 경로 설정
-
-var MySQLStore = require('express-mysql-session')(session);
-var sessionStore = new MySQLStore(sessionOption);
-router.use(session({  
-   key: 'session_cookie_name',
-    secret: '~',
-   store: sessionStore,
-   resave: false,
-   saveUninitialized: false
-}))
-
-
+// 통신 테스트
 router.get('/', (req, res) => {
     res.send('Hello, board');
 });
@@ -185,7 +195,6 @@ router.post('/api/upload', upload.array('recipe_img'), function (req, res, next)
     const recipe_img_10 = recipe_img_array[10];
 
 
-    
     const query = `INSERT INTO cookhelper (recipe_title, members, recipe_stuff, recipe_img, recipe_step_1, recipe_step_2, recipe_step_3, recipe_step_4, recipe_step_5, recipe_step_6, recipe_step_7, recipe_step_8, recipe_step_9, recipe_step_10, rd_1, rd_1_video, timer_rd_1, rd_2, rd_2_video, timer_rd_2, rd_3, rd_3_video, timer_rd_3, rd_4, rd_4_video, timer_rd_4, rd_5, rd_5_video, timer_rd_5, rd_6, rd_6_video, timer_rd_6, rd_7, rd_7_video, timer_rd_7, rd_8, rd_8_video, timer_rd_8, rd_9, rd_9_video, timer_rd_9, rd_10, rd_10_video, timer_rd_10, created_date, foodstyle, recipe_img_1, recipe_img_2, recipe_img_3, recipe_img_4, recipe_img_5, recipe_img_6, recipe_img_7, recipe_img_8, recipe_img_9, recipe_img_10) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);`;
     const values = [
         recipe_title, members, recipe_stuff, recipe_img, recipe_step_1, recipe_step_2, recipe_step_3, recipe_step_4, recipe_step_5, recipe_step_6, recipe_step_7, recipe_step_8, recipe_step_9, recipe_step_10,
@@ -214,41 +223,40 @@ router.post('/api/upload', upload.array('recipe_img'), function (req, res, next)
 
 
 // 요리 도우미 구현
-router.get("/api/recipehelper/:recipe_idx", (req, res) => {
+// router.get("/api/recipehelper/:recipe_idx", (req, res) => {
 
-    // 전달받은 리스트의 인덱스
-    const recipe_idx = req.params.recipe_idx;
+//     // 전달받은 리스트의 인덱스
+//     const recipe_idx = req.params.recipe_idx;
 
-    const sqlQuery = `SELECT *, DATE_FORMAT(created_date, '%Y-%m-%d') AS formatted_date FROM cookhelper WHERE recipe_idx = '${recipe_idx}';`;
-    db.query(sqlQuery, (err, result) => {
-        if (err) {
-            console.log("데이터 조회 오류", err);
-            res.result(500).send("데이터 조회 오류");
-            return;
-        }
+//     const sqlQuery = `SELECT *, DATE_FORMAT(created_date, '%Y-%m-%d') AS formatted_date FROM cookhelper WHERE recipe_idx = '${recipe_idx}';`;
+//     db.query(sqlQuery, (err, result) => {
+//         if (err) {
+//             console.log("데이터 조회 오류", err);
+//             res.result(500).send("데이터 조회 오류");
+//             return;
+//         }
 
-        // 특정 컬럼 값 추출
-        const recipeStuff = result.length > 0 ? result[0].recipe_stuff : null;
-        console.log("recipe_stuff 값:", recipeStuff);
+//         // 특정 컬럼 값 추출
+//         const recipeStuff = result.length > 0 ? result[0].recipe_stuff : null;
+//         console.log("recipe_stuff 값:", recipeStuff);
 
-        // 레시피 재료를 배열로 변환
-        const recipeStuffArray = recipeStuff ? recipeStuff.split('/') : [];
-        console.log("recipe_stuff_array 값:", recipeStuffArray);
-        console.log("데이터 전송 성공, 데이터 개수:", result.length);
+//         // 레시피 재료를 배열로 변환
+//         const recipeStuffArray = recipeStuff ? recipeStuff.split('/') : [];
+//         console.log("recipe_stuff_array 값:", recipeStuffArray);
+//         console.log("데이터 전송 성공, 데이터 개수:", result.length);
         
-        // 클라이언트로 결과 및 recipeStuffArray 전송
-        res.send({ result: result, recipeStuffArray: recipeStuffArray });
-    });
-});
+//         // 클라이언트로 결과 및 recipeStuffArray 전송
+//         res.send({ result: result, recipeStuffArray: recipeStuffArray });
+//     });
+// });
+  
 
-
-// 리스트에서 검색기능 구현.
+// 리스트 검색
 router.get("/api/search/:keyword", (req, res) => {
 
-    // const recipe_idx = 1;
     const keyword = req.params.keyword;
 
-    const sqlQuery = `SELECT recipe_idx, recipe_title, members, created_date FROM cookhelp WHERE recipe_title LIKE '%${keyword}%';`;
+    const sqlQuery = `SELECT recipe_idx, recipe_title, members, created_date FROM cookhelper WHERE recipe_title LIKE '%${keyword}%';`;
     db.query(sqlQuery, (err, result) => {
         if (err) {
             console.log("데이터 조회 오류", err);
@@ -262,34 +270,39 @@ router.get("/api/search/:keyword", (req, res) => {
     });
 });
 
-// 아래부터 테스트 함수들.
+// 테스트 함수
 // ===================================================================================================================================================================================================
-// 데이터 삽입 테스트, 현재 상황 : 여러개 이미지를 받아 지정경로에 저장.
-router.post('/api/uploadTestTable', upload.array('recipe_img'), function (req, res, next) {
+router.get("/api/recipehelper/:recipe_idx", (req, res) => {
+    // 전달받은 리스트의 인덱스
+    const recipe_idx = req.params.recipe_idx;
+  
+    const sqlQuery = `SELECT *, DATE_FORMAT(created_date, '%Y-%m-%d') AS formatted_date FROM cookhelper WHERE recipe_idx = '${recipe_idx}';`;
+    db.query(sqlQuery, (err, result) => {
+      if (err) {
+        console.log("데이터 조회 오류", err);
+        res.status(500).send("데이터 조회 오류");
+        return;
+      }
+  
+      // 특정 컬럼 값 추출
+      const recipeStuff = result.length > 0 ? result[0].recipe_stuff : null;
+      console.log("recipe_stuff 값:", recipeStuff);
+  
+      // 레시피 재료를 배열로 변환
+      const recipeStuffArray = recipeStuff ? recipeStuff.split("/") : [];
+      console.log("recipe_stuff_array 값:", recipeStuffArray);
+      console.log("데이터 전송 성공, 데이터 개수:", result.length);
 
-    const title = req.body.recipe_title;
-    const stuff = req.body.recipe_stuff;
-    // const img = req.files.map(file => `./img_server/${file.filename}`);
-    const img = req.files.map(files => `./img_server/${files.filename}`);
+      // 이미지 URL 변환
+      const baseUrl = req.protocol + "://" + req.get("host");
+      console.log(baseUrl);
 
-    console.log(img);
+    //   http://localhost:8081/cookhelp/server/img_server/202306012244-dog.jpg
+      // /Users/sonny/Document/2023_1_Wap_Web_Team6/cookhelp/server/route/uploads/202306012244-dog.jpg
 
-    const query = `INSERT INTO testtable (title, stuff, img_path) VALUES (?, ?, ?);`
-    const value = [title, stuff, ...img];
+      // 클라이언트로 결과, recipeStuffArray, imageUrls 전송
+      res.send({ result: result, recipeStuffArray: recipeStuffArray});
+    });
 
-    const sendData = { isSuccess: "" };
-
-    db.query(query, value, function (error, result, fields) {
-        if (error) {
-            console.error("데이터 삽입 오류", error)
-            sendData.isSuccess = "데이터 삽입 오류 발생"
-        } else {
-            sendData.isSuccess = "True";
-            console.log("레시피 데이터 저장 완료.");
-        }
-    })
-
-    // 업로드 완료 시 동작할 코드 작성
-    res.send('파일 업로드 완료.');
 });
 // ===================================================================================================================================================================================================
