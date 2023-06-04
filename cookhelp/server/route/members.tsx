@@ -177,7 +177,6 @@ router.get('/api/info/:loginId', (req, res) => {
     console.log(userId,"데이터 전송 성공")
     res.send(result)
   })
-
 })
 // ======================================================================================================
 // 회원 정보 수정하기
@@ -206,3 +205,20 @@ router.get('/api/modify', (req, res) => {
     res.send(sendData);  
   }      
 });        
+// ======================================================================================================
+// 회원 요리 도우미 테이블 정보 가져오기
+router.get('/api/cookhelperInfo/:loginId', (req, res) => {      
+  const userId = req.params.loginId;
+  const sendData = { isSuccess: "" };
+
+  const sqlQuery = `SELECT recipe_title FROM cookhelper WHERE members = '${userId}';`;
+  db.query(sqlQuery, (err, result) => {
+    if(err) {
+      console.log("데이터 조회 오류", err);
+      res.result(500).send("데이터 조회 오류");
+      return;
+    }
+    console.log(userId,"데이터 전송 성공")
+    res.send(result) 
+  })
+})

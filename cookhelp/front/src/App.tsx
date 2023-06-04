@@ -6,6 +6,7 @@ import Join from "./pages/Join";
 import Recipe from "./pages/Recipe";
 import RecipeList from "./pages/RecipeList";
 import RecipeRegister from "./pages/RecipeRegister";
+import BoardList from "./pages/BoardList";
 import Mypage from "./pages/Mypage";
 
 function App() {
@@ -25,6 +26,7 @@ function App() {
           <Route path="/myPage/:id" element={<Mypage />} />
           <Route path="/recipe_list/:keyword?" element={<RecipeList />} />
           <Route path="/recipe_register" element={<RecipeRegister />} />
+          <Route path="/board_list/:keyword?" element={<BoardList />} />
 
           <Route path="/*" element={<NotFound />} />
         </Routes>
