@@ -8,8 +8,6 @@ const bcrypt = require('bcrypt');
 const db = require('../lib/db.tsx');
 const sessionOption = require('../lib/sessionOption.tsx');
 
-const imagePath = path.join(__dirname, 'server', '202306012244-dog.jpg');
-console.log(imagePath); // 출력: "project/server/uploads/202306012244-dog.jpg"
 
 // router
 const router = express.Router();
@@ -47,11 +45,6 @@ router.use(bodyParser.urlencoded({
     extended: false
 }));
 router.use(cors());
-
-router.use('/images', express.static('/Users/sonny/Document/2023_1_Wap_Web_Team6/cookhelp/server/route/img_server/'));
-const imageUrl = '/img_server/202306012244-dog.jpg';
-const absoluteUrl = `http://localhost:8081${imageUrl}`;
-console.log(absoluteUrl);
 
 
 // session
@@ -223,32 +216,32 @@ router.post('/api/upload', upload.array('recipe_img'), function (req, res, next)
 
 
 // 요리 도우미 구현
-// router.get("/api/recipehelper/:recipe_idx", (req, res) => {
+router.get("/api/recipehelper/:recipe_idx", (req, res) => {
 
-//     // 전달받은 리스트의 인덱스
-//     const recipe_idx = req.params.recipe_idx;
+    // 전달받은 리스트의 인덱스
+    const recipe_idx = req.params.recipe_idx;
 
-//     const sqlQuery = `SELECT *, DATE_FORMAT(created_date, '%Y-%m-%d') AS formatted_date FROM cookhelper WHERE recipe_idx = '${recipe_idx}';`;
-//     db.query(sqlQuery, (err, result) => {
-//         if (err) {
-//             console.log("데이터 조회 오류", err);
-//             res.result(500).send("데이터 조회 오류");
-//             return;
-//         }
+    const sqlQuery = `SELECT *, DATE_FORMAT(created_date, '%Y-%m-%d') AS formatted_date FROM cookhelper WHERE recipe_idx = '${recipe_idx}';`;
+    db.query(sqlQuery, (err, result) => {
+        if (err) {
+            console.log("데이터 조회 오류", err);
+            res.result(500).send("데이터 조회 오류");
+            return;
+        }
 
-//         // 특정 컬럼 값 추출
-//         const recipeStuff = result.length > 0 ? result[0].recipe_stuff : null;
-//         console.log("recipe_stuff 값:", recipeStuff);
+        // 특정 컬럼 값 추출
+        const recipeStuff = result.length > 0 ? result[0].recipe_stuff : null;
+        console.log("recipe_stuff 값:", recipeStuff);
 
-//         // 레시피 재료를 배열로 변환
-//         const recipeStuffArray = recipeStuff ? recipeStuff.split('/') : [];
-//         console.log("recipe_stuff_array 값:", recipeStuffArray);
-//         console.log("데이터 전송 성공, 데이터 개수:", result.length);
+        // 레시피 재료를 배열로 변환
+        const recipeStuffArray = recipeStuff ? recipeStuff.split('/') : [];
+        console.log("recipe_stuff_array 값:", recipeStuffArray);
+        console.log("데이터 전송 성공, 데이터 개수:", result.length);
         
-//         // 클라이언트로 결과 및 recipeStuffArray 전송
-//         res.send({ result: result, recipeStuffArray: recipeStuffArray });
-//     });
-// });
+        // 클라이언트로 결과 및 recipeStuffArray 전송
+        res.send({ result: result, recipeStuffArray: recipeStuffArray });
+    });
+});
   
 
 // 리스트 검색
@@ -272,37 +265,65 @@ router.get("/api/search/:keyword", (req, res) => {
 
 // 테스트 함수
 // ===================================================================================================================================================================================================
-router.get("/api/recipehelper/:recipe_idx", (req, res) => {
-    // 전달받은 리스트의 인덱스
-    const recipe_idx = req.params.recipe_idx;
+// const imagePath = '/Users/sonny/Document/2023_1_Wap_Web_Team6/cookhelp/server/img_server/202306012244-dog.jpg';
+
+// // 1. 이미지 데이터를 전송하는 방식
+// const imageBuffer = fs.readFileSync(imagePath);
+// const base64Image = imageBuffer.toString('base64');
+
+// // console.log(base64Image);
+
+// // 2. 데이터 스크림 사용하는 방식
+// const imageStream = fs.createReadStream(imagePath);
+
+// ===================================================================================================================================================================================================
+// router.get("/api/recipehelper/:recipe_idx", (req, res) => {
+//     // 전달받은 리스트의 인덱스
+//     const recipe_idx = req.params.recipe_idx;
   
-    const sqlQuery = `SELECT *, DATE_FORMAT(created_date, '%Y-%m-%d') AS formatted_date FROM cookhelper WHERE recipe_idx = '${recipe_idx}';`;
-    db.query(sqlQuery, (err, result) => {
-      if (err) {
-        console.log("데이터 조회 오류", err);
-        res.status(500).send("데이터 조회 오류");
-        return;
-      }
+//     const sqlQuery = `SELECT *, DATE_FORMAT(created_date, '%Y-%m-%d') AS formatted_date FROM cookhelper WHERE recipe_idx = '${recipe_idx}';`;
+//     db.query(sqlQuery, (err, result) => {
+//       if (err) {
+//         console.log("데이터 조회 오류", err);
+//         res.status(500).send("데이터 조회 오류");
+//         return;
+//       }
   
-      // 특정 컬럼 값 추출
-      const recipeStuff = result.length > 0 ? result[0].recipe_stuff : null;
-      console.log("recipe_stuff 값:", recipeStuff);
+//       // 특정 컬럼 값 추출
+//       const recipeStuff = result.length > 0 ? result[0].recipe_stuff : null;
+//       console.log("recipe_stuff 값:", recipeStuff);
   
-      // 레시피 재료를 배열로 변환
-      const recipeStuffArray = recipeStuff ? recipeStuff.split("/") : [];
-      console.log("recipe_stuff_array 값:", recipeStuffArray);
-      console.log("데이터 전송 성공, 데이터 개수:", result.length);
-
-      // 이미지 URL 변환
-      const baseUrl = req.protocol + "://" + req.get("host");
-      console.log(baseUrl);
-
-    //   http://localhost:8081/cookhelp/server/img_server/202306012244-dog.jpg
-      // /Users/sonny/Document/2023_1_Wap_Web_Team6/cookhelp/server/route/uploads/202306012244-dog.jpg
-
-      // 클라이언트로 결과, recipeStuffArray, imageUrls 전송
-      res.send({ result: result, recipeStuffArray: recipeStuffArray});
-    });
-
-});
+//       // 레시피 재료를 배열로 변환
+//       const recipeStuffArray = recipeStuff ? recipeStuff.split("/") : [];
+//       console.log("recipe_stuff_array 값:", recipeStuffArray);
+//       console.log("데이터 전송 성공, 데이터 개수:", result.length);
+      
+  
+//       // 이미지 파일 읽기
+//       const imagePromises = result.map(item => {
+//         return new Promise((resolve, reject) => {
+//           const imagePath = `../img_server/${item.recipe_img}`;
+//           console.log(item.recipe_img);
+//           fs.readFile(imagePath, (err, data) => {
+//             if (err) {
+//               reject(err);
+//               return;
+//             }
+//             resolve(data);
+//           });
+//         });
+//       });
+  
+//       // 이미지 파일 읽기 완료 후 클라이언트로 전송
+//       Promise.all(imagePromises)
+//         .then(imageDataArray => {
+//           // 클라이언트로 결과, recipeStuffArray, imageUrls, 이미지 데이터 전송
+//           res.send({ result: result, recipeStuffArray: recipeStuffArray,imageDataArray: imageDataArray });
+//         })
+//         .catch(err => {
+//           console.log("이미지 파일 읽기 오류", err);
+//           res.status(500).send("이미지 파일 읽기 오류");
+//         });
+//     });
+//   });
 // ===================================================================================================================================================================================================

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import useSliderCard from "../hooks/useSliderCard";
 import Timer from "./Timer";
-import { RecipeCard, ArrowButtonProps, CardProps } from "./type";
+import { ArrowButtonProps, CardProps, Card } from "./type";
 import Dictaphone from "./Dictaphone";
 
 const SliderContainer = styled.div`
@@ -66,29 +66,32 @@ const ArrowForward = ({ onClick }: ArrowButtonProps) => {
   );
 };
 
-const Card = ({ currentCard }: CardProps) => {
+const ScreenCard = ({ currentCard }: CardProps) => {
   const { pic, detail } = currentCard;
+  if (!pic) {
+    // console.log("null");
+    return <p>이미지가 없습니다</p>;
+  }
 
+  // console.log("imgSrc : ", pic);
+  const ImgSrc = pic.slice(1);
+  console.log(pic);
+  // console.log(`http://localhost:8081/server${ImgSrc}`);
   return (
     <StyledCard>
-      <SlideImg src={pic} />
+      <SlideImg src={`http://localhost:8081/cookhelp/server${ImgSrc}`} />
       <p>{detail}</p>
     </StyledCard>
   );
 };
 
-const Slider = ({
-  recipeList,
-  selectIdx,
-}: {
-  recipeList: RecipeCard;
-  selectIdx: number;
-}) => {
-  const { RecipeName, cards } = recipeList;
+const Slider = ({ cards, selectIdx }: { cards: Card[]; selectIdx: number }) => {
+  // const { RecipeName, cards } = recipeList;
   const { card, cardIdx, goForward, goBack } = useSliderCard(cards, selectIdx);
 
   // console.log("RecipeName", RecipeName);
   // console.log("cards", cards);
+  // console.log("use-card", card);
   // console.log(cardIdx);
   // console.log(timerRender);
   // console.log("cardIdx : ", cardIdx);
@@ -100,13 +103,15 @@ const Slider = ({
           <Dictaphone goForward={goForward} goBack={goBack} />
           <ImgBox>
             <ArrowBack onClick={goBack} />
-            <Card currentCard={card[cardIdx]} />
+            <ScreenCard currentCard={card[cardIdx]} />
             <ArrowForward onClick={goForward} />
           </ImgBox>
           <CardIdx>
             {cardIdx + 1}/{card.length}
           </CardIdx>
-          <Timer curTime={card[cardIdx].timer} Idx={cardIdx} />
+          {card[cardIdx].timer !== null && (
+            <Timer curTime={card[cardIdx].timer} Idx={cardIdx} />
+          )}
         </>
       )}
     </SliderContainer>

@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import NavBar from "../components/NavBar";
 import Slider from "../components/Slider";
-import { RecipeCard, ListProps } from "../components/type";
+import { ListProps, DeckData, Card } from "../components/type";
 import RecommendCard from "../components/RecommendCard";
+import { Form, useParams } from "react-router-dom";
 
 const Wrap = styled.div`
   margin-top: 2rem;
@@ -86,26 +87,102 @@ const List = ({ stepDetail, listNum, setSelectIdx }: ListProps) => {
   );
 };
 
-const Recipe = ({ cardData }: { cardData: RecipeCard }) => {
-  const [deck, setDeck] = useState<RecipeCard>(cardData);
-  const [selectIdx, setSelectIdx] = useState<number>(1);
-  // console.log(deck[0].cards.length);
-  // console.log("deck", deck);
-  // console.log(selectIdx);
+const Recipe = () => {
+  const params = useParams();
+  // console.log(params.recipe_idx);
 
-  let listContent = deck.cards.map((card) => (
+  const [deck, setDeck] = useState();
+  const [selectIdx, setSelectIdx] = useState<number>(1);
+  const [recipeSteps, setRecipeSteps] = useState<string[]>([]);
+  const [Ingredient, setIngredient] = useState<string[]>([]);
+  const [cards, setCards] = useState<Card[]>([]);
+
+  const addRecipeStep = (step: string | null) => {
+    if (step == null) return;
+    setRecipeSteps((prev) => [...prev, step]);
+  };
+
+  useEffect(() => {
+    const fetchRecipeHelper = async () => {
+      try {
+        const res = await fetch(
+          `http://localhost:8081/board/api/recipehelper/${params.recipe_idx}`
+        );
+        const data = await res.json();
+
+        if (!res.ok) {
+          console.log("error : ", data.description);
+          return;
+        }
+        console.log("data : ", data);
+        // console.log("data : ", data.result[0]);
+        setDeck(data.result[0]);
+        setIngredient(data.recipeStuffArray);
+        updateContent(data.result[0]);
+        //slider에 보낼 card 변수
+        const newGenerateCard = generateCards(data.result[0]);
+        setCards(newGenerateCard);
+      } catch (error) {
+        console.log("Error!", error);
+      }
+    };
+
+    fetchRecipeHelper();
+  }, []);
+
+  // let SliderContent = <></>;
+  // useEffect(() => {
+  //   SliderContent = <Slider cards={cards} selectIdx={selectIdx} />;
+  // }, [cards, deck]);
+
+  const updateContent = (deckData: DeckData) => {
+    setRecipeSteps([]);
+
+    Object.keys(deckData).forEach((key) => {
+      //요리 순서(소제목) 배열에 저장
+      if (key.startsWith("recipe_step") && deckData[key] !== null) {
+        // console.log(deckData[key]);
+        addRecipeStep(deckData[key]);
+      }
+    });
+  };
+  const generateCards = (deckData: DeckData) => {
+    const newCards = [];
+    for (let i = 1; i <= 10; i++) {
+      const recipeImg = deckData[`recipe_img_${i}`];
+      const rd = deckData[`rd_${i}`];
+      const timerRd = deckData[`timer_rd_${i}`];
+
+      if (recipeImg || rd || timerRd) {
+        const card = {
+          listNums: i,
+          pic: recipeImg,
+          detail: rd,
+          timer: timerRd !== null ? parseInt(timerRd) : null,
+        };
+        newCards.push(card);
+      }
+    }
+
+    return newCards;
+  };
+
+  let listContent = recipeSteps.map((step, idx) => (
     <List
-      key={card.ListNum}
-      stepDetail={card.stepTitle}
-      listNum={card.ListNum}
+      key={idx}
+      stepDetail={step}
+      listNum={idx + 1}
       setSelectIdx={setSelectIdx}
     />
   ));
 
-  let IngredientContent = deck.Ingredient.map((item, index) => (
+  let IngredientContent = Ingredient.map((item, index) => (
     <IngredientItem key={index}>{item}</IngredientItem>
   ));
 
+  // console.log("deck : ", deck);
+  // console.log("listContent : ", listContent);
+  // console.log(cards);
   return (
     <div>
       <NavBar />
@@ -115,7 +192,8 @@ const Recipe = ({ cardData }: { cardData: RecipeCard }) => {
           {listContent}
         </RightSideBar>
         <Main>
-          <Slider recipeList={deck} selectIdx={selectIdx} />
+          <Slider cards={cards} selectIdx={selectIdx} />
+          {/* {SliderContent} */}
         </Main>
         <LeftSideBar>
           <ListTitle>요리 재료</ListTitle>

@@ -60,23 +60,64 @@ const AuthButton = styled.button`
 const Navbar = () => {
   const [activeMenuItem, setActiveMenuItem] = useState(0); // 현재 활성화된 메뉴 아이템의 인덱스를 상태로 관리
   const [mode, setMode] = useState("");
+  
+  const handleBtnClick = (e: React.MouseEvent<HTMLButtonElement>): void => {
+    localStorage.setItem('isLogin', "False");
+    localStorage.setItem('loginId', "");
+    alert("로그아웃 완료 되었습니다!")
+    setMode("LOGIN");
+    // e.preventDefault(); // 버튼 클릭의 기본 동작 중지
+    // fetch("http://localhost:8081/members/api/logout", {
+    //   //auth 주소에서 받을 예정
+    //   method: "post", // method :통신방법
+    //   headers: {
+    //     // headers: API 응답에 대한 정보를 담음
+    //     "content-type": "application/json",
+    //   }
+    // })
+    //   .then(res => res.json())
+    //   .then(data => {
+    //     console.log('click')
+    //     if(data.isLogout==="True"){
+    //       alert('로그아웃 완료되었습니다!')
+    //       navigate("/");
+    //     }
+    //     else{
+    //       console.log(data)
+    //       alert(data.isLogin)
+    //     }
+    //   })
+    //   .catch(error => console.log("error =>", error))
+  };
 
   const navigate = useNavigate();
+  const id = localStorage.getItem('loginId')
   useEffect(() => {
-    fetch("http://localhost:8081/members/api/authcheck")
-      .then((res) => res.json())
-      .then((json) => {        
-        if (json.isLogin === "True") {
-          console.log('hello')
-          setMode("WELCOME");
-        }
-        else {
-          setMode("LOGIN");
-        }
-      });
+    if(localStorage.getItem('isLogin') === "True"){
+      setMode("WELCOME")
+    } else{
+      setMode("LOGIN")
+    }
+  //   fetch("http://localhost:8081/members/api/authcheck", {credentials: 'include'})
+  //     .then((res) => res.json())
+  //     .then((data) => {        
+  //       localStorage.setItem('sessionID', data.sessionID);
+  //       console.log()
+  //       if (data.isLogin === "True") {
+  //         console.log('hello')
+  //         setMode("WELCOME");
+  //         console.log(data)
+  //       }
+  //       else {
+  //         console.log(data)
+  //         setMode("LOGIN");
+  //       }
+  //     });
   }, []); 
 
+
   let content:any = null;  
+
 
   if(mode==="LOGIN"){
     content = <>
@@ -86,7 +127,8 @@ const Navbar = () => {
   }
   else if (mode === 'WELCOME') {
     content = <>
-    <AuthButton onClick={() => navigate("/Join")}>로그아웃</AuthButton>
+    <AuthButton onClick={() => navigate(`/myPage/${id}`)}>{id}</AuthButton>
+    <AuthButton onClick={handleBtnClick}>로그아웃</AuthButton>
     </>
   }
 
