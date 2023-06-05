@@ -5,7 +5,7 @@ import Container from "../UI/Container";
 import searchLogo from "../assets/searchLogo.png";
 import BoardItem from "../components/BoardItem";
 import { fetchBoardList, boardsearchData } from "../components/type";
-import { useNavigate, useLocation, useParams } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import Btn from "../UI/Btn";
 import Pagination from "../components/Pagination";
 
@@ -174,7 +174,7 @@ const BoardList = () => {
                 return (
                   <BoardItem
                     key={ele.board_idx}
-                    to={`/board/${index}`}
+                    to={`/board/${ele.board_idx}`}
                     BoardIdx={ele.board_idx}
                     BoardTitle={ele.title}
                     BoardWriter={ele.members}

@@ -108,3 +108,14 @@ export interface BoardItemProps {
   BoardStyle: string;
   to: string;
 }
+
+export interface BoardSeqProps {
+  countList: number[];
+  handleImgUpload: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  handleValueChange: (
+    e:
+      | React.ChangeEvent<HTMLInputElement>
+      | React.ChangeEvent<HTMLTextAreaElement>
+      | React.ChangeEvent<HTMLSelectElement>
+  ) => void;
+}
