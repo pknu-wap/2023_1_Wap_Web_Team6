@@ -159,7 +159,10 @@ const Navbar = () => {
         </MenuItem>
         <MenuItem
           isActive={activeMenuItem === 2}
-          onClick={() => handleMenuItemClick(2)}
+          onClick={() => {
+            handleMenuItemClick(2);
+            navigate("/board_list");
+          }}
         >
           Community
         </MenuItem>

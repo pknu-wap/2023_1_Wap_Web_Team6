@@ -82,3 +82,40 @@ export interface PaginationProps {
 export interface DeckData {
   [key: string]: string | null;
 }
+
+export interface fetchBoardList {
+  create_date: string;
+  boardstyle: string;
+  members: string;
+  board_idx: number;
+  title: string;
+}
+
+export interface boardsearchData {
+  board_idx: number;
+  title: string;
+  members: string;
+  create_date: string;
+  boardstyle: string;
+  views?: number;
+}
+
+export interface BoardItemProps {
+  BoardIdx: number;
+  BoardTitle: string;
+  BoardWriter: string;
+  BoardDate: string;
+  BoardStyle: string;
+  to: string;
+}
+
+export interface BoardSeqProps {
+  countList: number[];
+  handleImgUpload: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  handleValueChange: (
+    e:
+      | React.ChangeEvent<HTMLInputElement>
+      | React.ChangeEvent<HTMLTextAreaElement>
+      | React.ChangeEvent<HTMLSelectElement>
+  ) => void;
+}
