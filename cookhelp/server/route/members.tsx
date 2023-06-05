@@ -136,14 +136,14 @@ router.post("/api/Join", (req, res) => {  // 데이터 받아서 결과 전송
                 db.query('INSERT INTO members (id, password, nickname, foodstyle) VALUES(?,?,?,?)', [userId, userPassword, userName, userSelectFood], function (error, data) {
                     if (error) throw error;                    
                     console.log('회원가입 성공!')
-                    req.session.is_logined = true;
-                    req.session.nickname = userId;
-                    req.session.save(function () {   
+                    // req.session.is_logined = true;
+                    // req.session.nickname = userId;
                         sendData.isLogin = "True";
                         sendData.loginId = userId; 
                         sendData.isSuccess = "True"
                         res.send(sendData);
-                    });
+                    // req.session.save(function () {   
+                    // });
                     // db.query(`INSERT INTO logTable (created, username, action, command, actiondetail) VALUES (NOW(), ?, 'login' , ?, ?)`
                     //         , [req.session.nickname, '-', `React 로그인 테스트`], function (error, result) { });
                 });
@@ -192,13 +192,13 @@ router.get('/api/modify', (req, res) => {
       db.query(`UPDATE members SET PASSWORD ='${userPassword}', nickname='${userName}', foodstyle='${userSelectFood}' WHERE id ='${userId}'`, function (error, data) {
           if (error) throw error;                    
             console.log('회원정보 수정 완료!')
-            req.session.is_logined = true;
-            req.session.nickname = userId;
-            req.session.save(function () {    
-              sendData.isSuccess = "True"
-              res.send(sendData);
-            });
-        });
+            // req.session.is_logined = true;
+            // req.session.nickname = userId;
+            sendData.isSuccess = "True"
+            res.send(sendData);
+          });
+            // req.session.save(function () {    
+        // });
   } else {
     console.log('아이디 비밀번호 입력하세요!')
     sendData.isSuccess = "아이디와 비밀번호를 입력하세요!"

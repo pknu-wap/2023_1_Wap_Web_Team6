@@ -18,21 +18,20 @@ const ListWrapper = styled(Link)`
   text-decoration-line: none;
   color: black;
 `;
-const ListId = styled.div`
-  width: 4%;
+const Liststyle = styled.div`
+  width: 15%;
 `;
 const ListTitle = styled.div`
-  width: 52%;
+  width: 45%;
 `;
 const ListWriter = styled.div`
-  width: 15%;
+  width: 10%;
 `;
 const ListDate = styled.div`
   margin-left: auto;
 `;
 
 const BoardItem = ({
-  BoardIdx,
   BoardTitle,
   BoardWriter,
   BoardDate,
@@ -42,8 +41,8 @@ const BoardItem = ({
   return (
     <StyledRecipeItem>
       <ListWrapper to={to}>
-        <ListId>{BoardIdx}</ListId>
-        <ListTitle>[{BoardStyle}]{BoardTitle}</ListTitle>
+        <Liststyle>{BoardStyle}</Liststyle>
+        <ListTitle>{BoardTitle}</ListTitle>
         <ListWriter>{BoardWriter}</ListWriter>
         <ListDate>{BoardDate}</ListDate>
       </ListWrapper>
