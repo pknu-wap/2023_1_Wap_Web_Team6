@@ -35,7 +35,6 @@ router.get("/api/list", (req, res) => {
     const sqlQuery = "SELECT board_idx, title, members, DATE_FORMAT(create_date, '%Y-%m-%d') AS create_date, boardstyle FROM board ORDER BY board_idx desc;";
     db.query(sqlQuery, (err, result) => {
         res.send(result)
-        console.log('게시판 목록 생성 완료.')
     });
 });
 
@@ -48,7 +47,6 @@ router.post('/api/upload', function (req, res) {
     const content = req.body.content;
     const boardstyle = req.body.boardstyle;
 
-    console.log(boardstyle)
     const query = `INSERT INTO board (title, members, content, boardstyle) VALUES (?,?,?,?);`;
     const values = [
         title, members, content, boardstyle
@@ -70,12 +68,12 @@ router.post('/api/upload', function (req, res) {
 });
 
 // 요리 도우미 구현
-router.get("/api/recipehelper/:recipe_idx", (req, res) => {
+router.get("/api/board/:board_idx", (req, res) => {
 
     // const recipe_idx = 1;
-    const recipe_idx = req.params.recipe_idx;
+    const board_idx = req.params.board_idx;
 
-    const sqlQuery = `SELECT *, DATE_FORMAT(created_date, '%Y-%m-%d') AS formatted_date FROM cookhelper WHERE recipe_idx = '${recipe_idx}';`;
+    const sqlQuery = `SELECT *, DATE_FORMAT(create_date, '%Y-%m-%d') AS formatted_date FROM board WHERE board_idx = '${board_idx}';`;
     db.query(sqlQuery, (err, result) => {
         if (err) {
             console.log("데이터 조회 오류", err);
@@ -119,8 +117,6 @@ router.post('/api/uploadTestTable', function (req, res, next) {
     const stuff = req.body.recipe_stuff;
     // const img = req.files.map(file => `./img_server/${file.filename}`);
     const img = req.files.map(files => `./img_server/${files.filename}`);
-
-    console.log(img);
 
     const query = `INSERT INTO testtable (title, stuff, img_path) VALUES (?, ?, ?);`
     const value = [title, stuff, ...img];
