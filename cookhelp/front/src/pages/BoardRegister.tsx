@@ -4,6 +4,8 @@ import Navbar from "../components/NavBar";
 import Container from "../UI/Container";
 import Btn from "../UI/Btn";
 import { useNavigate } from "react-router-dom";
+import { CKEditor } from '@ckeditor/ckeditor5-react';
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
 const RegisterContainer = styled(Container)`
   max-width: 60rem;
@@ -128,12 +130,26 @@ const BoardRegister = () => {
 
           <FormItem>
             <Label>게시글 내용</Label>
-            <Textarea
-              name="content"
-              placeholder="게시글 내용을 입력해주세요."
-              onChange={handleValueChange}
-              required
-            />
+            <CKEditor
+          editor={ClassicEditor}
+          id="content"
+          data="<p></p>"
+          onReady={editor => {
+            console.log('Editor is ready to use!', editor);
+          }}
+          onChange={(event: any, editor: any) => {
+            const data = editor.getData();
+            console.log({ event, editor, data });
+            registerData.content = data;
+            console.log("hello",registerData)
+          }}
+          onBlur={(event: any, editor: any) => {
+            console.log('Blur.', editor);
+          }}
+          onFocus={(event: any, editor : any) => {
+            console.log('Focus.', editor);
+          }}
+        />
           </FormItem>
 
           {/* <FormItem>
