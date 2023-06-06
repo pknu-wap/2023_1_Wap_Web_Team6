@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import Navbar from "../components/NavBar";
 import Container from "../UI/Container";
 import styled from "styled-components";
+import { PostData } from "../components/type";
+import { useNavigate } from "react-router-dom";
 
 const StyleInfo = styled.div`
   display: flex;
@@ -72,9 +74,13 @@ const Content = styled.div`
 const Main = styled.div`
   display: flex;
 `;
+const PostItem = styled.li`
+  cursor: pointer;
+`;
 
 const Mypage = () => {
   const getID = localStorage.getItem("loginId");
+  const navigate = useNavigate();
 
   const [id, setId] = useState("id");
   const [password, setPassword] = useState("password");
@@ -82,6 +88,7 @@ const Mypage = () => {
   const [clickedCategory, setClickCategory] = useState("");
   const foodStyle = ["한식", "중식", "일식", "양식"];
   const [check, setCheck] = useState("정보 조회");
+  const [postData, setPostData] = useState<PostData[]>([]);
 
   useEffect(() => {
     const getInfo = async () => {
@@ -100,7 +107,24 @@ const Mypage = () => {
       }
     };
 
+    const getPost = async () => {
+      try {
+        // const res = await fetch(
+        //   `http://localhost:8081/members/api/cookhelperInfo/${getID}`
+        // );
+        const res = await fetch(
+          `http://localhost:8081/members/api/cookhelperInfo/test`
+        );
+        const data = await res.json();
+        // console.log(data);
+        setPostData(data);
+      } catch (error) {
+        console.log("Error:", error);
+      }
+    };
+
     getInfo();
+    getPost();
   }, []);
 
   const handleFoodClick = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -111,6 +135,14 @@ const Mypage = () => {
   const onChange = (e: React.MouseEvent<HTMLElement>) => {
     // console.log(e.currentTarget.textContent);
     if (e.currentTarget.textContent) setCheck(e.currentTarget.textContent);
+  };
+
+  const handlePostNavigate = (
+    e: React.MouseEvent<HTMLElement>,
+    target: PostData
+  ) => {
+    e.preventDefault();
+    navigate(`/recipe/${target.recipe_idx}`);
   };
 
   let InfoContent = <></>;
@@ -154,6 +186,16 @@ const Mypage = () => {
     InfoContent = (
       <Container>
         <h2>작성글 조회</h2>
+        <ul>
+          {postData.map((ele) => (
+            <PostItem
+              key={ele.recipe_idx}
+              onClick={(e) => handlePostNavigate(e, ele)}
+            >
+              {ele.recipe_title}
+            </PostItem>
+          ))}
+        </ul>
       </Container>
     );
   }

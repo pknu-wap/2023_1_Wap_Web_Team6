@@ -14,6 +14,18 @@ export interface Card {
   timer: number | null;
 }
 
+export interface fetchRecipeCardsProps {
+  listNums: number;
+  pic: string | null;
+  title: string | null;
+  detail: string | null;
+  timer: number | null;
+}
+
+export interface StepItemProps {
+  card: fetchRecipeCardsProps;
+}
+
 // export interface RecipeCard {
 //   id: number;
 //   RecipeName: string;
@@ -118,4 +130,9 @@ export interface BoardSeqProps {
       | React.ChangeEvent<HTMLTextAreaElement>
       | React.ChangeEvent<HTMLSelectElement>
   ) => void;
+}
+
+export interface PostData {
+  recipe_idx: number;
+  recipe_title: string;
 }
