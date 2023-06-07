@@ -8,6 +8,7 @@ import RecipeList from "./pages/RecipeList";
 import RecipeRegister from "./pages/RecipeRegister";
 import BoardList from "./pages/BoardList";
 import BoardRegister from "./pages/BoardRegister";
+import BoardModify from "./pages/BoardModify";
 import Board from "./pages/Board";
 import Mypage from "./pages/Mypage";
 import RecipeDetail from "./pages/RecipeDetail";
@@ -31,6 +32,7 @@ function App() {
           <Route path="/recipe/:recipe_idx" element={<Recipe />} />
           <Route path="/board_list/:keyword?" element={<BoardList />} />
           <Route path="/board_register" element={<BoardRegister />} />
+          <Route path="/board_modify" element={<BoardModify />} />
           <Route path="/board/:board_idx?" element={<Board />} />
 
           <Route path="/*" element={<NotFound />} />
