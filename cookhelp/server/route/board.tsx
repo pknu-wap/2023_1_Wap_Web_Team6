@@ -7,6 +7,8 @@ const fs = require('fs');
 const bcrypt = require('bcrypt');
 const db = require('../lib/db.tsx');
 const sessionOption = require('../lib/sessionOption.tsx');
+const { Buffer } = require('buffer');
+
 
 
 // router
@@ -188,6 +190,30 @@ router.post('/api/upload', upload.array('recipe_img'), function (req, res, next)
     const recipe_img_10 = recipe_img_array[10];
 
 
+    // 저장한 이미지를 배열에 저장. 후 배열의 순서에 따라 해당 값을 할당.
+    // const recipe_img_array = req.files.map(file => {
+    //     const imageBuffer = fs.readFileSync(`./img_server/${file.filename}`);
+    //     const imageData = Buffer.from(imageBuffer).toString("base64");
+    //     return imageData;
+    // });
+
+    // // 대표 이미지
+    // const recipe_img = recipe_img_array[0];
+    // console.log(recipe_img);
+
+    // // 세부 이미지
+    // const recipe_img_1 = recipe_img_array[1];
+    // const recipe_img_2 = recipe_img_array[2];
+    // const recipe_img_3 = recipe_img_array[3];
+    // const recipe_img_4 = recipe_img_array[4];
+    // const recipe_img_5 = recipe_img_array[5];
+    // const recipe_img_6 = recipe_img_array[6];
+    // const recipe_img_7 = recipe_img_array[7];
+    // const recipe_img_8 = recipe_img_array[8];
+    // const recipe_img_9 = recipe_img_array[9];
+    // const recipe_img_10 = recipe_img_array[10];
+
+    
     const query = `INSERT INTO cookhelper (recipe_title, members, recipe_stuff, recipe_img, recipe_step_1, recipe_step_2, recipe_step_3, recipe_step_4, recipe_step_5, recipe_step_6, recipe_step_7, recipe_step_8, recipe_step_9, recipe_step_10, rd_1, rd_1_video, timer_rd_1, rd_2, rd_2_video, timer_rd_2, rd_3, rd_3_video, timer_rd_3, rd_4, rd_4_video, timer_rd_4, rd_5, rd_5_video, timer_rd_5, rd_6, rd_6_video, timer_rd_6, rd_7, rd_7_video, timer_rd_7, rd_8, rd_8_video, timer_rd_8, rd_9, rd_9_video, timer_rd_9, rd_10, rd_10_video, timer_rd_10, created_date, foodstyle, recipe_img_1, recipe_img_2, recipe_img_3, recipe_img_4, recipe_img_5, recipe_img_6, recipe_img_7, recipe_img_8, recipe_img_9, recipe_img_10) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);`;
     const values = [
         recipe_title, members, recipe_stuff, recipe_img, recipe_step_1, recipe_step_2, recipe_step_3, recipe_step_4, recipe_step_5, recipe_step_6, recipe_step_7, recipe_step_8, recipe_step_9, recipe_step_10,
@@ -215,13 +241,34 @@ router.post('/api/upload', upload.array('recipe_img'), function (req, res, next)
 });
 
 
+// 리스트 검색
+router.get("/api/search/:keyword", (req, res) => {
+
+  const keyword = req.params.keyword;
+
+  const sqlQuery = `SELECT recipe_idx, recipe_title, members, created_date FROM cookhelper WHERE recipe_title LIKE '%${keyword}%';`;
+  db.query(sqlQuery, (err, result) => {
+      if (err) {
+          console.log("데이터 조회 오류", err);
+          res.result(500).send("데이터 조회 오류");
+          return;
+      }
+
+      console.log("데이터 전송 성공, 데이터 개수:", result.length)
+      res.send(result);
+      // console.log('게시판 목록 생성 완료. 전송 개수: ', recipeResult.length, recipeResult[0]);
+  });
+});
+
+
 // 요리 도우미 구현
+// 요리도우미 이미지 데이터 외 전송.
 router.get("/api/recipehelper/:recipe_idx", (req, res) => {
 
     // 전달받은 리스트의 인덱스
     const recipe_idx = req.params.recipe_idx;
 
-    const sqlQuery = `SELECT *, DATE_FORMAT(created_date, '%Y-%m-%d') AS formatted_date FROM cookhelper WHERE recipe_idx = '${recipe_idx}';`;
+    const sqlQuery = `SELECT recipe_title, members, recipe_stuff, recipe_step_1, recipe_step_2, recipe_step_3, recipe_step_4, recipe_step_5, recipe_step_6, recipe_step_7, recipe_step_8, recipe_step_9, recipe_step_10, rd_1, timer_rd_1, rd_2, timer_rd_2, rd_3, timer_rd_3, rd_4, timer_rd_4, rd_5, timer_rd_5, rd_6, timer_rd_6, rd_7, timer_rd_7, rd_8, timer_rd_8, rd_9, timer_rd_9, rd_10, timer_rd_10, DATE_FORMAT(created_date, '%Y-%m-%d') AS formatted_date FROM cookhelper WHERE recipe_idx = '${recipe_idx}';`;
     db.query(sqlQuery, (err, result) => {
         if (err) {
             console.log("데이터 조회 오류", err);
@@ -242,46 +289,52 @@ router.get("/api/recipehelper/:recipe_idx", (req, res) => {
         res.send({ result: result, recipeStuffArray: recipeStuffArray });
     });
 });
-  
 
-// 리스트 검색
-router.get("/api/search/:keyword", (req, res) => {
 
-    const keyword = req.params.keyword;
+// 요리 도우미 이미지만 전송
+router.get("/api/recipehelperimg/:recipe_idx", (req, res) => {
+  const recipe_idx = req.params.recipe_idx;
 
-    const sqlQuery = `SELECT recipe_idx, recipe_title, members, created_date FROM cookhelper WHERE recipe_title LIKE '%${keyword}%';`;
-    db.query(sqlQuery, (err, result) => {
-        if (err) {
-            console.log("데이터 조회 오류", err);
-            res.result(500).send("데이터 조회 오류");
+  const sqlQuery = `SELECT recipe_img, recipe_img_1, recipe_img_2, recipe_img_3, recipe_img_4, recipe_img_5, recipe_img_6, recipe_img_7, recipe_img_8, recipe_img_9, recipe_img_10, DATE_FORMAT(created_date, '%Y-%m-%d') AS formatted_date FROM cookhelper WHERE recipe_idx = '${recipe_idx}';`;
+  db.query(sqlQuery, (err, result) => {
+    if (err) {
+      console.log("데이터 조회 오류", err);
+      res.status(500).send("데이터 조회 오류");
+      return;
+    }
+
+    // 파일 이미지 전송
+    if (result.length > 0) {
+      const recipe_img = result[0].recipe_img;
+      if (recipe_img) {
+        const imagePath = `${recipe_img}`;
+        fs.readFile(imagePath, (error, data) => {
+          if (error) {
+            console.log("이미지 파일 읽기 오류", error);
+            res.status(500).send("이미지 파일 읽기 오류");
             return;
-        }
-
-        console.log("데이터 전송 성공, 데이터 개수:", result.length)
-        res.send(result);
-        // console.log('게시판 목록 생성 완료. 전송 개수: ', recipeResult.length, recipeResult[0]);
-    });
+          }
+          const imageData = data.toString("base64");
+          console.log(imageData);
+          const response = {
+            recipe_img: imageData,
+          };
+          res.send(response);
+        });
+      } else {
+        res.status(404).send("이미지 파일이 존재하지 않습니다.");
+      }
+    } else {
+      res.status(404).send("데이터가 존재하지 않습니다.");
+    }
+  });
 });
-
 // 테스트 함수
 // ===================================================================================================================================================================================================
-// const imagePath = '/Users/sonny/Document/2023_1_Wap_Web_Team6/cookhelp/server/img_server/202306012244-dog.jpg';
-
-// // 1. 이미지 데이터를 전송하는 방식
-// const imageBuffer = fs.readFileSync(imagePath);
-// const base64Image = imageBuffer.toString('base64');
-
-// // console.log(base64Image);
-
-// // 2. 데이터 스크림 사용하는 방식
-// const imageStream = fs.createReadStream(imagePath);
-
-// ===================================================================================================================================================================================================
-// router.get("/api/recipehelper/:recipe_idx", (req, res) => {
-//     // 전달받은 리스트의 인덱스
+// router.get("/api/recipehelpertest/:recipe_idx", (req, res) => {
 //     const recipe_idx = req.params.recipe_idx;
   
-//     const sqlQuery = `SELECT *, DATE_FORMAT(created_date, '%Y-%m-%d') AS formatted_date FROM cookhelper WHERE recipe_idx = '${recipe_idx}';`;
+//     const sqlQuery = `SELECT recipe_img, recipe_img_1, recipe_img_2, recipe_img_3, recipe_img_4, recipe_img_5, recipe_img_6, recipe_img_7, recipe_img_8, recipe_img_9, recipe_img_10, DATE_FORMAT(created_date, '%Y-%m-%d') AS formatted_date FROM cookhelper WHERE recipe_idx = '${recipe_idx}';`;
 //     db.query(sqlQuery, (err, result) => {
 //       if (err) {
 //         console.log("데이터 조회 오류", err);
@@ -289,41 +342,71 @@ router.get("/api/search/:keyword", (req, res) => {
 //         return;
 //       }
   
-//       // 특정 컬럼 값 추출
-//       const recipeStuff = result.length > 0 ? result[0].recipe_stuff : null;
-//       console.log("recipe_stuff 값:", recipeStuff);
-  
-//       // 레시피 재료를 배열로 변환
-//       const recipeStuffArray = recipeStuff ? recipeStuff.split("/") : [];
-//       console.log("recipe_stuff_array 값:", recipeStuffArray);
-//       console.log("데이터 전송 성공, 데이터 개수:", result.length);
-      
-  
-//       // 이미지 파일 읽기
-//       const imagePromises = result.map(item => {
-//         return new Promise((resolve, reject) => {
-//           const imagePath = `../img_server/${item.recipe_img}`;
-//           console.log(item.recipe_img);
-//           fs.readFile(imagePath, (err, data) => {
-//             if (err) {
-//               reject(err);
+//       // 파일 이미지 전송
+//       if (result.length > 0) {
+//         const recipe_img = result[0].recipe_img;
+//         if (recipe_img) {
+//           const imagePath = `${recipe_img}`;
+//           fs.readFile(imagePath, (error, data) => {
+//             if (error) {
+//               console.log("이미지 파일 읽기 오류", error);
+//               res.status(500).send("이미지 파일 읽기 오류");
 //               return;
 //             }
-//             resolve(data);
+//             const imageData = data.toString("base64");
+//             console.log(imageData);
+//             const response = {
+//               recipe_img: imageData,
+//             };
+//             res.send(response);
 //           });
-//         });
-//       });
-  
-//       // 이미지 파일 읽기 완료 후 클라이언트로 전송
-//       Promise.all(imagePromises)
-//         .then(imageDataArray => {
-//           // 클라이언트로 결과, recipeStuffArray, imageUrls, 이미지 데이터 전송
-//           res.send({ result: result, recipeStuffArray: recipeStuffArray,imageDataArray: imageDataArray });
-//         })
-//         .catch(err => {
-//           console.log("이미지 파일 읽기 오류", err);
-//           res.status(500).send("이미지 파일 읽기 오류");
-//         });
+//         } else {
+//           res.status(404).send("이미지 파일이 존재하지 않습니다.");
+//         }
+//       } else {
+//         res.status(404).send("데이터가 존재하지 않습니다.");
+//       }
 //     });
-//   });
-// ===================================================================================================================================================================================================
+// });
+// ===================================================================================================================================================================================================  
+// ===================================================================================================================================================================================================  
+router.get("/api/recipehelperimgtest/:recipe_idx", (req, res) => {
+  // 전달받은 리스트의 인덱스
+  const recipe_idx = req.params.recipe_idx;
+
+  const sqlQuery = `SELECT *, DATE_FORMAT(created_date, '%Y-%m-%d') AS formatted_date FROM cookhelper WHERE recipe_idx = '${recipe_idx}';`;
+  db.query(sqlQuery, (err, result) => {
+      if (err) {
+      console.log("데이터 조회 오류", err);
+      res.status(500).send("데이터 조회 오류");
+      return;
+      }
+
+      // 특정 컬럼 값 추출
+      const recipeStuff = result.length > 0 ? result[0].recipe_stuff : null;
+      console.log("recipe_stuff 값:", recipeStuff);
+
+      // 레시피 재료를 배열로 변환
+      const recipeStuffArray = recipeStuff ? recipeStuff.split("/") : [];
+      console.log("recipe_stuff_array 값:", recipeStuffArray);
+      console.log("데이터 전송 성공, 데이터 개수:", result.length);
+
+      // 이미지 데이터 추출 및 결과에 추가
+      if (result.length > 0) {
+          const imageBuffer = result[0].recipe_img;
+      if (imageBuffer) {
+          const base64Image = Buffer.from(imageBuffer).toString("base64");
+          result[0].recipe_img = base64Image;
+          // 클라이언트로 결과 및 이미지 데이터 전송
+          res.send({
+              result: result,
+              recipeStuffArray: recipeStuffArray
+          });
+      } else {
+        res.status(404).send("이미지 데이터가 존재하지 않습니다.");
+      }
+      } else {
+      res.status(404).send("데이터가 존재하지 않습니다.");
+      }
+  });
+});
