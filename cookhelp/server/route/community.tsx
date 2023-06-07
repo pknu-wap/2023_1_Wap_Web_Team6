@@ -30,15 +30,37 @@ router.get('/', (req, res) => {
 });
 
   
+// =================================================================
 // 게시글 리스트 불러오기
 router.get("/api/list", (req, res) => {
     const sqlQuery = "SELECT board_idx, title, members, DATE_FORMAT(create_date, '%Y-%m-%d') AS create_date, boardstyle FROM board ORDER BY board_idx desc;";
     db.query(sqlQuery, (err, result) => {
         res.send(result)
-        console.log('게시판 목록 생성 완료.')
     });
 });
 
+
+// =================================================================
+// 리스트 검색
+router.get("/api/search/:keyword", (req, res) => {
+
+    const keyword = req.params.keyword;
+
+    const sqlQuery = `SELECT board_idx, title, members, DATE_FORMAT(create_date, '%Y-%m-%d') AS create_date, boardstyle FROM board WHERE title LIKE '%${keyword}%';`;
+    db.query(sqlQuery, (err, result) => {
+        if (err) {
+            console.log("데이터 조회 오류", err);
+            res.result(500).send("데이터 조회 오류");
+            return;
+        }
+
+        console.log("데이터 전송 성공, 데이터 개수:", result.length)
+        res.send(result);
+        // console.log('게시판 목록 생성 완료. 전송 개수: ', recipeResult.length, recipeResult[0]);
+    });
+});
+
+// =================================================================
 // 게시글 업로드 처리
 router.post('/api/upload', function (req, res) {
 
@@ -48,7 +70,6 @@ router.post('/api/upload', function (req, res) {
     const content = req.body.content;
     const boardstyle = req.body.boardstyle;
 
-    console.log(boardstyle)
     const query = `INSERT INTO board (title, members, content, boardstyle) VALUES (?,?,?,?);`;
     const values = [
         title, members, content, boardstyle
@@ -69,13 +90,14 @@ router.post('/api/upload', function (req, res) {
     res.send('게시판 업로드 완료.');
 });
 
-// 요리 도우미 구현
-router.get("/api/recipehelper/:recipe_idx", (req, res) => {
+// =================================================================
+// 게시판 상세 구현
+router.get("/api/board/:board_idx", (req, res) => {
 
     // const recipe_idx = 1;
-    const recipe_idx = req.params.recipe_idx;
+    const board_idx = req.params.board_idx;
 
-    const sqlQuery = `SELECT *, DATE_FORMAT(created_date, '%Y-%m-%d') AS formatted_date FROM cookhelper WHERE recipe_idx = '${recipe_idx}';`;
+    const sqlQuery = `SELECT *, DATE_FORMAT(create_date, '%Y-%m-%d') AS create_date FROM board WHERE board_idx = '${board_idx}';`;
     db.query(sqlQuery, (err, result) => {
         if (err) {
             console.log("데이터 조회 오류", err);
@@ -89,56 +111,96 @@ router.get("/api/recipehelper/:recipe_idx", (req, res) => {
     });
 });
 
+// =================================================================
+// 게시판 삭제 구현
+router.post("/api/boardDelete", (req, res) => {
 
-
-// 리스트 검색
-router.get("/api/search/:keyword", (req, res) => {
-
-    const keyword = req.params.keyword;
-
-    const sqlQuery = `SELECT board_idx, title, members, DATE_FORMAT(create_date, '%Y-%m-%d') AS create_date, boardstyle FROM board WHERE title LIKE '%${keyword}%';`;
-    db.query(sqlQuery, (err, result) => {
-        if (err) {
-            console.log("데이터 조회 오류", err);
-            res.result(500).send("데이터 조회 오류");
-            return;
-        }
-
-        console.log("데이터 전송 성공, 데이터 개수:", result.length)
-        res.send(result);
-        // console.log('게시판 목록 생성 완료. 전송 개수: ', recipeResult.length, recipeResult[0]);
-    });
-});
-
-// 아래부터 테스트 함수들.
-// ===================================================================================================================================================================================================
-// 데이터 삽입 테스트, 현재 상황 : 여러개 이미지를 받아 지정경로에 저장.
-router.post('/api/uploadTestTable', function (req, res, next) {
-
-    const title = req.body.recipe_title;
-    const stuff = req.body.recipe_stuff;
-    // const img = req.files.map(file => `./img_server/${file.filename}`);
-    const img = req.files.map(files => `./img_server/${files.filename}`);
-
-    console.log(img);
-
-    const query = `INSERT INTO testtable (title, stuff, img_path) VALUES (?, ?, ?);`
-    const value = [title, stuff, ...img];
-
+    // const recipe_idx = 1;
+    const board_idx = req.body.board_idx;
+    const members = req.body.members;
     const sendData = { isSuccess: "" };
 
-    db.query(query, value, function (error, result, fields) {
-        if (error) {
-            console.error("데이터 삽입 오류", error)
-            sendData.isSuccess = "데이터 삽입 오류 발생"
-        } else {
+    const sqlQuery = `select members from board where board_idx = '${board_idx}';`;
+    db.query(sqlQuery, (err, result) => {
+        if (err) {
+            console.log("데이터 조회 오류", err);
+            sendData.isSuccess = "게시글 삭제 오류"
+            res.send(sendData);
+        } 
+        const membersWithoutQuotes = result[0].members.replace(/"/g, "");
+        if(membersWithoutQuotes === members) {
+        const sqlQuery2 = `DELETE from board where board_idx = '${board_idx}';`;
+        db.query(sqlQuery2, (err, result) => {
+            if (err) {
+                console.log("데이터 삭제 오류", err);
+                sendData.isSuccess = "게시글 삭제 오류"
+                res.send(sendData);
+            } 
             sendData.isSuccess = "True";
-            console.log("레시피 데이터 저장 완료.");
+            console.log(board_idx, '게시글 삭제 완료')
+            res.send(sendData);  
+        })
+        } else {
+            sendData.isSuccess = "만드신 분이 아닙니다!!";
+            res.send(sendData);
         }
-    })
+    }); 
+        // console.log('게시판 목록 생성 완료. 전송 개수: ', recipeResult.length, recipeResult[0]);
+    });
 
-    // 업로드 완료 시 동작할 코드 작성
-    res.send('파일 업로드 완료.');
+
+
+
+// =================================================================
+// 유저 확인 구현
+router.post("/api/infoCheck", (req, res) => {
+    // const recipe_idx = 1;
+    const board_idx = req.body.board_idx;
+    const members = req.body.members;
+    const sendData = { isSuccess: "" };
+    console.log(board_idx,members);
+
+    const sqlQuery = `select members from board where board_idx = '${board_idx}';`;
+    db.query(sqlQuery, (err, result) => {
+        if (err) {
+            console.log("데이터 조회 오류", err);
+            sendData.isSuccess = "게시글 삭제 오류"
+            res.send(sendData);
+        } 
+        const membersWithoutQuotes = result[0].members.replace(/"/g, "");
+        if(membersWithoutQuotes === members) {
+            sendData.isSuccess = "True";
+            res.send(sendData);  
+        } else {
+            sendData.isSuccess = "만드신 분이 아닙니다!!";
+            res.send(sendData);
+        }
+    }); 
 });
 
-// ===================================================================================================================================================================================================
+// =================================================================
+// 게시글 업로드 처리
+router.post('/api/boardModify', function (req, res) {
+
+    const board_idx = req.body.board_idx;
+    const title = req.body.title;
+    const members = req.body.members;
+    const content = req.body.content;
+    const boardstyle = req.body.boardstyle;
+
+    const query = `UPDATE board SET title ='${title}', content='${content}', boardstyle='${boardstyle}' WHERE board_idx =${board_idx}`;
+    const sendData = { isSuccess: "" };
+
+    db.query(query, function (error, result, fields) {
+        if (error) {
+            console.error("데이터 수정 오류", error)
+            sendData.isSuccess = "데이터 수정 오류 발생";
+        } else {
+            sendData.isSuccess = "True";
+            console.log("게시판 수정 완료.");
+        }
+    })
+    res.send('게시판 업로드 완료.');
+
+    // 업로드 완료 시 동작할 코드 작성x
+});

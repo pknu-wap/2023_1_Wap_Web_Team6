@@ -3,6 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@ckeditor/ckeditor5-build-classic": "^38.0.1",
+    "@ckeditor/ckeditor5-react": "^6.0.0",
     "@mui/material": "^5.11.16",
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^13.0.0",
@@ -13,6 +15,7 @@
     "@types/react-dom": "^18.0.0",
     "@types/react-speech-recognition": "^3.9.2",
     "axios": "^1.4.0",
+    "ckeditor": "^4.12.1",
     "express-session": "^1.17.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
