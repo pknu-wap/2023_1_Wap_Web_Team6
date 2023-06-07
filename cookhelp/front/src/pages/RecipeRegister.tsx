@@ -5,6 +5,7 @@ import Container from "../UI/Container";
 import Btn from "../UI/Btn";
 import RecipeSeq from "../components/RecipeSeq";
 import { useNavigate } from "react-router-dom";
+import { count } from "console";
 
 const RegisterContainer = styled(Container)`
   max-width: 60rem;
@@ -73,13 +74,16 @@ const RecipeRegister = () => {
   const navigate = useNavigate();
 
   const [countList, setCountList] = useState([0]);
+
   const onAddDetailDiv = () => {
-    let countArr = [...countList];
-    let counter = countArr.slice(-1)[0];
-    counter += 1;
-    countArr.push(counter); // index 사용 X
-    // countArr[counter] = counter	// index 사용 시 윗줄 대신 사용
-    setCountList(countArr);
+    if (countList.length < 10) {  // 요리순서 10개까지만 추가됨
+      let countArr = [...countList];
+      let counter = countArr.slice(-1)[0];
+      counter += 1;
+      countArr.push(counter); // index 사용 X
+      // countArr[counter] = counter	// index 사용 시 윗줄 대신 사용
+      setCountList(countArr);
+    }
   };
 
   const [recipe_img, setRecipe_Img] = useState<File[]>([]); // 이미지 배열
@@ -125,33 +129,11 @@ const RecipeRegister = () => {
     timer_rd_10: "",
   });
 
-  // const handleImgUpload = (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
-  //     const file = e.target.files?.[0];
-
-  //     if (file) {
-  //         const reader = new FileReader();
-
-  //         reader.onloadend = () => {
-  //             const imageUrl = reader.result as string;
-
-  //             setRegisterData((prevData) => {
-  //                 const updatedImgs = [...prevData.recipe_img];
-  //                 updatedImgs[index] = imageUrl;
-
-  //                 return {
-  //                     ...prevData,
-  //                     recipe_img: updatedImgs,
-  //                 };
-  //             });
-  //         };
-  //         reader.readAsDataURL(file);
-  //     }
-  // };
 
   const handleImgUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (files) {
-      const updatedImgs: File[] = [];
+      const updatedImgs: File[] = []; 
       for (let i = 0; i < files.length; i++) {
         updatedImgs.push(files[i]);
       }
@@ -256,7 +238,9 @@ const RecipeRegister = () => {
               handleImgUpload={handleImgUpload}
               handleValueChange={handleValueChange}
             />
-            <Btn onClick={onAddDetailDiv}>순서 추가</Btn>
+            <Btn onClick={onAddDetailDiv}
+            disabled={countList.length == 10}
+            >순서 추가</Btn>
           </CreateListDiv>
         </form>
       </RegisterContainer>

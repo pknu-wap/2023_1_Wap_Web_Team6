@@ -138,6 +138,16 @@ const RecipeList = () => {
     setKeyword(event.target.value);
   };
 
+  const handleBtnClick = () => {
+    if (localStorage.getItem('isLogin') === "True") {
+      navigate("/recipe_register");
+    }
+    else {
+      alert("로그인이 필요한 서비스입니다.");
+      navigate("/login");
+    }
+  };
+
   return (
     <>
       <Navbar />
@@ -187,7 +197,7 @@ const RecipeList = () => {
           page={page}
           setPage={setPage}
         />
-        <RegisterBtn onClick={() => navigate("/recipe_register")}>
+        <RegisterBtn onClick={handleBtnClick}>
           레시피 등록
         </RegisterBtn>
       </RecipeListContainer>
