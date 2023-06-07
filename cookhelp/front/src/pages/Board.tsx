@@ -1,17 +1,15 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import NavBar from "../components/NavBar";
-import Slider from "../components/Slider";
-import { ListProps, DeckData, Card } from "../components/type";
-import RecommendCard from "../components/RecommendCard";
-import { Form, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const Wrap = styled.div`
   margin-top: 2rem;
   display: flex;
   justify-content: center;
   gap: 1rem;
-
   /* @media screen and (max-width: 800px) {
     margin-top: 2rem;
     flex-direction: column;
@@ -19,108 +17,201 @@ const Wrap = styled.div`
   } */
 `;
 
-const RightSideBar = styled.div`
-  background-color: var(--light-gray-color);
+const PostWrapper = styled.div`
+  width: 80%;
+  margin: 0 auto;
+`;
 
-  max-width: 250px;
-  width: 25%;
-  margin: 0;
+const PostView  = styled.div`
+  margin: 10px 0;
+  display: flex;
+`;
 
-  /* @media screen and (max-width: 800px) {
-    max-width: 100%;
-    width: 600px;
-    max-height: 50%;
-    height: 150px;
-  } */
+const ContentView  = styled.div`
+  margin: 10px 0;
+  display: flex;
+  border-top:3px solid white;
 `;
-const LeftSideBar = styled.div`
-  background-color: var(--dark-green-color);
-  color: white;
-  width: 25%;
-  max-width: 250px;
+
+const PostView1 = styled.label`
+  margin: 10px 0;
+  width: 20%;
+  font-weight: bold;
 `;
-const ListTitle = styled.ol`
-  font-weight: var(--Bold-font);
-  font-size: 18px;
-  margin: 1rem 1rem;
+
+const PostView2 = styled.label`
+  margin: 10px 0;
+  width: 80%;
 `;
-const StyledList = styled.li`
-  font-size: 1rem;
-  margin-bottom: 5px;
-  list-style-type: decimal;
+
+const ModifyButton = styled.button`
   cursor: pointer;
-  /* padding-left: 1rem; */
+  background-color: var(--green-color);
+  color: #fff;
+  padding: 5px 10px;
+  border: none;
+  border-radius: 5px;
+  font-size: 18px;
+  margin-left: 65%;
 `;
+
+const DeleteButton = styled.button`
+  cursor: pointer;
+  background-color:  var(--green-color);
+  color: #fff;
+  padding: 5px 10px;
+  border: none;
+  border-radius: 5px;
+  font-size: 18px;
+  margin-left: 1%;
+`;
+
+const ListButton = styled.button`
+  cursor: pointer;
+  background-color:  var(--green-color);
+  color: #fff;
+  padding: 5px 10px;
+  border: none;
+  border-radius: 5px;
+  font-size: 18px;
+  margin-left: 1%;
+`;
+
 const Main = styled.div`
   background-color: var(--mint-color);
-  width: 50%;
+  width: 80%;
 `;
-const IngredientItem = styled.li`
-  font-size: 1rem;
-  margin-bottom: 5px;
-  list-style: none;
-  padding-left: 1rem;
-`;
-const Footer = styled.footer`
-  background-color: var(--green-color);
-  color: white;
-  margin: 0 auto;
-  margin-top: 2rem;
-  display: flex;
-  justify-content: center;
-
-  width: 1500px;
-  max-width: 90%;
-  height: 190px;
-`;
-
-const List = ({ stepDetail, listNum, setSelectIdx }: ListProps) => {
-  const hadleListItem = (e: React.MouseEvent<HTMLLIElement>) => {
-    console.log(e.currentTarget.value);
-    setSelectIdx(e.currentTarget.value);
-  };
-
-  return (
-    <StyledList key={listNum} value={listNum} onClick={hadleListItem}>
-      {stepDetail}
-    </StyledList>
-  );
-};
 
 const Recipe = () => {
   const params = useParams();
   // console.log(params.recipe_idx);
 
-  const [deck, setDeck] = useState();
-  const [selectIdx, setSelectIdx] = useState<number>(1);
-  const [Ingredient, setIngredient] = useState<string[]>([]);
-  const [cards, setCards] = useState<Card[]>([]);
+  const [registerData, setRegisterData] = useState({
+    members: localStorage.getItem('loginId'),
+    board_idx: params.board_idx
+  });
 
-  useEffect(() => {
-    const fetchRecipeHelper = async () => {
-      try {
-        const res = await fetch(
-          `http://localhost:8081/community/api/board/${params.board_idx}`
-        );
-        const data = await res.json();
+  const [board_idx, setboard_idx] = useState<string>("");
+  const [title, settitle] = useState();
+  const [content, setcontent] = useState<string>("")
+  const [members, setmembers] = useState<string>("")
+  const [boardstyle, setboardstyle] = useState();
+  const [create_date, setcreate_date] = useState();
+  const navigate = useNavigate();
 
-        if (!res.ok) {
-          console.log("error : ", data.description);
-          return;
+  const deleteBtnClick = (e: React.MouseEvent<HTMLButtonElement>): void => {
+    e.preventDefault(); // 버튼 클릭의 기본 동작 중지
+    fetch("http://localhost:8081/community/api/boardDelete", {
+      method: "post", // method :통신방법
+      headers: {
+        // headers: API 응답에 대한 정보를 담음
+        "content-type": "application/json",
+      },
+      body: JSON.stringify(registerData), //join 객체를 보냄
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.isSuccess === "True") {
+          alert("게시글 삭제 완료!");
+          console.log("게시글 삭제 완료!");
+          navigate("/board_list");
+        } else {
+          alert(data.isSuccess);
         }
-        console.log("data : ", data);
-        // console.log("data : ", data.result[0]);
-        setDeck(data.result[0]);
-        setIngredient(data.recipeStuffArray);
-      } catch (error) {
-        console.log("Error!", error);
-      }
-    };
+      }).catch(function(err) {
+        console.error(` Err: ${err}`);
+    })
+  };
 
-    fetchRecipeHelper();
-  }, []);
+  const modifyBtnClick = (e: React.MouseEvent<HTMLButtonElement>): void => {
+    e.preventDefault(); // 버튼 클릭의 기본 동작 중지
+    fetch("http://localhost:8081/community/api/infoCheck", {
+      method: "post", // method :통신방법
+      headers: {
+        // headers: API 응답에 대한 정보를 담음
+        "content-type": "application/json",
+      },
+      body: JSON.stringify(registerData), //join 객체를 보냄
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.isSuccess === "True") {
+          navigate("/board_modify", {state:board_idx})
+        } else {
+          alert(data.isSuccess);
+        }
+      }).catch(function(err) {
+        console.error(` Err: ${err}`);
+    })
+  };
+
+    useEffect(() => {
+      const fetchRecipeHelper = async () => {
+        try {
+          const res = await fetch(
+            `http://localhost:8081/community/api/board/${params.board_idx}`
+          );
+          const data = await res.json();
+
+          if (!res.ok) {
+            console.log("error : ", data.description);
+            return;
+          }
+          // console.log("data : ", data.result[0]);
+          setboard_idx(data[0].board_idx);
+          settitle(data[0].title);
+          setcontent(data[0].content);
+          setmembers(data[0].members);
+          setboardstyle(data[0].boardstyle);
+          setcreate_date(data[0].create_date);
+        } catch (error) {
+          console.log("Error!", error);
+        }
+      };
+
+      fetchRecipeHelper();
+    }, []);
   return (
     <div>
+    <NavBar />
+    <Wrap>
+      <Main>
+
+      <PostWrapper>
+              <PostView>
+                <PostView1>게시글 번호</PostView1>
+                <PostView2>{ board_idx }</PostView2>
+              </PostView>
+              <PostView>
+                <PostView1>게시글 유형</PostView1>
+                <PostView2>{ boardstyle }</PostView2>
+              </PostView>
+              <PostView>
+                <PostView1>제목</PostView1>
+                <PostView2>{ title }</PostView2>
+              </PostView>
+              <PostView>
+                <PostView1>작성한 사람</PostView1>
+                <PostView2>{ members }</PostView2>
+              </PostView>
+              <PostView>
+                <PostView1>작성일</PostView1>
+                <PostView2>{ create_date }</PostView2>
+              </PostView>
+              {/* <div className="post-view-row">
+                <label>조회수</label>
+                <label>{  }</label>
+              </div> */}
+              <ContentView>
+                <PostView1>내용</PostView1>
+                <div dangerouslySetInnerHTML={{ __html: content }}></div>
+              </ContentView>
+      </PostWrapper>
+        <ModifyButton onClick={modifyBtnClick}>게시글 수정</ModifyButton>
+        <DeleteButton onClick={deleteBtnClick}>게시글 삭제</DeleteButton>
+        <ListButton onClick={() => navigate("/board_list")}>목록 돌아가기</ListButton>
+        </Main>
+      </Wrap>
     </div>
   );
 };
