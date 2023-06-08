@@ -45,7 +45,7 @@ const RegisterBtn = styled(Btn)`
 `;
 const StyleBtnContainer = styled.div`
   position: relative;
-  left: 12rem;
+  /* left: 12rem; */
   top: 4rem;
   display: flex;
   gap: 0.7rem;
@@ -139,10 +139,9 @@ const RecipeList = () => {
   };
 
   const handleBtnClick = () => {
-    if (localStorage.getItem('isLogin') === "True") {
+    if (localStorage.getItem("isLogin") === "True") {
       navigate("/recipe_register");
-    }
-    else {
+    } else {
       alert("로그인이 필요한 서비스입니다.");
       navigate("/login");
     }
@@ -197,9 +196,7 @@ const RecipeList = () => {
           page={page}
           setPage={setPage}
         />
-        <RegisterBtn onClick={handleBtnClick}>
-          레시피 등록
-        </RegisterBtn>
+        <RegisterBtn onClick={handleBtnClick}>레시피 등록</RegisterBtn>
       </RecipeListContainer>
     </>
   );

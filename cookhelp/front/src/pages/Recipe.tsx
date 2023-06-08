@@ -96,29 +96,11 @@ const Recipe = () => {
   const [recipeSteps, setRecipeSteps] = useState<string[]>([]);
   const [Ingredient, setIngredient] = useState<string[]>([]);
   const [cards, setCards] = useState<Card[]>([]);
-
-  // const [imgSrc, setImgSrc] = useState("");
-  const [imageData, setImageData] = useState("");
+  const [imageData, setImageData] = useState<string[]>([]);
 
   const addRecipeStep = (step: string | null) => {
     if (step == null) return;
     setRecipeSteps((prev) => [...prev, step]);
-  };
-
-  useEffect(() => {
-    // 백엔드로부터 이미지 데이터 가져오는 로직
-    fetchImageDataFromBackend()
-      .then((data) => setImageData(data))
-      .catch((error) => console.log(error));
-  }, []);
-
-  const fetchImageDataFromBackend = async () => {
-    const response = await fetch(
-      `http://localhost:8081/board/api/recipehelperimg/${params.recipe_idx}`
-    );
-    const data = await response.json();
-    // console.log(data.recipe_img);
-    return data.recipe_img;
   };
 
   useEffect(() => {
@@ -128,15 +110,12 @@ const Recipe = () => {
           `http://localhost:8081/board/api/recipehelper/${params.recipe_idx}`
         );
         const data = await res.json();
-        console.log("data : ", data);
+        // console.log("data : ", data);
 
         if (!res.ok) {
           console.log("error : ", data.description);
           return;
         }
-
-        //이미지 저장
-        // setImgSrc(data.result[0].recipe_img);
 
         //데이터 저장
         setIngredient(data.recipeStuffArray);
@@ -149,14 +128,27 @@ const Recipe = () => {
         console.log("Error!", error);
       }
     };
+    const fetchImageDataFromBackend = async () => {
+      try {
+        const response = await fetch(
+          `http://localhost:8081/board/api/recipehelperimg/${params.recipe_idx}`
+        );
+        if (!response.ok) {
+          throw new Error("요청이 실패하였습니다.");
+        }
+
+        const data = await response.json();
+        // console.log("data : ", data);
+        const tmpImgArray = generateImgArray(data);
+        setImageData(tmpImgArray);
+      } catch (error) {
+        console.error("Error:", error);
+      }
+    };
 
     fetchRecipeHelper();
+    fetchImageDataFromBackend();
   }, []);
-
-  // let SliderContent = <></>;
-  // useEffect(() => {
-  //   SliderContent = <Slider cards={cards} selectIdx={selectIdx} />;
-  // }, [cards, deck]);
 
   const updateContent = (deckData: DeckData) => {
     setRecipeSteps([]);
@@ -189,6 +181,15 @@ const Recipe = () => {
 
     return newCards;
   };
+  const generateImgArray = (data: string[]) => {
+    let newImgArray = [];
+    for (let key in data) {
+      // console.log("key : ", key);
+      if (data.hasOwnProperty(key)) newImgArray.push(data[key]);
+    }
+    // console.log("newImgArray : ", newImgArray);
+    return newImgArray;
+  };
 
   let listContent = recipeSteps.map((step, idx) => (
     <List
@@ -206,22 +207,20 @@ const Recipe = () => {
   // console.log("deck : ", deck);
   // console.log("listContent : ", listContent);
   // console.log(cards);
+  // console.log(imageData);
   return (
-    <div>
+    <>
       <NavBar />
-      {/* <img src={imgSrc}></img> */}
-      {imageData ? (
-        <img src={`data:image/png;base64,${imageData}`} alt="Backend Image" />
-      ) : (
-        <p>Loading image...</p>
-      )}
+      {/* {imageData.map((ele) => (
+        <img src={`data:image/png;base64,${ele}`} alt="Backend Image" />
+      ))} */}
       <Wrap>
         <RightSideBar>
           <ListTitle>요리 순서</ListTitle>
           {listContent}
         </RightSideBar>
         <Main>
-          <Slider cards={cards} selectIdx={selectIdx} />
+          <Slider cards={cards} selectIdx={selectIdx} imgCard={imageData} />
           {/* {SliderContent} */}
         </Main>
         <LeftSideBar>
@@ -232,7 +231,7 @@ const Recipe = () => {
       <Footer>
         <RecommendCard />
       </Footer>
-    </div>
+    </>
   );
 };
 
