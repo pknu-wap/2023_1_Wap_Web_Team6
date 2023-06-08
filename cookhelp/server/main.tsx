@@ -15,9 +15,7 @@ app.use('/members', members);
 app.use('/board', board);
 app.use('/cookhelper', cookhelper);
 app.use('/community', community);
-app.use(function(req, res, next) {
-    res.status(404).send('Sorry cant find that!');
-  });
+
 
   app.get('/', function (req, res) {
     res.sendFile(path.join(__dirname, 'build', 'index.html'));
@@ -30,3 +28,7 @@ app.use(function(req, res, next) {
 // }));
 // 서버 작동하는지 찍는 부분
 app.listen(port, () => console.log('Listening on port',port))
+
+app.use(function(req, res, next) {
+  res.status(404).send('Sorry cant find that!');
+});
