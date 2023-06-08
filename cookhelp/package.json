@@ -1,10 +1,11 @@
 {
   "name": "client",
   "version": "1.0.0",
+  "private": true,
   "scripts": {
     "client": "cd front && yarn start",
     "server": "cd server && yarn server",
-    "dev": "concurrently --kill-others-on-fail \"yarn server\" \"yarn client\""
+    "dev": "concurrently --kill-others-on-fail \"yarn server\" \"yarn client\" "
   },
   "dependencies": {
     "concurrently": "^8.0.1",
