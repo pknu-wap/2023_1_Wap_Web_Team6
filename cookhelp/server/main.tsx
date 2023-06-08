@@ -8,6 +8,7 @@ const members = require("./route/members.tsx")
 const board = require("./route/board.tsx")
 const cookhelper = require("./route/cookhelper.tsx")
 const community = require("./route/community.tsx")
+const comments = require("./route/comments.tsx")
 
 app.use(express.static("/front/build")); 
 app.use(cors())
@@ -15,11 +16,7 @@ app.use('/members', members);
 app.use('/board', board);
 app.use('/cookhelper', cookhelper);
 app.use('/community', community);
-
-
-  app.get('/', function (req, res) {
-    res.sendFile(path.join(__dirname, 'build', 'index.html'));
-  });
+app.use('/comments', comments);
 
 // app.use(cors({
 //   origin: 'https://localhost:3000',
