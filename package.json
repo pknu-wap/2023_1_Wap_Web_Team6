@@ -15,5 +15,6 @@
   "dependencies": {
     "heroku": "^8.1.7",
     "pkg": "^5.8.1"
-  }
+  },
+  "homepage": "./"
 }
