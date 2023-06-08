@@ -8,6 +8,7 @@ const board = require("./route/board.tsx")
 const cookhelper = require("./route/cookhelper.tsx")
 const community = require("./route/community.tsx")
 
+app.use(express.static("/front/build")); 
 app.use(cors())
 app.use('/members', members);
 app.use('/board', board);
