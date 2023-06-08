@@ -87,13 +87,14 @@ const RecipeRegister = () => {
   };
 
   const [recipe_img, setRecipe_Img] = useState<File[]>([]); // 이미지 배열
+  const id = localStorage.getItem('loginId');
 
   const [registerData, setRegisterData] = useState({
     recipe_title: "", // 레시피 제목
     recipe_stuff: "", // 요리 재료
     foodstyle: "한식", // 음식 종류(한,중,일,양)
     //recipe_img: Array(11).fill("null"), // 이미지 배열
-    members: "",
+    members: "id",
 
     recipe_step_1: "", // 요리순서 소제목 1~10
     recipe_step_2: "",
@@ -215,7 +216,7 @@ const RecipeRegister = () => {
             <Label>요리 재료</Label>
             <Textarea
               name="recipe_stuff"
-              placeholder="요리 재료를 입력해주세요."
+              placeholder={"요리 재료를 입력해주세요\n (예시)  밥/참치/김"}
               onChange={handleValueChange}
               required
             />
