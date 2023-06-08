@@ -119,3 +119,38 @@ export interface BoardSeqProps {
       | React.ChangeEvent<HTMLSelectElement>
   ) => void;
 }
+
+export interface boardsearchData {
+  board_idx: number;
+  title: string;
+  members: string;
+  create_date: string;
+  boardstyle: string;
+  views?: number;
+}
+
+export interface CommentItemProps {
+  Cmtidx: number;
+  CmtComment: string;
+  CmtWriter: string;
+  CmtDate: string;
+  CmtPassword: string;
+  BoardIdx: number;
+}
+export interface cmtData {
+  comments_idx: number;
+  board_idx: number;
+  members: string;
+  comments_content: string;
+  create_date: string;
+  pwd: string;
+}
+
+export interface fetchCmtList {
+  comments_idx: number;
+  board_idx: number;
+  members: string;
+  comments_content: string;
+  create_date: string;
+  pwd: string;
+}
