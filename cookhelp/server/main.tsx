@@ -1,5 +1,6 @@
 const express = require('express');
 const port = process.env.PORT || 8081;
+require('dotenv').config();
 const cors = require('cors');
 const app = express();
 const members = require("./route/members.tsx")
