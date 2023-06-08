@@ -4,7 +4,7 @@
     "main": "main.tsx",
     "private": true,
     "scripts": {
-        "server": "nodemon server"
+        "server": "node server"
     },
     "dependencies": {
         "@types/dotenv": "^8.2.0",
