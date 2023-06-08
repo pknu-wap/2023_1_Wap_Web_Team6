@@ -6,7 +6,8 @@
   "scripts": {
     "client-build": "cd cookhelp && cd front && yarn install && yarn build && yarn start && cd ../",
     "server-build": "cd server && yarn install && yarn build && cd ../",
-    "heroku-postbuild" : "yarn client-build && yarn server-build && mv ./front/build .server/build && cd cookhelp && yarn dev",
+    "heroku-postbuild" : "yarn client-build && yarn server-build && mv ./front/build .server/build",
+    "start" : "cd server && yarn server",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
