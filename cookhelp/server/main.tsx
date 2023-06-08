@@ -3,6 +3,7 @@ const port = process.env.PORT || 8081;
 require('dotenv').config();
 const cors = require('cors');
 const app = express();
+const path = require('path');
 const members = require("./route/members.tsx")
 const board = require("./route/board.tsx")
 const cookhelper = require("./route/cookhelper.tsx")
@@ -16,6 +17,10 @@ app.use('/cookhelper', cookhelper);
 app.use('/community', community);
 app.use(function(req, res, next) {
     res.status(404).send('Sorry cant find that!');
+  });
+
+  app.get('/', function (req, res) {
+    res.sendFile(path.join(__dirname, 'build', 'index.html'));
   });
 
 // app.use(cors({
