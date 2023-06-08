@@ -97,9 +97,28 @@ const Recipe = () => {
   const [Ingredient, setIngredient] = useState<string[]>([]);
   const [cards, setCards] = useState<Card[]>([]);
 
+  // const [imgSrc, setImgSrc] = useState("");
+  const [imageData, setImageData] = useState("");
+
   const addRecipeStep = (step: string | null) => {
     if (step == null) return;
     setRecipeSteps((prev) => [...prev, step]);
+  };
+
+  useEffect(() => {
+    // 백엔드로부터 이미지 데이터 가져오는 로직
+    fetchImageDataFromBackend()
+      .then((data) => setImageData(data))
+      .catch((error) => console.log(error));
+  }, []);
+
+  const fetchImageDataFromBackend = async () => {
+    const response = await fetch(
+      `http://localhost:8081/board/api/recipehelperimg/${params.recipe_idx}`
+    );
+    const data = await response.json();
+    // console.log(data.recipe_img);
+    return data.recipe_img;
   };
 
   useEffect(() => {
@@ -109,16 +128,20 @@ const Recipe = () => {
           `http://localhost:8081/board/api/recipehelper/${params.recipe_idx}`
         );
         const data = await res.json();
+        console.log("data : ", data);
 
         if (!res.ok) {
           console.log("error : ", data.description);
           return;
         }
-        console.log("data : ", data);
-        // console.log("data : ", data.result[0]);
-        setDeck(data.result[0]);
+
+        //이미지 저장
+        // setImgSrc(data.result[0].recipe_img);
+
+        //데이터 저장
         setIngredient(data.recipeStuffArray);
         updateContent(data.result[0]);
+        setDeck(data.result[0]);
         //slider에 보낼 card 변수
         const newGenerateCard = generateCards(data.result[0]);
         setCards(newGenerateCard);
@@ -186,6 +209,12 @@ const Recipe = () => {
   return (
     <div>
       <NavBar />
+      {/* <img src={imgSrc}></img> */}
+      {imageData ? (
+        <img src={`data:image/png;base64,${imageData}`} alt="Backend Image" />
+      ) : (
+        <p>Loading image...</p>
+      )}
       <Wrap>
         <RightSideBar>
           <ListTitle>요리 순서</ListTitle>

@@ -74,12 +74,12 @@ const ScreenCard = ({ currentCard }: CardProps) => {
   }
 
   // console.log("imgSrc : ", pic);
-  const ImgSrc = pic.slice(1);
+  // const ImgSrc = pic.slice(1);
   console.log(pic);
   // console.log(`http://localhost:8081/server${ImgSrc}`);
   return (
     <StyledCard>
-      <SlideImg src={`http://localhost:8081/cookhelp/server${ImgSrc}`} />
+      <SlideImg src={`data:image/jpeg;base64, ${pic}`} />
       <p>{detail}</p>
     </StyledCard>
   );

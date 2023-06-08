@@ -196,7 +196,7 @@ router.get("/api/info/:loginId", (req, res) => {
 });
 // ======================================================================================================
 // 회원 정보 수정하기
-router.get("/api/modify", (req, res) => {
+router.post("/api/modify", (req, res) => {
   const userId = req.body.modifyId;
   const userPassword = req.body.modifyPassword;
   const userName = req.body.modifyName;
@@ -220,6 +220,7 @@ router.get("/api/modify", (req, res) => {
     // });
   } else {
     console.log("아이디 비밀번호 입력하세요!");
+    console.log(userId, userPassword, userName, userSelectFood);
     sendData.isSuccess = "아이디와 비밀번호를 입력하세요!";
     res.send(sendData);
   }
