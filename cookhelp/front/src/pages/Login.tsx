@@ -107,7 +107,7 @@ const Login = () => {
   const navigate = useNavigate();
   const handleBtnClick = (e: React.MouseEvent<HTMLButtonElement>): void => {
     e.preventDefault(); // 버튼 클릭의 기본 동작 중지
-    fetch("http://localhost:8081/members/api/login", {
+    fetch("http://ec2-3-34-47-79.ap-northeast-2.compute.amazonaws.com:8081/members/api/login", {
       //auth 주소에서 받을 예정
       method: "post", // method :통신방법
       headers: {
