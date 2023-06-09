@@ -41,9 +41,15 @@ const IngredientWrap = styled.div`
   align-items: center;
   gap: 1rem;
 `;
+const StyledImg = styled.img`
+  max-width: 500px;
+  max-height: 150px;
+  width: auto;
+  height: auto;
+`;
 
-const StepItem = ({ card }: StepItemProps) => {
-  const { title, detail, pic } = card;
+const StepItem = ({ card, img }: StepItemProps & { img?: string }) => {
+  const { title, detail } = card;
   //   console.log(card);
   return (
     <StyledStepItem>
@@ -51,7 +57,7 @@ const StepItem = ({ card }: StepItemProps) => {
         <h2>{title}</h2>
         <div>{detail}</div>
       </div>
-      <img src={imgSrc} />
+      {img && <img src={`data:image/png;base64, ${img}`} />}
     </StyledStepItem>
   );
 };
@@ -65,6 +71,8 @@ const RecipeDetail = () => {
   const [title, setTitle] = useState("");
   const [date, setDate] = useState("");
   const [cards, setCards] = useState<fetchRecipeCardsProps[]>([]);
+  const [recipeImg, setRecipeImg] = useState();
+  const [imageData, setImageData] = useState<string[]>([]);
 
   useEffect(() => {
     const fetchRecipeHelper = async () => {
@@ -92,8 +100,27 @@ const RecipeDetail = () => {
         console.log("Error!", error);
       }
     };
+    const fetchImage = async () => {
+      try {
+        const response = await fetch(
+          `http://localhost:8081/board/api/recipehelperimg/${params.recipe_idx}`
+        );
+        if (!response.ok) {
+          throw new Error("요청이 실패하였습니다.");
+        }
+
+        const data = await response.json();
+        // console.log("data : ", data);
+        setRecipeImg(data.recipe_img);
+        const tmpImgArray = generateImgArray(data);
+        setImageData(tmpImgArray);
+      } catch (error) {
+        console.error("Error:", error);
+      }
+    };
 
     fetchRecipeHelper();
+    fetchImage();
   }, []);
 
   const generateCards = (deckData: DeckData) => {
@@ -119,12 +146,19 @@ const RecipeDetail = () => {
 
     return newCards;
   };
+  const generateImgArray = (data: string[]) => {
+    let newImgArray = [];
+    for (let key in data) {
+      // console.log("key : ", key);
+      if (data.hasOwnProperty(key)) newImgArray.push(data[key]);
+    }
+    // console.log("newImgArray : ", newImgArray);
+    return newImgArray;
+  };
 
   const navigateToHelper = () => {
     navigate(`/recipe/${params.recipe_idx}`);
   };
-
-  //   console.log(RecipeData);
 
   return (
     <>
@@ -139,8 +173,14 @@ const RecipeDetail = () => {
           <h3>요리 재료</h3>
           <div>{Ingredient}</div>
         </IngredientWrap>
+        {recipeImg && (
+          <StyledImg
+            src={`data:image/png;base64,${recipeImg}`}
+            alt="레시피 대표 이미지"
+          />
+        )}
         {cards.map((elm, idx) => (
-          <StepItem key={idx} card={elm} />
+          <StepItem key={idx} card={elm} img={imageData[idx + 1]} />
         ))}
       </StyledContainer>
     </>

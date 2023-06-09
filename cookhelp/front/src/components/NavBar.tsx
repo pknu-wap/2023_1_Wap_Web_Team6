@@ -1,7 +1,9 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
-import { useEffect } from 'react';
+import { useEffect } from "react";
+import { AuthContext } from "../hooks/AuthContext";
+import { TapContext } from "../hooks/TapContext";
 
 type TabProps = {
   isActive: boolean;
@@ -55,50 +57,57 @@ const AuthButton = styled.button`
   font-size: 18px;
 `;
 
-
-
 const Navbar = () => {
+  const { setIsLogin } = useContext(AuthContext);
   const [activeMenuItem, setActiveMenuItem] = useState(0); // 현재 활성화된 메뉴 아이템의 인덱스를 상태로 관리
   const [mode, setMode] = useState("");
-  
+  const { tapItem, setTapItem } = useContext(TapContext);
+
   const handleBtnClick = (e: React.MouseEvent<HTMLButtonElement>): void => {
-    localStorage.setItem('isLogin', "False");
-    localStorage.setItem('loginId', "");
-    alert("로그아웃 완료 되었습니다!")
+    localStorage.setItem("isLogin", "False");
+    localStorage.setItem("loginId", "");
+    alert("로그아웃 완료 되었습니다!");
+    setIsLogin(false);
     setMode("LOGIN");
   };
 
   const navigate = useNavigate();
-  const id = localStorage.getItem('loginId')
+  const id = localStorage.getItem("loginId");
   useEffect(() => {
-    if(localStorage.getItem('loginId') !== ""){
-      setMode("WELCOME")
-    } else{
-      localStorage.setItem('loginId', "")
-      setMode("LOGIN")
+    if (localStorage.getItem("loginId") !== "") {
+      setMode("WELCOME");
+    } else {
+      localStorage.setItem("loginId", "");
+      setMode("LOGIN");
     }
-  }, []); 
+  }, []);
 
+  let content: any = null;
 
-  let content:any = null;  
-
-
-  if(mode==="LOGIN"){
-    content = <>
-    <AuthButton onClick={() => navigate("/login")}>로그인</AuthButton> 
-    <AuthButton onClick={() => navigate("/Join")}>회원가입</AuthButton>
-    </>
-  }
-  else if (mode === 'WELCOME') {
-    content = <>
-    <AuthButton onClick={() => navigate(`/myPage/${id}`)}>{id}</AuthButton>
-    <AuthButton onClick={handleBtnClick}>로그아웃</AuthButton>
-    </>
+  if (mode === "LOGIN") {
+    content = (
+      <>
+        <AuthButton onClick={() => navigate("/login")}>로그인</AuthButton>
+        <AuthButton onClick={() => navigate("/Join")}>회원가입</AuthButton>
+      </>
+    );
+  } else if (mode === "WELCOME") {
+    content = (
+      <>
+        <AuthButton onClick={() => navigate(`/myPage/${id}`)}>{id}</AuthButton>
+        <AuthButton onClick={handleBtnClick}>로그아웃</AuthButton>
+      </>
+    );
   }
 
   const handleMenuItemClick = (menuItemIndex: number) => {
     setActiveMenuItem(menuItemIndex);
+    setTapItem(menuItemIndex);
   };
+
+  useEffect(() => {
+    if (tapItem !== 0) setActiveMenuItem(tapItem);
+  }, []);
 
   return (
     <NavbarWrapper>
@@ -132,9 +141,7 @@ const Navbar = () => {
         </MenuItem>
       </MenuWrapper>
 
-      <AuthButtonsWrapper>
-        {content}
-      </AuthButtonsWrapper>
+      <AuthButtonsWrapper>{content}</AuthButtonsWrapper>
     </NavbarWrapper>
   );
 };
