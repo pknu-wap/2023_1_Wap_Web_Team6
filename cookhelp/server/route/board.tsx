@@ -120,8 +120,7 @@ router.get("/api/list", (req, res) => {
 router.post('/api/upload', upload.array('recipe_img'), function (req, res, next) {
 
     const recipe_title = req.body.recipe_title;
-    // const members = req.body.members;
-    const members = "관리자";
+    const members = req.body.members;
     const recipe_stuff = req.body.recipe_stuff;
 
     const recipe_step_1 = req.body.recipe_step_1;
@@ -328,7 +327,90 @@ router.get("/api/recipehelperimg/:recipe_idx", (req, res) => {
     }
   });
 });
+
+// recipe_img_1 전송...
+router.get("/api/recipehelperimgfirst/:recipe_idx", (req, res) => {
+  const recipe_idx = req.params.recipe_idx;
+
+  const sqlQuery = `SELECT recipe_img_1 FROM cookhelper WHERE recipe_idx = '${recipe_idx}';`;
+  db.query(sqlQuery, (err, result) => {
+    if (err) {
+      console.log("데이터 조회 오류", err);
+      res.status(500).send("데이터 조회 오류");
+      return;
+    }
+
+    if (result.length > 0) {
+      const recipe_img_1 = result[0].recipe_img_1;
+      if (recipe_img_1) {
+        const imagePath = `${recipe_img_1}`;
+        fs.readFile(imagePath, (error, data) => {
+          if (error) {
+            console.log("이미지 파일 읽기 오류", error);
+            res.status(500).send("이미지 파일 읽기 오류");
+            return;
+          }
+          const imageData = data.toString("base64");
+          console.log(imageData);
+          res.send(imageData);
+        });
+      } else {
+        res.status(404).send("이미지 파일이 존재하지 않습니다.");
+      }
+    } else {
+      res.status(404).send("데이터가 존재하지 않습니다.");
+    }
+  });
+});
+
+
+router.get("/api/recipehelperimgtestcode/:recipe_idx", (req, res) => {
+  const recipe_idx = req.params.recipe_idx;
+
+  const sqlQuery = `SELECT recipe_img, recipe_img_1, recipe_img_2, recipe_img_3, recipe_img_4, recipe_img_5, recipe_img_6, recipe_img_7, recipe_img_8, recipe_img_9, recipe_img_10 FROM cookhelper WHERE recipe_idx = '${recipe_idx}';`;
+  db.query(sqlQuery, (err, result) => {
+    if (err) {
+      console.log("데이터 조회 오류", err);
+      res.status(500).send("데이터 조회 오류");
+      return;
+    }
+
+    const imageColumns = [
+      "recipe_img",
+      "recipe_img_1",
+      "recipe_img_2",
+      "recipe_img_3",
+      "recipe_img_4",
+      "recipe_img_5",
+      "recipe_img_6",
+      "recipe_img_7",
+      "recipe_img_8",
+      "recipe_img_9",
+      "recipe_img_10",
+    ];
+
+    const imageData = {};
+
+    imageColumns.forEach((column) => {
+      const image = result[0][column];
+      if (image) {
+        const imagePath = `${image}`;
+        const data = fs.readFileSync(imagePath);
+        const base64Image = data.toString("base64");
+        imageData[column] = base64Image;
+      }
+    });
+
+    res.send(imageData);
+  });
+});
+
+// ===================================================================================================================================================================================================
 // 테스트 함수
+// ===================================================================================================================================================================================================
+// ===================================================================================================================================================================================================
+// ===================================================================================================================================================================================================
+// ===================================================================================================================================================================================================
 // ===================================================================================================================================================================================================
 // router.get("/api/recipehelpertest/:recipe_idx", (req, res) => {
 //     const recipe_idx = req.params.recipe_idx;

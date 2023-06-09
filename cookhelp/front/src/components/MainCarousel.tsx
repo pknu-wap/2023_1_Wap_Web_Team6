@@ -31,7 +31,7 @@ const ItemText = styled.p`
 
 const MainCarousel = () => {
   const [recipeTitle, setRecipeTitle] = useState<string[]>([]);
-  const [thumbnail, setThumbnail] = useState("");
+  const [recipeImg, setRecipeImg] = useState<string[]>([]);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -40,9 +40,7 @@ const MainCarousel = () => {
         const titlePromises = [1, 2, 3].map(async (id) => {
           const res = await fetch(`http://localhost:8081/board/api/recipehelper/${id}`);
           const data = await res.json();
-          if (!res.ok) {
-            console.log(`error ${id}: ${data.description}`);
-          }
+
           return data.result[0]?.recipe_title || "";
         });
 
@@ -55,7 +53,28 @@ const MainCarousel = () => {
 
     fetchRecipeCard();
   }, []);
- 
+
+  useEffect(() => {
+    const fetchRecipeImg = async () => {
+      try {
+        const imgPromises = [1, 2, 3].map(async (id) => {
+          const res = await fetch(`http://localhost:8081/board/api/recipehelperimg/${id}`);
+          const data = await res.json();
+
+          return data.result[0]?.recipe_img || "";
+        });
+
+        const thumbnail = await Promise.all(imgPromises);
+        setRecipeImg(thumbnail);
+      } catch (error) {
+        console.log("Error!", error);
+      }
+    };
+
+    fetchRecipeImg();
+  }, []);
+
+
   const handlePaperClick = (id: number) => {
     navigate(`/recipe_detail/${id}`);
   };
@@ -64,17 +83,17 @@ const MainCarousel = () => {
     <CarouselWrapper>
       <Carousel>
         <Paper onClick={() => {handlePaperClick(1)}}>
-          <CarouselItemImg src="https://thumbs.dreamstime.com/b/healthy-food-selection-healthy-food-selection-fruits-vegetables-seeds-superfood-cereals-gray-background-121936825.jpg" />
+          <CarouselItemImg src={recipeImg[0]} />
           <ItemTitle>{recipeTitle[0]}</ItemTitle>
           <ItemText>{recipeTitle[0]} </ItemText>
         </Paper>
         <Paper onClick={() => {handlePaperClick(2)}}>
-          <CarouselItemImg src="https://www.chickensaladchick.com/assets/mainstage/mainstage-img.jpg" />
+          <CarouselItemImg src={recipeImg[1]} />
           <ItemTitle>{recipeTitle[1]}</ItemTitle>
           <ItemText>{recipeTitle[1]} </ItemText>
         </Paper>
         <Paper onClick={() => {handlePaperClick(3)}}>
-          <CarouselItemImg src="https://images.pexels.com/photos/958545/pexels-photo-958545.jpeg?cs=srgb&dl=pexels-chan-walrus-958545.jpg&fm=jpg" />
+          <CarouselItemImg src={recipeImg[2]}/>
           <ItemTitle>{recipeTitle[2]}</ItemTitle>
           <ItemText>{recipeTitle[2]} </ItemText>
         </Paper>
