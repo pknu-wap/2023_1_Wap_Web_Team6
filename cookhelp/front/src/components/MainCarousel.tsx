@@ -61,7 +61,7 @@ const MainCarousel = () => {
       try {
         const imgPromises = [50, 51, 52].map(async (id) => {
           const res = await fetch(
-            `http://localhost:8081/board/api/recipehelperimg/${id}`
+            `http://ec2-3-34-47-79.ap-northeast-2.compute.amazonaws.com:8081/board/api/recipehelperimg/${id}`
           );
           const data = await res.json();
           //console.log(data);
