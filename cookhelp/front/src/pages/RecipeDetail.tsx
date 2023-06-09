@@ -78,7 +78,7 @@ const RecipeDetail = () => {
     const fetchRecipeHelper = async () => {
       try {
         const res = await fetch(
-          `http://localhost:8081/board/api/recipehelper/${params.recipe_idx}`
+          `http://ec2-3-34-47-79.ap-northeast-2.compute.amazonaws.com:8081/board/api/recipehelper/${params.recipe_idx}`
         );
         const data = await res.json();
 
@@ -103,7 +103,7 @@ const RecipeDetail = () => {
     const fetchImage = async () => {
       try {
         const response = await fetch(
-          `http://localhost:8081/board/api/recipehelperimg/${params.recipe_idx}`
+          `http://ec2-3-34-47-79.ap-northeast-2.compute.amazonaws.com:8081/board/api/recipehelperimg/${params.recipe_idx}`
         );
         if (!response.ok) {
           throw new Error("요청이 실패하였습니다.");

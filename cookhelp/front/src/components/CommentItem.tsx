@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { CommentItemProps } from "./type";
-import "../css/cmt.css";  
+import "../pages/cmt.css";  
 import { useNavigate } from "react-router-dom";
 
 const Cmt = styled.p`
@@ -36,7 +36,7 @@ const navigate = useNavigate();
   const cmtDeleteBtnClick = (e: React.MouseEvent<HTMLButtonElement>): void => {
     e.preventDefault(); // 버튼 클릭의 기본 동작 중지
 
-    fetch("http://localhost:8081/comments/api/commentsDelete", {
+    fetch("http://ec2-3-34-47-79.ap-northeast-2.compute.amazonaws.com:8081/comments/api/commentsDelete", {
       method: "post", // method :통신방법
       headers: {
         // headers: API 응답에 대한 정보를 담음

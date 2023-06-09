@@ -5,8 +5,7 @@ import { useParams } from "react-router-dom";
 import CommentItem from "../components/CommentItem";
 import { cmtData } from "../components/type";
 import { useNavigate } from "react-router-dom";
-import "../css/cmt.css";  
-
+import "./cmt.css";  
 const Wrap = styled.div`
   margin-top: 2rem;
   display: flex;
@@ -124,7 +123,7 @@ const Board = () => {
 
   const fetchData = async () => {
     try {
-      const res = await fetch(`http://localhost:8081/comments/api/cmtList/${params.board_idx}`);
+      const res = await fetch(`http://ec2-3-34-47-79.ap-northeast-2.compute.amazonaws.com:8081/comments/api/cmtList/${params.board_idx}`);
       const data = await res.json();
 
       if (!res.ok) {
@@ -141,7 +140,7 @@ const Board = () => {
   const fetchRecipeHelper = async () => {
     try {
       const res = await fetch(
-        `http://localhost:8081/community/api/board/${params.board_idx}`
+        `http://ec2-3-34-47-79.ap-northeast-2.compute.amazonaws.com:8081/community/api/board/${params.board_idx}`
       );
       const data = await res.json();
 
@@ -168,7 +167,7 @@ const Board = () => {
 
   const deleteBtnClick = (e: React.MouseEvent<HTMLButtonElement>): void => {
     e.preventDefault(); // 버튼 클릭의 기본 동작 중지
-    fetch("http://localhost:8081/community/api/boardDelete", {
+    fetch("http://ec2-3-34-47-79.ap-northeast-2.compute.amazonaws.com:8081/community/api/boardDelete", {
       method: "post", // method :통신방법
       headers: {
         // headers: API 응답에 대한 정보를 담음
@@ -192,7 +191,7 @@ const Board = () => {
 
   const modifyBtnClick = (e: React.MouseEvent<HTMLButtonElement>): void => {
     e.preventDefault(); // 버튼 클릭의 기본 동작 중지
-    fetch("http://localhost:8081/community/api/infoCheck", {
+    fetch("http://ec2-3-34-47-79.ap-northeast-2.compute.amazonaws.com:8081/community/api/infoCheck", {
       method: "post", // method :통신방법
       headers: {
         // headers: API 응답에 대한 정보를 담음
@@ -213,7 +212,7 @@ const Board = () => {
   };
     const cmtbtnClick = (e: React.MouseEvent<HTMLButtonElement>): void => {
       e.preventDefault(); // 버튼 클릭의 기본 동작 중지
-      fetch("http://localhost:8081/comments/api/upload", {
+      fetch("http://ec2-3-34-47-79.ap-northeast-2.compute.amazonaws.com:8081/comments/api/upload", {
         method: "post", // method :통신방법
         headers: {
           // headers: API 응답에 대한 정보를 담음
