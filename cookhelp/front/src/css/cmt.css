@@ -1,12 +1,12 @@
 
-*{margin:0; padding:0;}
-body{
+/* *{margin:0; padding:0;} */
+/* body{
     font-family: 'Noto Sans KR', sans-serif;
     font-weight:300;
 }
 ul,li{
     list-style:none;
-}
+} */
 
 .comment{
     display:flex;
@@ -105,7 +105,7 @@ ul,li{
     z-index: 10;
 }
 
-.btn{
+/* .btn{
     width:15%;
     height: 29px;
     text-align: center;
@@ -116,7 +116,7 @@ ul,li{
     color:#fff;
     font-size:14px;
     cursor: pointer;
-}
+} */
 
 .comment-delete-btn{
     display:inline-block;
