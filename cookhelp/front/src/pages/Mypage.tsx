@@ -112,7 +112,7 @@ const Mypage = () => {
           `http://localhost:8081/members/api/info/${getID}`
         );
         const data = await res.json();
-        console.log("data : ", data);
+        // console.log("data : ", data);
 
         setId(data[0].id);
         setPassword(data[0].password);
@@ -131,12 +131,12 @@ const Mypage = () => {
 
     const getPost = async () => {
       try {
-        // const res = await fetch(
-        //   `http://localhost:8081/members/api/cookhelperInfo/${getID}`
-        // );
         const res = await fetch(
-          `http://localhost:8081/members/api/cookhelperInfo/test`
+          `http://localhost:8081/members/api/cookhelperInfo/${getID}`
         );
+        // const res = await fetch(
+        //   `http://localhost:8081/members/api/cookhelperInfo/test`
+        // );
         const data = await res.json();
         // console.log(data);
         setPostData(data);
