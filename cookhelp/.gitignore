@@ -29,3 +29,5 @@ yarn-error.log*
 /lib
 
 .yarn.lock
+
+/*.pem
