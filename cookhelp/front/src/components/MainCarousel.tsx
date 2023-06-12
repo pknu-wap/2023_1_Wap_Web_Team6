@@ -37,9 +37,9 @@ const MainCarousel = () => {
   useEffect(() => {
     const fetchRecipeCard = async () => {
       try {
-        const titlePromises = [50, 51, 52].map(async (id) => {
+        const titlePromises = [1,2,3].map(async (id) => {
           const res = await fetch(
-            `http://localhost:8081/board/api/recipehelper/${id}`
+            `http://ec2-3-34-47-79.ap-northeast-2.compute.amazonaws.com:8081/board/api/recipehelper/${id}`
           );
           const data = await res.json();
 
@@ -59,9 +59,9 @@ const MainCarousel = () => {
   useEffect(() => {
     const fetchRecipeImg = async () => {
       try {
-        const imgPromises = [50, 51, 52].map(async (id) => {
+        const imgPromises = [1,2,3].map(async (id) => {
           const res = await fetch(
-            `http://localhost:8081/board/api/recipehelperimg/${id}`
+            `http://ec2-3-34-47-79.ap-northeast-2.compute.amazonaws.com:8081/board/api/recipehelperimg/${id}`
           );
           const data = await res.json();
           //console.log(data);

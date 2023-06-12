@@ -109,7 +109,7 @@ const Mypage = () => {
     const getInfo = async () => {
       try {
         const res = await fetch(
-          `http://localhost:8081/members/api/info/${getID}`
+          `http://ec2-3-34-47-79.ap-northeast-2.compute.amazonaws.com:8081/members/api/info/${getID}`
         );
         const data = await res.json();
         // console.log("data : ", data);
@@ -132,7 +132,7 @@ const Mypage = () => {
     const getPost = async () => {
       try {
         const res = await fetch(
-          `http://localhost:8081/members/api/cookhelperInfo/${getID}`
+          `http://ec2-3-34-47-79.ap-northeast-2.compute.amazonaws.com:8081/members/api/cookhelperInfo/${getID}`
         );
         // const res = await fetch(
         //   `http://localhost:8081/members/api/cookhelperInfo/test`
@@ -151,7 +151,7 @@ const Mypage = () => {
 
   const updateInfo = async () => {
     try {
-      const res = await fetch(`http://localhost:8081/members/api/modify`, {
+      const res = await fetch(`http://ec2-3-34-47-79.ap-northeast-2.compute.amazonaws.com:8081/members/api/modify`, {
         method: "POST",
         headers: {
           "content-type": "application/json",

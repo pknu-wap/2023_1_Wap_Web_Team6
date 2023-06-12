@@ -170,7 +170,7 @@ const RecipeRegister = () => {
     });
 
     try {
-      const response = await fetch("http://localhost:8081/board/api/upload", {
+      const response = await fetch("http://ec2-3-34-47-79.ap-northeast-2.compute.amazonaws.com:8081/board/api/upload", {
         method: "POST",
         body: formData,
       });

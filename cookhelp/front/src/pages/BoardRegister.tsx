@@ -83,7 +83,7 @@ const BoardRegister = () => {
     e.preventDefault();
     console.log(registerData)
     try {
-      const response = await fetch("http://localhost:8081/community/api/upload", {
+      const response = await fetch("http://ec2-3-34-47-79.ap-northeast-2.compute.amazonaws.com:8081/community/api/upload", {
         method: "POST",
         headers: {
           // headers: API 응답에 대한 정보를 담음

@@ -85,7 +85,7 @@ const RecipeList = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await fetch("http://localhost:8081/board/api/list");
+        const res = await fetch("http://ec2-3-34-47-79.ap-northeast-2.compute.amazonaws.com:8081/board/api/list");
         const data = await res.json();
 
         if (!res.ok) {
@@ -118,7 +118,7 @@ const RecipeList = () => {
   const RecipeSearch = async () => {
     try {
       const res = await fetch(
-        `http://localhost:8081/board/api/search/${keyword}`
+        `http://ec2-3-34-47-79.ap-northeast-2.compute.amazonaws.com:8081/board/api/search/${keyword}`
       );
       const data = await res.json();
       console.log(keyword);
