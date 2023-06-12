@@ -92,7 +92,6 @@ const BoardList = () => {
           console.log("error : ", data.description);
           return;
         }
-        console.log("data : ", data);
 
         clickedCategory === "전체"
           ? setListData(data)
